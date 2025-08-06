@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Controllers",
+    "\\Data",
+    "\\Models",
+    "\\Models\\Events",
+    "\\Properties",
+    "\\Repositories",
+    "\\Services"
+  ],
+  "SelectedNode": "\\Data",
+  "PreviewInSolutionExplorer": false
+}
