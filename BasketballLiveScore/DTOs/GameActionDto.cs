@@ -12,7 +12,7 @@ namespace BasketballLiveScore.DTOs
         public int MatchId { get; set; }
 
         [Required(ErrorMessage = "L'ID du joueur est obligatoire")]
-        public int PlayerId { get; set; } // FIX: plus de PlayerName
+        public int PlayerId { get; set; }
 
         [Required(ErrorMessage = "Le type d'action est obligatoire")]
         [MaxLength(50)]
@@ -28,6 +28,6 @@ namespace BasketballLiveScore.DTOs
         public int Quarter { get; set; }
 
         [Required(ErrorMessage = "Le temps de jeu est obligatoire")]
-        public TimeSpan GameTime { get; set; } // FIX: remplace Timestamp
+        public TimeSpan GameTime { get; set; }
     }
 }

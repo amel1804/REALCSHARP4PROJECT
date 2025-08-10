@@ -1,17 +1,17 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers",
-    "\\Data",
     "\\DTOs",
-    "\\DTOs\\LiveScore",
-    "\\DTOs\\Match",
+    "\\DTOs\\User",
+    "\\Hubs",
     "\\Models",
-    "\\Models\\Events",
-    "\\Services",
-    "\\Services\\Interfaces",
-    "\\wwwroot"
+    "\\Models\\Enums",
+    "\\Pages",
+    "\\Pages\\Shared",
+    "\\Repositories",
+    "\\Repositories\\Implementations",
+    "\\Repositories\\Interfaces"
   ],
-  "SelectedNode": "\\Services\\MatchService.cs",
+  "SelectedNode": "\\Services\\RegisterService.cs",
   "PreviewInSolutionExplorer": false
 }

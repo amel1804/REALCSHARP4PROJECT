@@ -24,12 +24,13 @@ namespace BasketballLiveScore.Models.Enums
     }
 
     /// <summary>
-    /// Statuts possibles d'un match
+    /// Statuts possibles d'un match (pour compatibilité avec l'ancien code)
     /// </summary>
     public enum MatchStatus
     {
         Scheduled,
         InProgress,
+        Halftime,
         Finished,
         Cancelled
     }

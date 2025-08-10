@@ -7,6 +7,8 @@ using BasketballLiveScore.DTOs.User;
 using BasketballLiveScore.Models;
 using BasketballLiveScore.Repositories.Interfaces;
 using BasketballLiveScore.Services.Interfaces;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace BasketballLiveScore.Services
 {
@@ -35,8 +37,17 @@ namespace BasketballLiveScore.Services
 
         public async Task<User> AuthenticateAsync(string username, string password)
         {
-            var user = _unitOfWork.Users.Find(u => u.Username == username && u.Password == password).FirstOrDefault();
-            return await Task.FromResult(user);
+            // Récupérer l'utilisateur
+            var user = _unitOfWork.Users.Find(u => u.Username == username).FirstOrDefault();
+            if (user == null) return null;
+
+            // Vérifier le mot de passe hashé
+            if (VerifyPassword(password, user.Password))
+            {
+                return await Task.FromResult(user);
+            }
+
+            return null;
         }
 
         public async Task<User> CreateAsync(UserCreateDto userDto)
@@ -50,7 +61,7 @@ namespace BasketballLiveScore.Services
                 LastName = userDto.LastName,
                 Email = userDto.Email,
                 Username = userDto.Username,
-                Password = userDto.Password, // 🔐 ATTENTION : à hasher dans une vraie application !
+                Password = HashPassword(userDto.Password), // HASHAGE DU MOT DE PASSE
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true
             };
@@ -76,8 +87,7 @@ namespace BasketballLiveScore.Services
 
             if (!string.IsNullOrEmpty(userDto.Role))
             {
-                // Supposons que le rôle soit une propriété sur l'entité User
-                // user.Role = userDto.Role;
+                user.Role = userDto.Role;
             }
 
             _unitOfWork.Users.Update(user);
@@ -109,15 +119,65 @@ namespace BasketballLiveScore.Services
             if (user == null)
                 return false;
 
-            if (user.Password != currentPassword)
+            // Vérifier l'ancien mot de passe hashé
+            if (!VerifyPassword(currentPassword, user.Password))
                 return false;
 
-            user.Password = newPassword; 
+            // Hasher le nouveau mot de passe
+            user.Password = HashPassword(newPassword);
 
             _unitOfWork.Users.Update(user);
             var result = await _unitOfWork.CompleteAsync();
 
             return result > 0;
+        }
+
+        /// <summary>
+        /// Hash un mot de passe avec PBKDF2
+        /// </summary>
+        private string HashPassword(string password)
+        {
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
+
+            return $"{Convert.ToBase64String(salt)}.{hashed}";
+        }
+
+        /// <summary>
+        /// Vérifie un mot de passe contre son hash
+        /// </summary>
+        private bool VerifyPassword(string password, string hashedPassword)
+        {
+            if (string.IsNullOrEmpty(hashedPassword) || !hashedPassword.Contains("."))
+            {
+                // Pour migration : si pas de point, c'est un ancien mot de passe non hashé
+                return password == hashedPassword;
+            }
+
+            var parts = hashedPassword.Split('.');
+            if (parts.Length != 2) return false;
+
+            var salt = Convert.FromBase64String(parts[0]);
+            var hash = parts[1];
+
+            string computedHash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
+
+            return hash == computedHash;
         }
     }
 }

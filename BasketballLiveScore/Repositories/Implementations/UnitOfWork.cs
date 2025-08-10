@@ -7,106 +7,260 @@ namespace BasketballLiveScore.Repositories.Implementations
 {
     /// <summary>
     /// Implémentation du pattern Unit of Work
-    /// Centralise la gestion des repositories et des transactions
-    /// Comme vu dans les notes sur Entity Framework
+    /// Centralise les transactions et l'accès aux repositories
     /// </summary>
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly BasketballDbContext _context;
-        private bool _disposed = false;
-
-        // Repositories - Lazy loading comme vu dans les notes
         private IUserRepository _users;
         private ITeamRepository _teams;
         private IPlayerRepository _players;
         private IMatchRepository _matches;
+        private IGameActionRepository _gameActions;
         private IMatchEventRepository _matchEvents;
+        private IMatchLineupRepository _matchLineups;
 
         public UnitOfWork(BasketballDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        /// <summary>
-        /// Repository des utilisateurs
-        /// Utilise le pattern Lazy Loading pour optimiser les performances
-        /// </summary>
-        public IUserRepository Users => _users ??= new UserRepository(_context);
+        public IUserRepository Users =>
+            _users ??= new UserRepository(_context);
 
-        /// <summary>
-        /// Repository des équipes
-        /// </summary>
-        public ITeamRepository Teams => _teams ??= new TeamRepository(_context);
+        public ITeamRepository Teams =>
+            _teams ??= new TeamRepository(_context);
 
-        /// <summary>
-        /// Repository des joueurs
-        /// </summary>
-        public IPlayerRepository Players => _players ??= new PlayerRepository(_context);
+        public IPlayerRepository Players =>
+            _players ??= new PlayerRepository(_context);
 
-        /// <summary>
-        /// Repository des matchs
-        /// </summary>
-        public IMatchRepository Matches => _matches ??= new MatchRepository(_context);
+        public IMatchRepository Matches =>
+            _matches ??= new MatchRepository(_context);
 
-        /// <summary>
-        /// Repository des événements de match
-        /// </summary>
-        public IMatchEventRepository MatchEvents => _matchEvents ??= new MatchEventRepository(_context);
+        public IGameActionRepository GameActions =>
+            _gameActions ??= new GameActionRepository(_context);
 
-        /// <summary>
-        /// Sauvegarde tous les changements dans la base de données
-        /// Utilise le pattern transactionnel d'Entity Framework
-        /// </summary>
+        public IMatchEventRepository MatchEvents =>
+            _matchEvents ??= new MatchEventRepository(_context);
+
+        public IMatchLineupRepository MatchLineups =>
+            _matchLineups ??= new MatchLineupRepository(_context);
+
         public int Complete()
         {
-            try
-            {
-                return _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                // En production, logger l'exception
-                throw new InvalidOperationException("Erreur lors de la sauvegarde des changements", ex);
-            }
+            return _context.SaveChanges();
         }
 
-        /// <summary>
-        /// Sauvegarde tous les changements de manière asynchrone
-        /// Comme vu dans les notes sur la programmation asynchrone
-        /// </summary>
         public async Task<int> CompleteAsync()
         {
-            try
-            {
-                return await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // En production, logger l'exception
-                throw new InvalidOperationException("Erreur lors de la sauvegarde asynchrone des changements", ex);
-            }
+            return await _context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Libère les ressources du contexte
-        /// Pattern Dispose vu dans les notes de cours
-        /// </summary>
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            _context.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Repository générique de base
+    /// </summary>
+    public class Repository<T> : IRepository<T> where T : class
+    {
+        protected readonly BasketballDbContext _context;
+
+        public Repository(BasketballDbContext context)
+        {
+            _context = context;
         }
 
-        protected virtual void Dispose(bool disposing)
+        public T GetById(int id)
         {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    _context?.Dispose();
-                }
-                _disposed = true;
-            }
+            return _context.Set<T>().Find(id);
+        }
+
+        public IEnumerable<T> GetAll()
+        {
+            return _context.Set<T>().ToList();
+        }
+
+        public IEnumerable<T> Find(Expression<Func<T, bool>> expression)
+        {
+            return _context.Set<T>().Where(expression);
+        }
+
+        public void Add(T entity)
+        {
+            _context.Set<T>().Add(entity);
+        }
+
+        public void AddRange(IEnumerable<T> entities)
+        {
+            _context.Set<T>().AddRange(entities);
+        }
+
+        public void Remove(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+        }
+
+        public void RemoveRange(IEnumerable<T> entities)
+        {
+            _context.Set<T>().RemoveRange(entities);
+        }
+
+        public void Update(T entity)
+        {
+            _context.Set<T>().Update(entity);
+        }
+    }
+
+    /// <summary>
+    /// Repository pour les utilisateurs
+    /// </summary>
+    public class UserRepository : Repository<User>, IUserRepository
+    {
+        public UserRepository(BasketballDbContext context) : base(context)
+        {
+        }
+
+        public bool UserExists(string username)
+        {
+            return _context.Users.Any(u => u.Username == username);
+        }
+
+        public User GetByUsername(string username)
+        {
+            return _context.Users.FirstOrDefault(u => u.Username == username);
+        }
+
+        public User GetByEmail(string email)
+        {
+            return _context.Users.FirstOrDefault(u => u.Email == email);
+        }
+    }
+
+    /// <summary>
+    /// Repository pour les équipes
+    /// </summary>
+    public class TeamRepository : Repository<Team>, ITeamRepository
+    {
+        public TeamRepository(BasketballDbContext context) : base(context)
+        {
+        }
+
+        public Team GetTeamWithPlayers(int teamId)
+        {
+            return _context.Teams
+                .Include(t => t.Players)
+                .FirstOrDefault(t => t.Id == teamId);
+        }
+
+        public List<Team> GetActiveTeams()
+        {
+            return _context.Teams.ToList();
+        }
+    }
+
+    /// <summary>
+    /// Repository pour les joueurs
+    /// </summary>
+    public class PlayerRepository : Repository<Player>, IPlayerRepository
+    {
+        public PlayerRepository(BasketballDbContext context) : base(context)
+        {
+        }
+
+        public List<Player> GetPlayersByTeam(int teamId)
+        {
+            return _context.Players.Where(p => p.TeamId == teamId).ToList();
+        }
+
+        public Player GetPlayerWithStats(int playerId)
+        {
+            return _context.Players
+                .Include(p => p.Team)
+                .FirstOrDefault(p => p.Id == playerId);
+        }
+    }
+
+    /// <summary>
+    /// Repository pour les actions de jeu
+    /// </summary>
+    public class GameActionRepository : Repository<GameAction>, IGameActionRepository
+    {
+        public GameActionRepository(BasketballDbContext context) : base(context)
+        {
+        }
+
+        public List<GameAction> GetActionsByMatch(int matchId)
+        {
+            return _context.GameActions
+                .Where(ga => ga.MatchId == matchId)
+                .OrderBy(ga => ga.Quarter)
+                .ThenBy(ga => ga.GameTime)
+                .ToList();
+        }
+
+        public List<GameAction> GetActionsByQuarter(int matchId, int quarter)
+        {
+            return _context.GameActions
+                .Where(ga => ga.MatchId == matchId && ga.Quarter == quarter)
+                .OrderBy(ga => ga.GameTime)
+                .ToList();
+        }
+    }
+
+    /// <summary>
+    /// Repository pour les événements de match
+    /// </summary>
+    public class MatchEventRepository : Repository<MatchEvent>, IMatchEventRepository
+    {
+        public MatchEventRepository(BasketballDbContext context) : base(context)
+        {
+        }
+
+        public List<MatchEvent> GetEventsByMatch(int matchId)
+        {
+            return _context.MatchEvents
+                .Where(me => me.MatchId == matchId)
+                .OrderBy(me => me.CreatedAt)
+                .ToList();
+        }
+    }
+
+    /// <summary>
+    /// Repository pour les compositions de match
+    /// </summary>
+    public class MatchLineupRepository : Repository<MatchLineup>, IMatchLineupRepository
+    {
+        public MatchLineupRepository(BasketballDbContext context) : base(context)
+        {
+        }
+
+        public List<MatchLineup> GetLineupByMatch(int matchId)
+        {
+            return _context.MatchLineups
+                .Include(ml => ml.Player)
+                .Include(ml => ml.Team)
+                .Where(ml => ml.MatchId == matchId)
+                .ToList();
+        }
+
+        public List<MatchLineup> GetLineupByTeam(int matchId, int teamId)
+        {
+            return _context.MatchLineups
+                .Include(ml => ml.Player)
+                .Where(ml => ml.MatchId == matchId && ml.TeamId == teamId)
+                .OrderBy(ml => ml.Position)
+                .ToList();
+        }
+
+        public MatchLineup GetPlayerLineup(int matchId, int playerId)
+        {
+            return _context.MatchLineups
+                .Include(ml => ml.Player)
+                .FirstOrDefault(ml => ml.MatchId == matchId && ml.PlayerId == playerId);
         }
     }
 }

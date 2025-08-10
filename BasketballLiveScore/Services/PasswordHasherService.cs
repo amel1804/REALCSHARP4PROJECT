@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using BasketballLiveScore.Services.Interfaces;
 
 namespace BasketballLiveScore.Services
 {
@@ -9,72 +10,70 @@ namespace BasketballLiveScore.Services
     /// </summary>
     public interface IPasswordHasherService
     {
-        /// <summary>
-        /// Hash un mot de passe avec un salt aléatoire
-        /// </summary>
         string HashPassword(string password);
-
-        /// <summary>
-        /// Vérifie qu'un mot de passe correspond à un hash
-        /// </summary>
         bool VerifyPassword(string password, string hashedPassword);
     }
 
     /// <summary>
-    /// Service pour le hashage sécurisé des mots de passe
-    /// Utilise PBKDF2 avec salt aléatoire pour une sécurité maximale
+    /// Service de hashage sécurisé des mots de passe utilisant PBKDF2-SHA256
     /// </summary>
     public class PasswordHasherService : IPasswordHasherService
     {
-        // Constantes pour la configuration du hashage
-        private const int SALT_SIZE = 128 / 8; // 16 bytes
-        private const int HASH_SIZE = 256 / 8; // 32 bytes
-        private const int ITERATIONS = 100000; // Nombre d'itérations PBKDF2
-        private const char DELIMITER = '.';
+        // Configuration du hashage
+        private const int SALT_SIZE = 128 / 8; // 128 bits
+        private const int HASH_SIZE = 256 / 8; // 256 bits
+        private const int ITERATIONS = 10000;  // Nombre d'itérations PBKDF2
 
         /// <summary>
         /// Hash un mot de passe avec un salt aléatoire
-        /// Format du résultat: salt.hash (encodé en base64)
         /// </summary>
         public string HashPassword(string password)
         {
-            if (string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(password))
             {
                 throw new ArgumentNullException(nameof(password));
             }
 
-            // Générer un salt aléatoire
-            byte[] salt = GenerateSalt();
+            // Génération d'un salt aléatoire
+            byte[] salt = new byte[SALT_SIZE];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
 
-            // Hasher le mot de passe avec le salt
-            byte[] hash = HashPasswordWithSalt(password, salt);
+            // Hashage du mot de passe
+            byte[] hash = KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: ITERATIONS,
+                numBytesRequested: HASH_SIZE);
 
-            // Combiner salt et hash avec un délimiteur
-            string saltBase64 = Convert.ToBase64String(salt);
-            string hashBase64 = Convert.ToBase64String(hash);
-
-            return $"{saltBase64}{DELIMITER}{hashBase64}";
+            // Combinaison salt + hash en base64
+            return $"{Convert.ToBase64String(salt)}.{Convert.ToBase64String(hash)}";
         }
 
         /// <summary>
-        /// Vérifie qu'un mot de passe correspond à un hash
+        /// Vérifie qu'un mot de passe correspond à son hash
         /// </summary>
         public bool VerifyPassword(string password, string hashedPassword)
         {
-            if (string.IsNullOrEmpty(password))
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(hashedPassword))
+            if (string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(hashedPassword))
             {
                 return false;
             }
 
             try
             {
-                // Séparer le salt et le hash
-                string[] parts = hashedPassword.Split(DELIMITER);
+                // Support pour migration des anciens mots de passe non hashés
+                if (!hashedPassword.Contains("."))
+                {
+                    // Ancien mot de passe en clair (migration)
+                    return password == hashedPassword;
+                }
+
+                // Extraction du salt et du hash
+                var parts = hashedPassword.Split('.');
                 if (parts.Length != 2)
                 {
                     return false;
@@ -83,63 +82,37 @@ namespace BasketballLiveScore.Services
                 byte[] salt = Convert.FromBase64String(parts[0]);
                 byte[] storedHash = Convert.FromBase64String(parts[1]);
 
-                // Hasher le mot de passe fourni avec le même salt
-                byte[] computedHash = HashPasswordWithSalt(password, salt);
+                // Hashage du mot de passe fourni
+                byte[] computedHash = KeyDerivation.Pbkdf2(
+                    password: password,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA256,
+                    iterationCount: ITERATIONS,
+                    numBytesRequested: HASH_SIZE);
 
-                // Comparer les deux hashs de manière sécurisée
-                return CryptographicEquals(storedHash, computedHash);
+                // Comparaison sécurisée
+                return SlowEquals(storedHash, computedHash);
             }
             catch
             {
-                // En cas d'erreur (format invalide, etc.), retourner false
                 return false;
             }
         }
 
         /// <summary>
-        /// Génère un salt aléatoire cryptographiquement sécurisé
+        /// Comparaison sécurisée résistante aux timing attacks
         /// </summary>
-        private byte[] GenerateSalt()
-        {
-            byte[] salt = new byte[SALT_SIZE];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-            return salt;
-        }
-
-        /// <summary>
-        /// Hash un mot de passe avec un salt donné
-        /// </summary>
-        private byte[] HashPasswordWithSalt(string password, byte[] salt)
-        {
-            return KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: ITERATIONS,
-                numBytesRequested: HASH_SIZE
-            );
-        }
-
-        /// <summary>
-        /// Comparaison sécurisée de deux tableaux de bytes
-        /// Résistant aux attaques de timing
-        /// </summary>
-        private bool CryptographicEquals(byte[] a, byte[] b)
+        private bool SlowEquals(byte[] a, byte[] b)
         {
             if (a == null || b == null || a.Length != b.Length)
-            {
                 return false;
-            }
 
-            var result = 0;
+            uint diff = 0;
             for (int i = 0; i < a.Length; i++)
             {
-                result |= a[i] ^ b[i];
+                diff |= (uint)(a[i] ^ b[i]);
             }
-            return result == 0;
+            return diff == 0;
         }
     }
 }

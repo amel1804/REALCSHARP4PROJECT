@@ -1,34 +1,71 @@
-using BasketballLiveScore.DTOs.User;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using BasketballLiveScore.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace BasketballLiveScore.Pages
 {
     public class RegisterModel : PageModel
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IRegisterService _registerService;
+        private readonly ILogger<RegisterModel> _logger;
 
-        public RegisterModel(IHttpClientFactory httpClientFactory)
+        public RegisterModel(IRegisterService registerService, ILogger<RegisterModel> logger)
         {
-            _httpClientFactory = httpClientFactory;
+            _registerService = registerService;
+            _logger = logger;
         }
 
         [BindProperty]
-        public UserRegistrationDto RegisterInput { get; set; } = new();
+        public RegisterInputModel RegisterInput { get; set; } = new();
 
         public string ErrorMessage { get; set; } = string.Empty;
         public string SuccessMessage { get; set; } = string.Empty;
 
-        public void OnGet()
+        public class RegisterInputModel
         {
+            [Required(ErrorMessage = "Le prénom est obligatoire")]
+            [Display(Name = "Prénom")]
+            public string FirstName { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "Le nom est obligatoire")]
+            [Display(Name = "Nom")]
+            public string LastName { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "Le nom d'utilisateur est obligatoire")]
+            [Display(Name = "Nom d'utilisateur")]
+            public string Username { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "L'email est obligatoire")]
+            [EmailAddress(ErrorMessage = "Format d'email invalide")]
+            [Display(Name = "Email")]
+            public string Email { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "Le mot de passe est obligatoire")]
+            [StringLength(100, ErrorMessage = "Le {0} doit contenir au moins {2} caractères.", MinimumLength = 6)]
+            [DataType(DataType.Password)]
+            [Display(Name = "Mot de passe")]
+            public string Password { get; set; } = string.Empty;
+
+            [DataType(DataType.Password)]
+            [Display(Name = "Confirmer le mot de passe")]
+            [Compare("Password", ErrorMessage = "Les mots de passe ne correspondent pas.")]
+            public string ConfirmPassword { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "Le rôle est obligatoire")]
+            [Display(Name = "Rôle")]
+            public string Role { get; set; } = "Viewer";
         }
 
-        public async Task<IActionResult>
-    OnPostAsync()
+        public void OnGet()
+        {
+            // Page GET - rien à faire
+        }
+
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -37,33 +74,34 @@ namespace BasketballLiveScore.Pages
 
             try
             {
-                var client = _httpClientFactory.CreateClient("BasketballAPI");
-                var json = JsonSerializer.Serialize(RegisterInput);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                // Pour l'instant, on utilise le username comme base pour créer l'utilisateur
+                // Le service RegisterService attend (username, password, role)
+                // On devra adapter le service pour accepter toutes les données
 
-                var response = await client.PostAsync("api/Authentication/Register", content);
+                var result = await Task.Run(() =>
+                    _registerService.Register(RegisterInput.Username, RegisterInput.Password, RegisterInput.Role));
 
-                if (response.IsSuccessStatusCode)
+                if (result == "OK")
                 {
-                    SuccessMessage = "Compte créé avec succès ! Vous pouvez maintenant vous connecter.";
-                    ModelState.Clear();
-                    RegisterInput = new UserRegistrationDto();
+                    _logger.LogInformation("Nouvel utilisateur inscrit: {Username}", RegisterInput.Username);
+                    SuccessMessage = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
 
-                    // Redirection après 2 secondes
-                    Response.Headers.Add("Refresh", "2; url=/Login");
+                    // Redirection vers la page de connexion après 2 secondes
+                    return RedirectToPage("/Login");
                 }
                 else
                 {
-                    var error = await response.Content.ReadAsStringAsync();
-                    ErrorMessage = $"Erreur lors de l'inscription: {error}";
+                    ErrorMessage = result;
+                    _logger.LogWarning("Échec de l'inscription pour {Username}: {Error}", RegisterInput.Username, result);
+                    return Page();
                 }
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Erreur de connexion: {ex.Message}";
+                _logger.LogError(ex, "Erreur lors de l'inscription");
+                ErrorMessage = "Une erreur est survenue lors de l'inscription. Veuillez réessayer.";
+                return Page();
             }
-
-            return Page();
         }
     }
 }

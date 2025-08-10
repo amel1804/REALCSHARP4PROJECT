@@ -1,187 +1,86 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using BasketballLiveScore.Data;
 using BasketballLiveScore.DTOs.LiveScore;
 using BasketballLiveScore.Models;
 using BasketballLiveScore.Models.Events;
-using BasketballLiveScore.Models.Enums;
+using BasketballLiveScore.Repositories.Interfaces;
 using BasketballLiveScore.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace BasketballLiveScore.Services
 {
     /// <summary>
-    /// Service pour la gestion du score en temps réel
-    /// Implémente toute la logique métier pour l'encodage live
+    /// Interface pour le service LiveScore
+    /// </summary>
+    public interface ILiveScoreService
+    {
+        Task<bool> RecordBasketAsync(int matchId, BasketScoredDto basketDto, int encoderId);
+        Task<bool> RecordFoulAsync(int matchId, FoulCommittedDto foulDto, int encoderId);
+        Task<bool> RecordSubstitutionAsync(int matchId, PlayerSubstitutionDto substitutionDto, int encoderId);
+        Task<bool> RecordTimeoutAsync(int matchId, TimeoutCalledDto timeoutDto, int encoderId);
+        Task<bool> ChangeQuarterAsync(int matchId, int newQuarter);
+        Task<bool> StartMatchAsync(int matchId);
+        Task<bool> EndMatchAsync(int matchId);
+        Task<MatchLiveStatusDto> GetMatchStatusAsync(int matchId);
+        Task<bool> UpdateGameClockAsync(int matchId, int remainingSeconds);
+    }
+
+    /// <summary>
+    /// Service pour gérer l'encodage en temps réel des matchs
+    /// Implémente toutes les fonctionnalités de l'énoncé
     /// </summary>
     public class LiveScoreService : ILiveScoreService
     {
-        // Constantes pour éviter les valeurs magiques
-        private const int QUARTER_DURATION_SECONDS = 600; // 10 minutes par défaut
-        private const int MAX_PERSONAL_FOULS = 5;
-        private const int MAX_TIMEOUTS_PER_HALF = 3;
-        private const int PLAYERS_ON_COURT = 5;
-
-        private readonly BasketballDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<LiveScoreService> _logger;
 
-        public LiveScoreService(BasketballDbContext context, ILogger<LiveScoreService> logger)
+        // Dictionnaire pour tracker les timeouts utilisés par équipe
+        private readonly Dictionary<int, Dictionary<int, int>> _timeoutsUsed = new();
+
+        public LiveScoreService(
+            IUnitOfWork unitOfWork,
+            ILogger<LiveScoreService> logger)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
-        /// Démarre le chronomètre du match
+        /// Enregistre un panier marqué (1, 2 ou 3 points)
         /// </summary>
-        public async Task<bool> StartClockAsync(int matchId)
+        public async Task<bool> RecordBasketAsync(int matchId, BasketScoredDto basketDto, int encoderId)
         {
             try
             {
-                var match = await _context.Matches
-                    .Include(m => m.HomeTeam)
-                    .Include(m => m.AwayTeam)
-                    .FirstOrDefaultAsync(m => m.Id == matchId);
-
-                if (match == null)
-                {
-                    _logger.LogWarning("Match {MatchId} non trouvé", matchId);
-                    return false;
-                }
-
-                // Vérifier que le match peut être démarré
-                // Utilisation explicite du namespace pour éviter l'ambiguïté
-                if (match.Status != BasketballLiveScore.Models.MatchStatus.Scheduled &&
-                    match.Status != BasketballLiveScore.Models.MatchStatus.InProgress)
-                {
-                    _logger.LogWarning("Le match {MatchId} ne peut pas être démarré (status: {Status})", matchId, match.Status);
-                    return false;
-                }
-
-                match.Status = BasketballLiveScore.Models.MatchStatus.InProgress;
-
-                // Si c'est le premier démarrage
-                if (!match.StartTime.HasValue)
-                {
-                    match.StartTime = DateTime.UtcNow;
-                    match.CurrentQuarter = 1;
-                    match.RemainingTimeSeconds = match.QuarterDurationMinutes * 60;
-                }
-
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Chronomètre démarré pour le match {MatchId}", matchId);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Erreur lors du démarrage du chronomètre pour le match {MatchId}", matchId);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Arrête le chronomètre du match
-        /// </summary>
-        public async Task<bool> StopClockAsync(int matchId)
-        {
-            try
-            {
-                var match = await _context.Matches.FindAsync(matchId);
-
-                if (match == null)
-                {
-                    _logger.LogWarning("Match {MatchId} non trouvé", matchId);
-                    return false;
-                }
-
-                // Le chronomètre peut être arrêté à tout moment pendant le match
-                // Mais on ne change pas le statut du match (il reste InProgress)
-
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Chronomètre arrêté pour le match {MatchId}", matchId);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Erreur lors de l'arrêt du chronomètre pour le match {MatchId}", matchId);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Enregistre un panier marqué
-        /// </summary>
-        public async Task<bool> RecordBasketAsync(int matchId, BasketScoreDto basketDto)
-        {
-            try
-            {
-                var match = await _context.Matches
-                    .Include(m => m.HomeTeam)
-                        .ThenInclude(t => t != null ? t.Players : null)
-                    .Include(m => m.AwayTeam)
-                        .ThenInclude(t => t != null ? t.Players : null)
-                    .FirstOrDefaultAsync(m => m.Id == matchId);
-
-                if (match == null || match.Status != BasketballLiveScore.Models.MatchStatus.InProgress)
+                var match = _unitOfWork.Matches.GetById(matchId);
+                if (match == null || match.Status != MatchStatus.InProgress)
                 {
                     _logger.LogWarning("Match {MatchId} non trouvé ou pas en cours", matchId);
                     return false;
                 }
 
-                // Vérifier que le joueur existe et appartient à une des équipes du match
-                var player = await _context.Players
-                    .Include(p => p.Team)
-                    .FirstOrDefaultAsync(p => p.Id == basketDto.PlayerId);
+                // Vérifier que le joueur est sur le terrain
+                var lineup = _unitOfWork.MatchLineups
+                    .Find(ml => ml.MatchId == matchId && ml.PlayerId == basketDto.PlayerId)
+                    .FirstOrDefault();
 
-                if (player == null)
+                if (lineup == null || !lineup.IsOnCourt)
                 {
-                    _logger.LogWarning("Joueur {PlayerId} non trouvé", basketDto.PlayerId);
+                    _logger.LogWarning("Joueur {PlayerId} non sur le terrain", basketDto.PlayerId);
                     return false;
                 }
 
-                bool isHomeTeam = player.TeamId == match.HomeTeamId;
-                bool isAwayTeam = player.TeamId == match.AwayTeamId;
-
-                if (!isHomeTeam && !isAwayTeam)
+                // Validation des points (1, 2 ou 3)
+                if (basketDto.Points < 1 || basketDto.Points > 3)
                 {
-                    _logger.LogWarning("Le joueur {PlayerId} n'appartient à aucune équipe du match", basketDto.PlayerId);
+                    _logger.LogWarning("Points invalides: {Points}", basketDto.Points);
                     return false;
                 }
 
-                // Déterminer le type de panier
-                var basketType = basketDto.Points switch
-                {
-                    1 => BasketType.FreeThrow,
-                    2 => BasketType.TwoPoints,
-                    3 => BasketType.ThreePoints,
-                    _ => throw new InvalidOperationException($"Nombre de points invalide: {basketDto.Points}")
-                };
-
-                // Créer l'événement de panier
-                var basketEvent = new BasketScoredEvent
-                {
-                    MatchId = matchId,
-                    Match = match,
-                    PlayerId = basketDto.PlayerId,
-                    Player = player,
-                    Quarter = basketDto.Quarter,
-                    GameTime = basketDto.GameTime,
-                    BasketType = basketType,
-                    Points = basketDto.Points,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedById = 1 // TODO: Récupérer l'utilisateur actuel
-                };
-
-                // Calculer les points automatiquement
-                basketEvent.CalculatePoints();
-
-                // Mettre à jour le score du match
-                if (isHomeTeam)
+                // Mise à jour du score
+                if (lineup.TeamId == match.HomeTeamId)
                 {
                     match.HomeTeamScore += basketDto.Points;
                 }
@@ -190,7 +89,10 @@ namespace BasketballLiveScore.Services
                     match.AwayTeamScore += basketDto.Points;
                 }
 
-                // Ajouter aussi dans GameActions pour compatibilité
+                // Mise à jour des stats du joueur
+                lineup.AddBasket(basketDto.Points);
+
+                // Création de l'action de jeu
                 var gameAction = new GameAction
                 {
                     MatchId = matchId,
@@ -202,98 +104,116 @@ namespace BasketballLiveScore.Services
                     CreatedAt = DateTime.UtcNow
                 };
 
-                _context.MatchEvents.Add(basketEvent);
-                _context.GameActions.Add(gameAction);
-                await _context.SaveChangesAsync();
+                _unitOfWork.GameActions.Add(gameAction);
+                _unitOfWork.Matches.Update(match);
+                _unitOfWork.MatchLineups.Update(lineup);
 
-                _logger.LogInformation("Panier de {Points} points enregistré pour le joueur {PlayerId} (équipe: {Team})",
-                    basketDto.Points, basketDto.PlayerId, isHomeTeam ? "domicile" : "visiteur");
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Panier de {Points} points enregistré pour joueur {PlayerId}",
+                    basketDto.Points, basketDto.PlayerId);
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de l'enregistrement du panier pour le match {MatchId}", matchId);
+                _logger.LogError(ex, "Erreur lors de l'enregistrement du panier");
                 return false;
             }
         }
 
         /// <summary>
-        /// Enregistre une faute commise
+        /// Enregistre une faute (P0, P1, P2, P3)
         /// </summary>
-        public async Task<bool> RecordFoulAsync(int matchId, FoulCommittedDto foulDto)
+        public async Task<bool> RecordFoulAsync(int matchId, FoulCommittedDto foulDto, int encoderId)
         {
             try
             {
-                var match = await _context.Matches
-                    .Include(m => m.HomeTeam)
-                        .ThenInclude(t => t != null ? t.Players : null)
-                    .Include(m => m.AwayTeam)
-                        .ThenInclude(t => t != null ? t.Players : null)
-                    .FirstOrDefaultAsync(m => m.Id == matchId);
-
-                if (match == null || match.Status != BasketballLiveScore.Models.MatchStatus.InProgress)
+                var match = _unitOfWork.Matches.GetById(matchId);
+                if (match == null || match.Status != MatchStatus.InProgress)
                 {
-                    _logger.LogWarning("Match {MatchId} non trouvé ou pas en cours", matchId);
                     return false;
                 }
 
-                // Vérifier que le joueur existe
-                var player = await _context.Players.FindAsync(foulDto.PlayerId);
-                if (player == null)
+                var lineup = _unitOfWork.MatchLineups
+                    .Find(ml => ml.MatchId == matchId && ml.PlayerId == foulDto.PlayerId)
+                    .FirstOrDefault();
+
+                if (lineup == null)
                 {
-                    _logger.LogWarning("Joueur {PlayerId} non trouvé", foulDto.PlayerId);
+                    _logger.LogWarning("Joueur {PlayerId} non trouvé dans le lineup", foulDto.PlayerId);
                     return false;
                 }
 
-                // Compter les fautes existantes du joueur dans ce match
-                var existingFouls = await _context.Set<FoulEvent>()
-                    .CountAsync(f => f.MatchId == matchId && f.PlayerId == foulDto.PlayerId);
-
-                if (existingFouls >= MAX_PERSONAL_FOULS)
+                // Validation du type de faute (P0, P1, P2, P3)
+                var validFoulTypes = new[] { "P0", "P1", "P2", "P3", "T", "U", "D" };
+                if (!validFoulTypes.Contains(foulDto.FoulType.ToUpper()))
                 {
-                    _logger.LogWarning("Le joueur {PlayerId} a déjà {MaxFouls} fautes", foulDto.PlayerId, MAX_PERSONAL_FOULS);
-                    // Le joueur est éliminé mais on peut quand même enregistrer la faute
+                    _logger.LogWarning("Type de faute invalide: {FoulType}", foulDto.FoulType);
+                    return false;
                 }
 
-                // Créer l'événement de faute
+                // Ajouter la faute et vérifier la disqualification
+                lineup.AddFoul(foulDto.FoulType.ToUpper());
+
+                // Création de l'événement de faute
                 var foulEvent = new FoulEvent
                 {
                     MatchId = matchId,
-                    Match = match,
                     PlayerId = foulDto.PlayerId,
-                    Player = player,
+                    FoulType = foulDto.FoulType.ToUpper(),
                     Quarter = foulDto.Quarter,
                     GameTime = foulDto.GameTime,
-                    FoulType = foulDto.FoulType.ToUpper(),
                     CreatedAt = DateTime.UtcNow,
-                    CreatedById = 1 // TODO: Récupérer l'utilisateur actuel
+                    CreatedById = encoderId
                 };
 
-                // Ajouter aussi dans GameActions pour compatibilité
+                // Déterminer le nombre de lancers francs selon le type
+                switch (foulDto.FoulType.ToUpper())
+                {
+                    case "P1":
+                        foulEvent.FreeThrowsAwarded = 1;
+                        break;
+                    case "P2":
+                        foulEvent.FreeThrowsAwarded = 2;
+                        break;
+                    case "P3":
+                        foulEvent.FreeThrowsAwarded = 3;
+                        break;
+                }
+
+                _unitOfWork.MatchEvents.Add(foulEvent);
+
+                // Création de l'action de jeu
                 var gameAction = new GameAction
                 {
                     MatchId = matchId,
                     PlayerId = foulDto.PlayerId,
-                    ActionType = "Fault",
+                    ActionType = "Foul",
                     FaultType = foulDto.FoulType.ToUpper(),
                     Quarter = foulDto.Quarter,
                     GameTime = foulDto.GameTime,
                     CreatedAt = DateTime.UtcNow
                 };
 
-                _context.MatchEvents.Add(foulEvent);
-                _context.GameActions.Add(gameAction);
-                await _context.SaveChangesAsync();
+                _unitOfWork.GameActions.Add(gameAction);
+                _unitOfWork.MatchLineups.Update(lineup);
 
-                _logger.LogInformation("Faute {FoulType} enregistrée pour le joueur {PlayerId} (total: {TotalFouls})",
-                    foulDto.FoulType, foulDto.PlayerId, existingFouls + 1);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Faute {FoulType} enregistrée pour joueur {PlayerId} (Total: {TotalFouls})",
+                    foulDto.FoulType, foulDto.PlayerId, lineup.PersonalFouls);
+
+                if (lineup.IsDisqualified)
+                {
+                    _logger.LogWarning("Joueur {PlayerId} disqualifié avec 5 fautes", foulDto.PlayerId);
+                }
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de l'enregistrement de la faute pour le match {MatchId}", matchId);
+                _logger.LogError(ex, "Erreur lors de l'enregistrement de la faute");
                 return false;
             }
         }
@@ -301,53 +221,63 @@ namespace BasketballLiveScore.Services
         /// <summary>
         /// Enregistre un changement de joueur
         /// </summary>
-        public async Task<bool> RecordSubstitutionAsync(int matchId, PlayerSubstitutionDto substitutionDto)
+        public async Task<bool> RecordSubstitutionAsync(int matchId, PlayerSubstitutionDto substitutionDto, int encoderId)
         {
             try
             {
-                var match = await _context.Matches
-                    .Include(m => m.Lineups)
-                    .FirstOrDefaultAsync(m => m.Id == matchId);
-
-                if (match == null || match.Status != BasketballLiveScore.Models.MatchStatus.InProgress)
+                var match = _unitOfWork.Matches.GetById(matchId);
+                if (match == null || match.Status != MatchStatus.InProgress)
                 {
-                    _logger.LogWarning("Match {MatchId} non trouvé ou pas en cours", matchId);
                     return false;
                 }
 
-                // Vérifier que les deux joueurs existent
-                var playerIn = await _context.Players.FindAsync(substitutionDto.PlayerInId);
-                var playerOut = await _context.Players.FindAsync(substitutionDto.PlayerOutId);
+                var playerOut = _unitOfWork.MatchLineups
+                    .Find(ml => ml.MatchId == matchId && ml.PlayerId == substitutionDto.PlayerOutId)
+                    .FirstOrDefault();
 
-                if (playerIn == null || playerOut == null)
+                var playerIn = _unitOfWork.MatchLineups
+                    .Find(ml => ml.MatchId == matchId && ml.PlayerId == substitutionDto.PlayerInId)
+                    .FirstOrDefault();
+
+                // Validations
+                if (playerOut == null || !playerOut.IsOnCourt)
                 {
-                    _logger.LogWarning("Joueur entrant ({PlayerIn}) ou sortant ({PlayerOut}) non trouvé",
-                        substitutionDto.PlayerInId, substitutionDto.PlayerOutId);
+                    _logger.LogWarning("Joueur sortant {PlayerId} pas sur le terrain", substitutionDto.PlayerOutId);
                     return false;
                 }
 
-                // Vérifier qu'ils sont dans la même équipe
-                if (playerIn.TeamId != playerOut.TeamId)
+                if (playerIn == null || !playerIn.CanEnterCourt())
                 {
-                    throw new InvalidOperationException("Les joueurs doivent être de la même équipe");
+                    _logger.LogWarning("Joueur entrant {PlayerId} ne peut pas entrer", substitutionDto.PlayerInId);
+                    return false;
                 }
 
-                // Créer l'événement de substitution
+                // Vérifier même équipe
+                if (playerOut.TeamId != playerIn.TeamId)
+                {
+                    _logger.LogWarning("Les joueurs ne sont pas de la même équipe");
+                    return false;
+                }
+
+                // Effectuer le changement
+                playerOut.ExitCourt();
+                playerIn.EnterCourt(substitutionDto.Quarter);
+
+                // Création de l'événement
                 var substitutionEvent = new SubstitutionEvent
                 {
                     MatchId = matchId,
-                    Match = match,
                     PlayerInId = substitutionDto.PlayerInId,
-                    PlayerIn = playerIn,
                     PlayerOutId = substitutionDto.PlayerOutId,
-                    PlayerOut = playerOut,
                     Quarter = substitutionDto.Quarter,
                     GameTime = substitutionDto.GameTime,
                     CreatedAt = DateTime.UtcNow,
-                    CreatedById = 1 // TODO: Récupérer l'utilisateur actuel
+                    CreatedById = encoderId
                 };
 
-                // Ajouter aussi dans GameActions pour compatibilité
+                _unitOfWork.MatchEvents.Add(substitutionEvent);
+
+                // Création de l'action de jeu
                 var gameAction = new GameAction
                 {
                     MatchId = matchId,
@@ -359,18 +289,20 @@ namespace BasketballLiveScore.Services
                     CreatedAt = DateTime.UtcNow
                 };
 
-                _context.MatchEvents.Add(substitutionEvent);
-                _context.GameActions.Add(gameAction);
-                await _context.SaveChangesAsync();
+                _unitOfWork.GameActions.Add(gameAction);
+                _unitOfWork.MatchLineups.Update(playerOut);
+                _unitOfWork.MatchLineups.Update(playerIn);
 
-                _logger.LogInformation("Substitution: {PlayerOut} remplacé par {PlayerIn} au match {MatchId}",
-                    playerOut.FullName, playerIn.FullName, matchId);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Changement: {PlayerOut} remplacé par {PlayerIn}",
+                    substitutionDto.PlayerOutId, substitutionDto.PlayerInId);
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de l'enregistrement de la substitution pour le match {MatchId}", matchId);
+                _logger.LogError(ex, "Erreur lors du changement de joueur");
                 return false;
             }
         }
@@ -378,202 +310,319 @@ namespace BasketballLiveScore.Services
         /// <summary>
         /// Enregistre un timeout
         /// </summary>
-        public async Task<bool> RecordTimeoutAsync(int matchId, int teamId)
+        public async Task<bool> RecordTimeoutAsync(int matchId, TimeoutCalledDto timeoutDto, int encoderId)
         {
             try
             {
-                var match = await _context.Matches
-                    .Include(m => m.MatchEvents)
-                    .FirstOrDefaultAsync(m => m.Id == matchId);
-
-                if (match == null || match.Status != BasketballLiveScore.Models.MatchStatus.InProgress)
+                var match = _unitOfWork.Matches.GetById(matchId);
+                if (match == null || match.Status != MatchStatus.InProgress)
                 {
-                    _logger.LogWarning("Match {MatchId} non trouvé ou pas en cours", matchId);
                     return false;
                 }
 
-                var team = await _context.Teams.FindAsync(teamId);
-                if (team == null)
+                // Initialiser le tracking des timeouts
+                if (!_timeoutsUsed.ContainsKey(matchId))
                 {
-                    _logger.LogWarning("Équipe {TeamId} non trouvée", teamId);
+                    _timeoutsUsed[matchId] = new Dictionary<int, int>();
+                }
+
+                if (!_timeoutsUsed[matchId].ContainsKey(timeoutDto.TeamId))
+                {
+                    _timeoutsUsed[matchId][timeoutDto.TeamId] = 0;
+                }
+
+                // Vérifier le nombre de timeouts (max 3 par équipe selon les règles standards)
+                if (_timeoutsUsed[matchId][timeoutDto.TeamId] >= 3)
+                {
+                    _logger.LogWarning("Équipe {TeamId} n'a plus de timeouts", timeoutDto.TeamId);
                     return false;
                 }
 
-                // Vérifier que l'équipe participe au match
-                if (teamId != match.HomeTeamId && teamId != match.AwayTeamId)
-                {
-                    throw new InvalidOperationException("L'équipe ne participe pas à ce match");
-                }
+                _timeoutsUsed[matchId][timeoutDto.TeamId]++;
 
-                // Compter les timeouts déjà pris
-                var currentHalf = match.CurrentQuarter <= 2 ? 1 : 2;
-                var timeoutsInHalf = match.MatchEvents
-                    .OfType<TimeoutEvent>()
-                    .Count(t => t.TeamId == teamId &&
-                           (currentHalf == 1 ? t.Quarter <= 2 : t.Quarter > 2));
-
-                if (timeoutsInHalf >= MAX_TIMEOUTS_PER_HALF)
-                {
-                    throw new InvalidOperationException($"L'équipe a déjà utilisé ses {MAX_TIMEOUTS_PER_HALF} timeouts pour cette mi-temps");
-                }
-
-                // Créer l'événement de timeout
+                // Création de l'événement
                 var timeoutEvent = new TimeoutEvent
                 {
                     MatchId = matchId,
-                    Match = match,
-                    TeamId = teamId,
-                    Team = team,
-                    Quarter = match.CurrentQuarter,
-                    GameTime = TimeSpan.FromSeconds(match.RemainingTimeSeconds),
+                    TeamId = timeoutDto.TeamId,
+                    Quarter = timeoutDto.Quarter,
+                    GameClockSeconds = timeoutDto.GameClockSeconds,
                     CreatedAt = DateTime.UtcNow,
-                    CreatedById = 1 // TODO: Récupérer l'utilisateur actuel
+                    CreatedById = encoderId
                 };
 
-                // Ajouter aussi dans GameActions pour compatibilité
+                _unitOfWork.MatchEvents.Add(timeoutEvent);
+
+                // Création de l'action de jeu
                 var gameAction = new GameAction
                 {
                     MatchId = matchId,
                     ActionType = "Timeout",
-                    Quarter = match.CurrentQuarter,
-                    GameTime = TimeSpan.FromSeconds(match.RemainingTimeSeconds),
+                    Quarter = timeoutDto.Quarter,
+                    GameTime = TimeSpan.FromSeconds(timeoutDto.GameClockSeconds),
                     CreatedAt = DateTime.UtcNow
                 };
 
-                _context.MatchEvents.Add(timeoutEvent);
-                _context.GameActions.Add(gameAction);
-                await _context.SaveChangesAsync();
+                _unitOfWork.GameActions.Add(gameAction);
+                await _unitOfWork.CompleteAsync();
 
-                _logger.LogInformation("Timeout enregistré pour l'équipe {TeamName} au match {MatchId}",
-                    team.Name, matchId);
+                var remaining = 3 - _timeoutsUsed[matchId][timeoutDto.TeamId];
+                _logger.LogInformation("Timeout pour équipe {TeamId}. Restants: {Remaining}",
+                    timeoutDto.TeamId, remaining);
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de l'enregistrement du timeout pour le match {MatchId}", matchId);
+                _logger.LogError(ex, "Erreur lors de l'enregistrement du timeout");
                 return false;
             }
         }
 
         /// <summary>
-        /// Récupère les informations de score en direct
+        /// Change le quart-temps
         /// </summary>
-        public async Task<LiveScoreUpdateDto> GetLiveScoreAsync(int matchId)
+        public async Task<bool> ChangeQuarterAsync(int matchId, int newQuarter)
         {
             try
             {
-                var match = await _context.Matches
-                    .Include(m => m.HomeTeam)
-                        .ThenInclude(t => t != null ? t.Players : null)
-                    .Include(m => m.AwayTeam)
-                        .ThenInclude(t => t != null ? t.Players : null)
-                    .Include(m => m.Lineups)
-                        .ThenInclude(l => l.Player)
-                    .Include(m => m.MatchEvents)
-                        .ThenInclude(e => e.Player)
-                    .FirstOrDefaultAsync(m => m.Id == matchId);
-
+                var match = _unitOfWork.Matches.GetById(matchId);
                 if (match == null)
                 {
-                    _logger.LogWarning("Match {MatchId} non trouvé", matchId);
-                    return new LiveScoreUpdateDto(); // Retourner un objet vide au lieu de null
+                    return false;
                 }
 
-                // Récupérer les joueurs sur le terrain
-                var homePlayersOnCourt = await GetPlayersOnCourtAsync(matchId, match.HomeTeamId);
-                var awayPlayersOnCourt = await GetPlayersOnCourtAsync(matchId, match.AwayTeamId);
-
-                var liveScoreDto = new LiveScoreUpdateDto
+                // Validation (support des prolongations jusqu'à 10)
+                if (newQuarter < 1 || newQuarter > 10)
                 {
-                    MatchId = matchId,
-                    HomeTeamScore = match.HomeTeamScore,
-                    AwayTeamScore = match.AwayTeamScore,
-                    CurrentQuarter = match.CurrentQuarter,
-                    RemainingTimeSeconds = match.RemainingTimeSeconds,
-                    Status = match.Status.ToString(),
-                    TeamsOnCourt = new TeamsOnCourtDto
-                    {
-                        HomeTeamPlayers = homePlayersOnCourt,
-                        AwayTeamPlayers = awayPlayersOnCourt
-                    }
-                };
+                    _logger.LogWarning("Numéro de quart-temps invalide: {Quarter}", newQuarter);
+                    return false;
+                }
 
-                return liveScoreDto;
+                // Mettre à jour le temps de jeu de tous les joueurs sur le terrain
+                var playersOnCourt = _unitOfWork.MatchLineups
+                    .Find(ml => ml.MatchId == matchId && ml.IsOnCourt)
+                    .ToList();
+
+                foreach (var player in playersOnCourt)
+                {
+                    player.UpdatePlayingTime();
+                    _unitOfWork.MatchLineups.Update(player);
+                }
+
+                match.CurrentQuarter = newQuarter;
+
+                // Réinitialiser le chrono
+                int duration = newQuarter <= 4
+                    ? match.QuarterDurationMinutes
+                    : 5; // Prolongations de 5 minutes
+
+                match.RemainingTimeSeconds = duration * 60;
+
+                _unitOfWork.Matches.Update(match);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Passage au quart-temps {Quarter} pour match {MatchId}",
+                    newQuarter, matchId);
+
+                return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la récupération du score en direct pour le match {MatchId}", matchId);
-                return new LiveScoreUpdateDto(); // Retourner un objet vide au lieu de null
+                _logger.LogError(ex, "Erreur lors du changement de quart-temps");
+                return false;
             }
         }
 
         /// <summary>
-        /// Méthode privée pour récupérer les joueurs sur le terrain
+        /// Démarre un match avec validation des 5 de base
         /// </summary>
-        private async Task<List<PlayerOnCourtDto>> GetPlayersOnCourtAsync(int matchId, int teamId)
+        public async Task<bool> StartMatchAsync(int matchId)
         {
             try
             {
-                // Récupérer les 5 de base ou les derniers joueurs entrés
-                var starters = await _context.MatchLineups
-                    .Include(ml => ml.Player)
-                    .Where(ml => ml.MatchId == matchId && ml.TeamId == teamId && ml.IsStarter)
-                    .Select(ml => ml.Player)
-                    .ToListAsync();
-
-                // Appliquer les substitutions
-                var substitutions = await _context.Set<SubstitutionEvent>()
-                    .Where(s => s.MatchId == matchId)
-                    .OrderBy(s => s.Quarter)
-                    .ThenBy(s => s.GameTime)
-                    .ToListAsync();
-
-                var playersOnCourt = starters.Where(p => p != null).ToList();
-
-                foreach (var sub in substitutions)
+                var match = _unitOfWork.Matches.GetById(matchId);
+                if (match == null || match.Status != MatchStatus.Scheduled)
                 {
-                    var playerOut = playersOnCourt.FirstOrDefault(p => p != null && p.Id == sub.PlayerOutId);
-                    if (playerOut != null)
-                    {
-                        playersOnCourt.Remove(playerOut);
-                        var playerIn = await _context.Players.FindAsync(sub.PlayerInId);
-                        if (playerIn != null)
-                        {
-                            playersOnCourt.Add(playerIn);
-                        }
-                    }
+                    _logger.LogWarning("Match {MatchId} ne peut pas être démarré", matchId);
+                    return false;
                 }
 
-                // Calculer les statistiques pour chaque joueur
-                var playerDtos = new List<PlayerOnCourtDto>();
-                foreach (var player in playersOnCourt.Take(PLAYERS_ON_COURT))
+                // Vérifier les 5 de base pour chaque équipe
+                var homeStarters = _unitOfWork.MatchLineups
+                    .Find(ml => ml.MatchId == matchId && ml.TeamId == match.HomeTeamId && ml.IsStarter)
+                    .ToList();
+
+                var awayStarters = _unitOfWork.MatchLineups
+                    .Find(ml => ml.MatchId == matchId && ml.TeamId == match.AwayTeamId && ml.IsStarter)
+                    .ToList();
+
+                if (homeStarters.Count != 5 || awayStarters.Count != 5)
                 {
-                    if (player == null) continue;
-
-                    var fouls = await _context.Set<FoulEvent>()
-                        .CountAsync(f => f.MatchId == matchId && f.PlayerId == player.Id);
-
-                    var points = await _context.Set<BasketScoredEvent>()
-                        .Where(b => b.MatchId == matchId && b.PlayerId == player.Id)
-                        .SumAsync(b => b.Points);
-
-                    playerDtos.Add(new PlayerOnCourtDto
-                    {
-                        PlayerId = player.Id,
-                        PlayerName = player.FullName,
-                        JerseyNumber = player.JerseyNumber,
-                        PersonalFouls = fouls,
-                        Points = points
-                    });
+                    _logger.LogWarning("Les 5 de base ne sont pas complets");
+                    return false;
                 }
 
-                return playerDtos;
+                // Mettre les 5 de base sur le terrain
+                foreach (var starter in homeStarters.Concat(awayStarters))
+                {
+                    starter.EnterCourt(1);
+                    _unitOfWork.MatchLineups.Update(starter);
+                }
+
+                // Démarrer le match
+                match.Status = MatchStatus.InProgress;
+                match.StartTime = DateTime.UtcNow;
+                match.CurrentQuarter = 1;
+                match.RemainingTimeSeconds = match.QuarterDurationMinutes * 60;
+
+                _unitOfWork.Matches.Update(match);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Match {MatchId} démarré", matchId);
+                return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la récupération des joueurs sur le terrain");
-                return new List<PlayerOnCourtDto>();
+                _logger.LogError(ex, "Erreur lors du démarrage du match");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Termine un match
+        /// </summary>
+        public async Task<bool> EndMatchAsync(int matchId)
+        {
+            try
+            {
+                var match = _unitOfWork.Matches.GetById(matchId);
+                if (match == null || match.Status != MatchStatus.InProgress)
+                {
+                    return false;
+                }
+
+                // Mettre à jour le temps de jeu final
+                var playersOnCourt = _unitOfWork.MatchLineups
+                    .Find(ml => ml.MatchId == matchId && ml.IsOnCourt)
+                    .ToList();
+
+                foreach (var player in playersOnCourt)
+                {
+                    player.ExitCourt();
+                    _unitOfWork.MatchLineups.Update(player);
+                }
+
+                match.Status = MatchStatus.Finished;
+                match.EndTime = DateTime.UtcNow;
+
+                _unitOfWork.Matches.Update(match);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Match {MatchId} terminé. Score: {HomeScore}-{AwayScore}",
+                    matchId, match.HomeTeamScore, match.AwayTeamScore);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la fin du match");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Récupère le statut en direct d'un match
+        /// </summary>
+        public async Task<MatchLiveStatusDto> GetMatchStatusAsync(int matchId)
+        {
+            var match = _unitOfWork.Matches.GetById(matchId);
+            if (match == null)
+            {
+                return new MatchLiveStatusDto { MatchId = matchId, IsActive = false };
+            }
+
+            var homePlayersOnCourt = _unitOfWork.MatchLineups
+                .Find(ml => ml.MatchId == matchId && ml.TeamId == match.HomeTeamId && ml.IsOnCourt)
+                .Select(ml => new PlayerOnCourtDto
+                {
+                    PlayerId = ml.PlayerId,
+                    PlayerName = ml.Player?.FullName ?? "Unknown",
+                    JerseyNumber = ml.Player?.JerseyNumber ?? 0,
+                    PersonalFouls = ml.PersonalFouls,
+                    Points = ml.Points
+                })
+                .ToList();
+
+            var awayPlayersOnCourt = _unitOfWork.MatchLineups
+                .Find(ml => ml.MatchId == matchId && ml.TeamId == match.AwayTeamId && ml.IsOnCourt)
+                .Select(ml => new PlayerOnCourtDto
+                {
+                    PlayerId = ml.PlayerId,
+                    PlayerName = ml.Player?.FullName ?? "Unknown",
+                    JerseyNumber = ml.Player?.JerseyNumber ?? 0,
+                    PersonalFouls = ml.PersonalFouls,
+                    Points = ml.Points
+                })
+                .ToList();
+
+            // Calculer les timeouts restants
+            int homeTimeoutsRemaining = 3;
+            int awayTimeoutsRemaining = 3;
+
+            if (_timeoutsUsed.ContainsKey(matchId))
+            {
+                if (_timeoutsUsed[matchId].ContainsKey(match.HomeTeamId))
+                    homeTimeoutsRemaining = 3 - _timeoutsUsed[matchId][match.HomeTeamId];
+
+                if (_timeoutsUsed[matchId].ContainsKey(match.AwayTeamId))
+                    awayTimeoutsRemaining = 3 - _timeoutsUsed[matchId][match.AwayTeamId];
+            }
+
+            return await Task.FromResult(new MatchLiveStatusDto
+            {
+                MatchId = matchId,
+                IsActive = match.Status == MatchStatus.InProgress,
+                Status = match.Status.ToString(),
+                CurrentQuarter = match.CurrentQuarter,
+                RemainingTimeSeconds = match.RemainingTimeSeconds,
+                HomeTeamScore = match.HomeTeamScore,
+                AwayTeamScore = match.AwayTeamScore,
+                HomeTeamPlayers = homePlayersOnCourt,
+                AwayTeamPlayers = awayPlayersOnCourt,
+                HomeTeamTimeoutsRemaining = homeTimeoutsRemaining,
+                AwayTeamTimeoutsRemaining = awayTimeoutsRemaining
+            });
+        }
+
+        /// <summary>
+        /// Met à jour le chronomètre du match
+        /// </summary>
+        public async Task<bool> UpdateGameClockAsync(int matchId, int remainingSeconds)
+        {
+            try
+            {
+                var match = _unitOfWork.Matches.GetById(matchId);
+                if (match == null || match.Status != MatchStatus.InProgress)
+                {
+                    return false;
+                }
+
+                if (remainingSeconds < 0)
+                {
+                    remainingSeconds = 0;
+                }
+
+                match.RemainingTimeSeconds = remainingSeconds;
+                _unitOfWork.Matches.Update(match);
+
+                await _unitOfWork.CompleteAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la mise à jour du chronomètre");
+                return false;
             }
         }
     }

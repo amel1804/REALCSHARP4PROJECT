@@ -11,35 +11,46 @@ namespace BasketballLiveScore.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Le nom de l'équipe est obligatoire")]
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
 
         [MaxLength(100)]
         public string City { get; set; } = string.Empty;
 
-        // Ajout des propriétés manquantes
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Coach { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        [MaxLength(200)]
+        public string Arena { get; set; } = string.Empty;
+
+        [MaxLength(500)]
+        public string LogoUrl { get; set; } = string.Empty;
+
+        [MaxLength(10)]
+        public string PrimaryColor { get; set; } = "#000000";
+
+        [MaxLength(10)]
+        public string SecondaryColor { get; set; } = "#FFFFFF";
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public bool IsActive { get; set; } = true;
+
+        // Navigation properties
+        public virtual List<Player> Players { get; set; } = new();
+        public virtual List<Match> HomeMatches { get; set; } = new();
+        public virtual List<Match> AwayMatches { get; set; } = new();
+        public virtual List<MatchLineup> MatchLineups { get; set; } = new();
 
         /// <summary>
-        /// Liste des joueurs de l'équipe
-        /// Navigation property comme vu dans ef_relations.cs
+        /// Obtient le nom complet de l'équipe (Ville + Nom)
         /// </summary>
-        public List<Player> Players { get; set; } = new();
+        public string FullName => string.IsNullOrWhiteSpace(City) ? Name : $"{City} {Name}";
 
         /// <summary>
-        /// Matchs à domicile
+        /// Obtient le nombre total de matchs joués
         /// </summary>
-        public List<Match> HomeMatches { get; set; } = new();
-
-        /// <summary>
-        /// Matchs à l'extérieur
-        /// </summary>
-        public List<Match> AwayMatches { get; set; } = new();
-
-        public List<MatchLineup> MatchLineups { get; set; } = new List<MatchLineup>();
-
+        public int TotalMatches => HomeMatches.Count + AwayMatches.Count;
     }
 }

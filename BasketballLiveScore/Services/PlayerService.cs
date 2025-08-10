@@ -4,256 +4,311 @@ using System.Linq;
 using System.Threading.Tasks;
 using BasketballLiveScore.DTOs.Player;
 using BasketballLiveScore.Models;
-using BasketballLiveScore.Models.Enums;
 using BasketballLiveScore.Repositories.Interfaces;
 using BasketballLiveScore.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace BasketballLiveScore.Services
 {
     /// <summary>
-    /// Service pour la gestion des joueurs
+    /// Interface pour le service de gestion des joueurs
+    /// </summary>
+    public interface IPlayerService
+    {
+        Task<Player> GetByIdAsync(int id);
+        Task<IEnumerable<Player>> GetAllAsync();
+        Task<IEnumerable<Player>> GetByTeamAsync(int teamId);
+        Task<Player> CreateAsync(PlayerDto playerDto);
+        Task<Player> UpdateAsync(int id, PlayerDto playerDto);
+        Task<bool> DeleteAsync(int id);
+        Task<PlayerMatchStatsDto> GetPlayerMatchStatsAsync(int playerId, int matchId);
+        Task<bool> UpdateJerseyNumberAsync(int playerId, int newNumber);
+    }
+
+    /// <summary>
+    /// Service pour la gestion des joueurs de basketball
     /// </summary>
     public class PlayerService : IPlayerService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<PlayerService> _logger;
 
-        public PlayerService(IUnitOfWork unitOfWork)
+        public PlayerService(IUnitOfWork unitOfWork, ILogger<PlayerService> logger)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        /// <summary>
-        /// Récupère tous les joueurs
-        /// </summary>
-        public async Task<IEnumerable<PlayerDto>> GetAllPlayersAsync()
+        public async Task<Player> GetByIdAsync(int id)
         {
-            var players = await _unitOfWork.Players.GetAllAsync();
-
-            return players.Select(ConvertToDto);
-        }
-
-        /// <summary>
-        /// Récupère un joueur par son identifiant
-        /// </summary>
-        public async Task<PlayerDto> GetPlayerByIdAsync(int id)
-        {
-            var player = await _unitOfWork.Players.GetByIdAsync(id);
-
-            if (player == null)
+            try
+            {
+                var player = _unitOfWork.Players.GetPlayerWithStats(id);
+                return await Task.FromResult(player);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération du joueur {PlayerId}", id);
                 return null;
-
-            return ConvertToDto(player);
-        }
-
-        /// <summary>
-        /// Récupère les joueurs d'une équipe
-        /// </summary>
-        public async Task<IEnumerable<PlayerDto>> GetPlayersByTeamAsync(int teamId)
-        {
-            var players = await _unitOfWork.Players.GetPlayersByTeamAsync(teamId);
-
-            return players.Select(ConvertToDto);
-        }
-
-        /// <summary>
-        /// Crée un nouveau joueur
-        /// </summary>
-        public async Task<PlayerDto> CreatePlayerAsync(CreatePlayerDto createPlayerDto)
-        {
-            if (createPlayerDto == null)
-                throw new ArgumentNullException(nameof(createPlayerDto));
-
-            // Vérifier que l'équipe existe
-            var team = await _unitOfWork.Teams.GetByIdAsync(createPlayerDto.TeamId);
-            if (team == null)
-                throw new InvalidOperationException($"L'équipe avec l'ID {createPlayerDto.TeamId} n'existe pas");
-
-            // Vérifier que le numéro n'est pas déjà pris dans l'équipe
-            if (await _unitOfWork.Players.IsNumberTakenInTeamAsync(createPlayerDto.JerseyNumber, createPlayerDto.TeamId))
-                throw new InvalidOperationException($"Le numéro {createPlayerDto.JerseyNumber} est déjà utilisé dans cette équipe");
-
-            var player = new Player
-            {
-                FirstName = createPlayerDto.FirstName,
-                LastName = createPlayerDto.LastName,
-                JerseyNumber = createPlayerDto.JerseyNumber,
-                TeamId = createPlayerDto.TeamId
-            };
-
-            await _unitOfWork.Players.AddAsync(player);
-            await _unitOfWork.CompleteAsync();
-
-            return ConvertToDto(player);
-        }
-
-        /// <summary>
-        /// Met à jour un joueur existant
-        /// </summary>
-        public async Task<PlayerDto> UpdatePlayerAsync(int id, UpdatePlayerDto updatePlayerDto)
-        {
-            if (updatePlayerDto == null)
-                throw new ArgumentNullException(nameof(updatePlayerDto));
-
-            var player = await _unitOfWork.Players.GetByIdAsync(id);
-
-            if (player == null)
-                return null;
-
-            // Mise à jour des propriétés si elles sont fournies
-            if (!string.IsNullOrEmpty(updatePlayerDto.FirstName))
-                player.FirstName = updatePlayerDto.FirstName;
-
-            if (!string.IsNullOrEmpty(updatePlayerDto.LastName))
-                player.LastName = updatePlayerDto.LastName;
-
-            if (updatePlayerDto.JerseyNumber.HasValue)
-            {
-                // Vérifier que le nouveau numéro n'est pas déjà pris
-                if (player.JerseyNumber != updatePlayerDto.JerseyNumber.Value)
-                {
-                    if (await _unitOfWork.Players.IsNumberTakenInTeamAsync(updatePlayerDto.JerseyNumber.Value, player.TeamId))
-                        throw new InvalidOperationException($"Le numéro {updatePlayerDto.JerseyNumber.Value} est déjà utilisé dans cette équipe");
-
-                    player.JerseyNumber = updatePlayerDto.JerseyNumber.Value;
-                }
             }
-
-            if (updatePlayerDto.TeamId.HasValue && updatePlayerDto.TeamId.Value != player.TeamId)
-            {
-                // Vérifier que la nouvelle équipe existe
-                var team = await _unitOfWork.Teams.GetByIdAsync(updatePlayerDto.TeamId.Value);
-                if (team == null)
-                    throw new InvalidOperationException($"L'équipe avec l'ID {updatePlayerDto.TeamId.Value} n'existe pas");
-
-                // Vérifier que le numéro n'est pas déjà pris dans la nouvelle équipe
-                if (await _unitOfWork.Players.IsNumberTakenInTeamAsync(player.JerseyNumber, updatePlayerDto.TeamId.Value))
-                    throw new InvalidOperationException($"Le numéro {player.JerseyNumber} est déjà utilisé dans l'équipe cible");
-
-                player.TeamId = updatePlayerDto.TeamId.Value;
-            }
-
-            _unitOfWork.Players.Update(player);
-            await _unitOfWork.CompleteAsync();
-
-            return ConvertToDto(player);
         }
 
-        /// <summary>
-        /// Supprime un joueur
-        /// </summary>
-        public async Task<bool> DeletePlayerAsync(int id)
+        public async Task<IEnumerable<Player>> GetAllAsync()
         {
-            var player = await _unitOfWork.Players.GetByIdAsync(id);
-
-            if (player == null)
-                return false;
-
-            _unitOfWork.Players.Remove(player);
-            await _unitOfWork.CompleteAsync();
-
-            return true;
-        }
-        /// <summary>
-        /// Définit les 5 joueurs de base pour un match
-        /// </summary>
-        public async Task SetStartingFiveAsync(int matchId, int teamId, List<int> playerIds)
-        {
-            const int STARTING_FIVE_COUNT = 5;
-
-            if (playerIds == null || playerIds.Count != STARTING_FIVE_COUNT)
+            try
             {
-                throw new ArgumentException($"Exactement {STARTING_FIVE_COUNT} joueurs doivent être sélectionnés");
+                var players = _unitOfWork.Players.GetAll();
+                return await Task.FromResult(players);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération des joueurs");
+                return new List<Player>();
+            }
+        }
+
+        public async Task<IEnumerable<Player>> GetByTeamAsync(int teamId)
+        {
+            try
+            {
+                var players = _unitOfWork.Players.GetPlayersByTeam(teamId);
+                return await Task.FromResult(players);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération des joueurs de l'équipe {TeamId}", teamId);
+                return new List<Player>();
+            }
+        }
+
+        public async Task<Player> CreateAsync(PlayerDto playerDto)
+        {
+            if (playerDto == null)
+                throw new ArgumentNullException(nameof(playerDto));
 
             try
             {
-                var match = await _unitOfWork.Matches.GetMatchWithDetailsAsync(matchId);
-                if (match == null)
+                // Validation
+                if (string.IsNullOrWhiteSpace(playerDto.FirstName) || string.IsNullOrWhiteSpace(playerDto.LastName))
                 {
-                    throw new InvalidOperationException($"Match {matchId} non trouvé");
+                    throw new ArgumentException("Le prénom et le nom sont obligatoires");
                 }
 
-                // Vérifier que tous les joueurs existent et sont dans l'équipe
-                foreach (var playerId in playerIds)
+                if (playerDto.JerseyNumber < 0 || playerDto.JerseyNumber > 99)
                 {
-                    var player = await _unitOfWork.Players.GetByIdAsync(playerId);
-                    if (player == null || player.TeamId != teamId)
-                    {
-                        throw new InvalidOperationException($"Joueur {playerId} invalide ou pas dans l'équipe {teamId}");
-                    }
+                    throw new ArgumentException("Le numéro de maillot doit être entre 0 et 99");
                 }
 
-                // Supprimer les anciens starters de cette équipe
-                var oldStarters = match.Lineups.Where(l => l.TeamId == teamId && l.IsStarter).ToList();
-                foreach (var oldStarter in oldStarters)
+                // Vérifier l'équipe existe
+                var team = _unitOfWork.Teams.GetById(playerDto.TeamId);
+                if (team == null)
                 {
-                    match.Lineups.Remove(oldStarter);
+                    throw new InvalidOperationException($"L'équipe avec l'ID {playerDto.TeamId} n'existe pas");
                 }
 
-                // Ajouter les nouveaux starters
-                foreach (var playerId in playerIds)
+                // Vérifier l'unicité du numéro dans l'équipe
+                var existingNumber = _unitOfWork.Players
+                    .Find(p => p.TeamId == playerDto.TeamId && p.JerseyNumber == playerDto.JerseyNumber)
+                    .FirstOrDefault();
+
+                if (existingNumber != null)
                 {
-                    match.Lineups.Add(new MatchLineup
-                    {
-                        MatchId = matchId,
-                        PlayerId = playerId,
-                        TeamId = teamId,
-                        IsStarter = true
-                    });
+                    throw new InvalidOperationException($"Le numéro {playerDto.JerseyNumber} est déjà utilisé dans cette équipe");
                 }
 
+                var player = new Player
+                {
+                    FirstName = playerDto.FirstName,
+                    LastName = playerDto.LastName,
+                    JerseyNumber = playerDto.JerseyNumber,
+                    TeamId = playerDto.TeamId
+                };
+
+                _unitOfWork.Players.Add(player);
                 await _unitOfWork.CompleteAsync();
 
-                // Si vous avez un logger
-                // _logger.LogInformation("5 de base défini pour l'équipe {TeamId} dans le match {MatchId}", teamId, matchId);
+                _logger.LogInformation("Joueur {PlayerName} créé avec succès", player.FullName);
+                return player;
             }
-            catch (Exception ex) when (!(ex is ArgumentException || ex is InvalidOperationException))
+            catch (Exception ex)
             {
-                // Si vous avez un logger
-                // _logger.LogError(ex, "Erreur lors de la définition du 5 de base");
+                _logger.LogError(ex, "Erreur lors de la création du joueur");
                 throw;
             }
         }
 
-        /// <summary>
-        /// Récupère les statistiques d'un joueur pour un match
-        /// </summary>
-        public async Task<PlayerMatchStatsDto> GetPlayerMatchStatsAsync(int playerId, int matchId)
+        public async Task<Player> UpdateAsync(int id, PlayerDto playerDto)
         {
-            var player = await _unitOfWork.Players.GetByIdAsync(playerId);
-            if (player == null)
-                return null;
+            if (playerDto == null)
+                throw new ArgumentNullException(nameof(playerDto));
 
-            var matchEvents = await _unitOfWork.MatchEvents. GetMatchEventsAsync(matchId);
-            var playerEvents = matchEvents.Where(e => e.PlayerId == playerId);
-
-            return new PlayerMatchStatsDto
+            try
             {
-                PlayerId = player.Id,
-                PlayerName = player.FullName,
-                JerseyNumber = player.JerseyNumber,
-                Points = playerEvents.Where(e => e.EventType == MatchEventType.Basket).Sum(e => e.Points),
-                Fouls = playerEvents.Count(e => e.EventType == MatchEventType.Foul),
-                MinutesPlayed = 0, // À calculer selon la logique métier
-                IsStarter = false // À déterminer selon le lineup du match
-            };
+                var player = _unitOfWork.Players.GetById(id);
+                if (player == null)
+                {
+                    _logger.LogWarning("Joueur {PlayerId} non trouvé", id);
+                    return null;
+                }
+
+                // Validation du numéro si changé
+                if (player.JerseyNumber != playerDto.JerseyNumber)
+                {
+                    var existingNumber = _unitOfWork.Players
+                        .Find(p => p.TeamId == player.TeamId &&
+                                   p.JerseyNumber == playerDto.JerseyNumber &&
+                                   p.Id != id)
+                        .FirstOrDefault();
+
+                    if (existingNumber != null)
+                    {
+                        throw new InvalidOperationException($"Le numéro {playerDto.JerseyNumber} est déjà utilisé dans cette équipe");
+                    }
+                }
+
+                // Mise à jour des propriétés
+                player.FirstName = playerDto.FirstName;
+                player.LastName = playerDto.LastName;
+                player.JerseyNumber = playerDto.JerseyNumber;
+
+                if (playerDto.TeamId != player.TeamId)
+                {
+                    // Changement d'équipe
+                    var newTeam = _unitOfWork.Teams.GetById(playerDto.TeamId);
+                    if (newTeam == null)
+                    {
+                        throw new InvalidOperationException($"L'équipe avec l'ID {playerDto.TeamId} n'existe pas");
+                    }
+                    player.TeamId = playerDto.TeamId;
+                }
+
+                _unitOfWork.Players.Update(player);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Joueur {PlayerId} mis à jour avec succès", id);
+                return player;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la mise à jour du joueur {PlayerId}", id);
+                throw;
+            }
         }
 
-        /// <summary>
-        /// Méthode privée pour convertir un Player en PlayerDto
-        /// </summary>
-        private PlayerDto ConvertToDto(Player player)
+        public async Task<bool> DeleteAsync(int id)
         {
-            return new PlayerDto
+            try
             {
-                Id = player.Id,
-                FirstName = player.FirstName,
-                LastName = player.LastName,
-                FullName = player.FullName,
-                JerseyNumber = player.JerseyNumber,
-                TeamId = player.TeamId,
-                TeamName = player.Team?.Name ?? string.Empty
-            };
+                var player = _unitOfWork.Players.GetById(id);
+                if (player == null)
+                {
+                    _logger.LogWarning("Joueur {PlayerId} non trouvé pour suppression", id);
+                    return false;
+                }
+
+                // Vérifier qu'il n'y a pas de statistiques de match associées
+                var hasMatchStats = _unitOfWork.MatchLineups
+                    .Find(ml => ml.PlayerId == id)
+                    .Any();
+
+                if (hasMatchStats)
+                {
+                    _logger.LogWarning("Impossible de supprimer le joueur {PlayerId} car il a des statistiques de match", id);
+                    return false;
+                }
+
+                _unitOfWork.Players.Remove(player);
+                var result = await _unitOfWork.CompleteAsync();
+
+                if (result > 0)
+                {
+                    _logger.LogInformation("Joueur {PlayerId} supprimé avec succès", id);
+                }
+
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la suppression du joueur {PlayerId}", id);
+                return false;
+            }
+        }
+
+        public async Task<PlayerMatchStatsDto> GetPlayerMatchStatsAsync(int playerId, int matchId)
+        {
+            try
+            {
+                var lineup = _unitOfWork.MatchLineups.GetPlayerLineup(matchId, playerId);
+                if (lineup == null)
+                {
+                    _logger.LogWarning("Statistiques non trouvées pour le joueur {PlayerId} dans le match {MatchId}",
+                        playerId, matchId);
+                    return null;
+                }
+
+                var stats = new PlayerMatchStatsDto
+                {
+                    PlayerId = playerId,
+                    PlayerName = lineup.Player?.FullName ?? "Unknown",
+                    JerseyNumber = lineup.Player?.JerseyNumber ?? 0,
+                    Points = lineup.Points,
+                    Fouls = lineup.PersonalFouls,
+                    MinutesPlayed = lineup.PlayingTimeSeconds / 60,
+                    IsStarter = lineup.IsStarter
+                };
+
+                return await Task.FromResult(stats);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération des statistiques du joueur");
+                return null;
+            }
+        }
+
+        public async Task<bool> UpdateJerseyNumberAsync(int playerId, int newNumber)
+        {
+            try
+            {
+                if (newNumber < 0 || newNumber > 99)
+                {
+                    _logger.LogWarning("Numéro de maillot invalide: {Number}", newNumber);
+                    return false;
+                }
+
+                var player = _unitOfWork.Players.GetById(playerId);
+                if (player == null)
+                {
+                    _logger.LogWarning("Joueur {PlayerId} non trouvé", playerId);
+                    return false;
+                }
+
+                // Vérifier l'unicité du numéro dans l'équipe
+                var existingNumber = _unitOfWork.Players
+                    .Find(p => p.TeamId == player.TeamId &&
+                               p.JerseyNumber == newNumber &&
+                               p.Id != playerId)
+                    .FirstOrDefault();
+
+                if (existingNumber != null)
+                {
+                    _logger.LogWarning("Le numéro {Number} est déjà utilisé dans l'équipe", newNumber);
+                    return false;
+                }
+
+                player.JerseyNumber = newNumber;
+                _unitOfWork.Players.Update(player);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Numéro de maillot du joueur {PlayerId} changé en {Number}",
+                    playerId, newNumber);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors du changement de numéro de maillot");
+                return false;
+            }
         }
     }
 }

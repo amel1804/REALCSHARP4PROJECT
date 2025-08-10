@@ -13,14 +13,14 @@ namespace BasketballLiveScore.Services
     /// </summary>
     public class DeleteService : IDeleteService
     {
-        private readonly BasketballDbContext _context; // Point-virgule manquant
+        private readonly BasketballDbContext _context;
 
         /// <summary>
         /// Constructeur avec injection du DbContext
         /// </summary>
         public DeleteService(BasketballDbContext context)
         {
-            _context = context; // Correction : utiliser _context au lieu de _dataContext
+            _context = context;
         }
 
         /// <summary>
