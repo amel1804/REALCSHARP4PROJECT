@@ -1,35 +1,27 @@
-// Pages/Login.cshtml.cs
-using BasketballLiveScore.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
-using System.Net.Http;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
+using BasketballLiveScore.DTOs;
 
 namespace BasketballLiveScore.Pages
 {
     /// <summary>
-    /// Page de connexion utilisant l'authentification JWT
-    /// Basé sur le pattern vu dans les notes de cours sur Authorization with JWT
+    /// Page de connexion - Gère l'authentification des utilisateurs
+    /// Utilise HttpClient comme dans les exemples de cours
     /// </summary>
     public class LoginModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
 
-        // Propriétés pour le binding du formulaire
-        [BindProperty]
-        public UserConnectionDto LoginInput { get; set; } = new UserConnectionDto();
+        // Constantes pour éviter les valeurs magiques
+        private const string HTTP_CLIENT_NAME = "BasketballAPI";
+        private const string TOKEN_SESSION_KEY = "Token";
+        private const string USERNAME_SESSION_KEY = "Username";
+        private const string ROLE_SESSION_KEY = "Role";
 
-        // Message d'erreur à afficher
-        public string ErrorMessage { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Constructeur avec injection de dépendances
-        /// Suit le pattern vu dans les codes de cours DependencyInjection
-        /// </summary>
         public LoginModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
@@ -37,17 +29,48 @@ namespace BasketballLiveScore.Pages
         }
 
         /// <summary>
-        /// Affichage de la page de login
+        /// Modèle de liaison pour le formulaire de connexion
         /// </summary>
-        public void OnGet()
+        [BindProperty]
+        public LoginInputModel LoginInput { get; set; } = new LoginInputModel();
+
+        /// <summary>
+        /// Message d'erreur à afficher
+        /// </summary>
+        public string ErrorMessage { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Classe interne pour les données du formulaire - Pattern vu en cours
+        /// </summary>
+        public class LoginInputModel
         {
-            // Réinitialiser le formulaire
-            LoginInput = new UserConnectionDto();
+            [Required(ErrorMessage = "Le nom d'utilisateur est obligatoire")]
+            [Display(Name = "Nom d'utilisateur")]
+            public string Name { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "Le mot de passe est obligatoire")]
+            [DataType(DataType.Password)]
+            [Display(Name = "Mot de passe")]
+            public string Password { get; set; } = string.Empty;
         }
 
         /// <summary>
-        /// Traitement de la soumission du formulaire de connexion
-        /// Communique avec l'API pour obtenir le JWT token
+        /// Gestion du GET - Affichage du formulaire
+        /// </summary>
+        public IActionResult OnGet()
+        {
+            // Si déjà connecté, rediriger vers le tableau de bord
+            if (HttpContext.Session.GetString(TOKEN_SESSION_KEY) != null)
+            {
+                return RedirectToPage("/Dashboard");
+            }
+
+            return Page();
+        }
+
+        /// <summary>
+        /// Gestion du POST - Traitement de la connexion
+        /// Pattern async/await comme vu dans les cours
         /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
@@ -59,29 +82,39 @@ namespace BasketballLiveScore.Pages
 
             try
             {
-                // Création du client HTTP via la factory (pattern vu en cours)
-                var httpClient = _httpClientFactory.CreateClient("BasketballAPI");
+                // Création du client HTTP - Pattern vu dans les notes HttpClient
+                var client = _httpClientFactory.CreateClient(HTTP_CLIENT_NAME);
 
-                // Sérialisation du DTO en JSON
-                var jsonContent = JsonSerializer.Serialize(LoginInput);
+                // Préparation des données de connexion
+                var loginDto = new UserConnectionDto
+                {
+                    Name = LoginInput.Name,
+                    Password = LoginInput.Password
+                };
+
+                // Sérialisation en JSON
+                var jsonContent = JsonSerializer.Serialize(loginDto);
                 var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-                // Appel à l'API d'authentification
-                var response = await httpClient.PostAsync("/api/Authentication/Login", httpContent);
+                // Appel à l'API
+                var response = await client.PostAsync("api/Authentication/Login", httpContent);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Lecture de la réponse contenant le token
+                    // Lecture de la réponse
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent);
 
                     if (tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.Token))
                     {
-                        // Stockage du token dans la session
-                        HttpContext.Session.SetString("JWTToken", tokenResponse.Token);
-                        HttpContext.Session.SetString("Username", LoginInput.Name);
+                        // Stockage du token et des informations utilisateur en session
+                        HttpContext.Session.SetString(TOKEN_SESSION_KEY, tokenResponse.Token);
+                        HttpContext.Session.SetString(USERNAME_SESSION_KEY, LoginInput.Name);
 
-                        // Redirection vers le dashboard
+                        // Extraction du rôle depuis le token (si nécessaire)
+                        // Pour simplifier, on stocke un rôle par défaut
+                        HttpContext.Session.SetString(ROLE_SESSION_KEY, "Encoder");
+
                         return RedirectToPage("/Dashboard");
                     }
                 }
@@ -97,19 +130,19 @@ namespace BasketballLiveScore.Pages
             catch (HttpRequestException ex)
             {
                 // Log de l'erreur en production
-                ErrorMessage = "Impossible de contacter le serveur";
+                ErrorMessage = $"Impossible de contacter le serveur : {ex.Message}";
             }
             catch (Exception ex)
             {
                 // Log de l'erreur en production
-                ErrorMessage = "Une erreur inattendue est survenue";
+                ErrorMessage = $"Une erreur inattendue est survenue : {ex.Message}";
             }
 
             return Page();
         }
 
         /// <summary>
-        /// Classe interne pour désérialiser la réponse du token
+        /// Classe pour désérialiser la réponse du token
         /// </summary>
         private class TokenResponse
         {

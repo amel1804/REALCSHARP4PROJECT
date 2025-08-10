@@ -5,10 +5,10 @@
     "\\Data",
     "\\Models",
     "\\Models\\Events",
-    "\\Properties",
-    "\\Repositories",
-    "\\Services"
+    "\\Pages",
+    "\\Pages\\Shared",
+    "\\Services\\Interfaces"
   ],
-  "SelectedNode": "\\Data",
+  "SelectedNode": "\\Pages\\LiveScore.cshtml",
   "PreviewInSolutionExplorer": false
 }

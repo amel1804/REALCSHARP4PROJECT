@@ -141,3 +141,6 @@ C:\Users\amben\source\repos\GitHub\BasketballLive\REALCSHARP4PROJECT\BasketballL
 C:\Users\amben\source\repos\GitHub\BasketballLive\REALCSHARP4PROJECT\BasketballLiveScore\obj\Debug\net9.0\BasketballLiveScore.pdb
 C:\Users\amben\source\repos\GitHub\BasketballLive\REALCSHARP4PROJECT\BasketballLiveScore\obj\Debug\net9.0\BasketballLiveScore.genruntimeconfig.cache
 C:\Users\amben\source\repos\GitHub\BasketballLive\REALCSHARP4PROJECT\BasketballLiveScore\obj\Debug\net9.0\ref\BasketballLiveScore.dll
+C:\Users\amben\source\repos\GitHub\BasketballLive\REALCSHARP4PROJECT\BasketballLiveScore\bin\Debug\net9.0\BasketballLiveScore.staticwebassets.runtime.json
+C:\Users\amben\source\repos\GitHub\BasketballLive\REALCSHARP4PROJECT\BasketballLiveScore\obj\Debug\net9.0\compressed\opkjqdwa3f-mhgta61qdd.gz
+C:\Users\amben\source\repos\GitHub\BasketballLive\REALCSHARP4PROJECT\BasketballLiveScore\obj\Debug\net9.0\compressed\3wtc7zdnxj-3ws4lma3w6.gz

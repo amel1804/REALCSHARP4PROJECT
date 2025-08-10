@@ -1,0 +1,132 @@
+@page
+@model BasketballLiveScore.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Tableau de bord";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Tableau de bord</h1>
+
+    @* Section des actions rapides *@
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Nouveau Match</h5>
+                    <p class="card-text">Créer et configurer un nouveau match</p>
+                    <a asp-page="/MatchSetup" class="btn btn-primary">Créer un match</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Matchs en cours</h5>
+                    <p class="card-text">@Model.ActiveMatchesCount match(s) en cours</p>
+                    <a asp-page="/LiveScore" class="btn btn-success">Voir les scores</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Historique</h5>
+                    <p class="card-text">@Model.TotalMatchesCount matchs au total</p>
+                    <a href="#matches-list" class="btn btn-info">Voir l'historique</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Liste des matchs récents *@
+    <div class="card" id="matches-list">
+        <div class="card-header">
+            <h3>Matchs récents</h3>
+        </div>
+        <div class="card-body">
+            @if (Model.RecentMatches != null && Model.RecentMatches.Any())
+            {
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Équipe domicile</th>
+                            <th>Score</th>
+                            <th>Équipe visiteur</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var match in Model.RecentMatches)
+                            {
+                        <tr>
+                            <td>@match.ScheduledDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@match.HomeTeamName</td>
+                            <td class="text-center">
+                                <strong>@match.HomeTeamScore - @match.AwayTeamScore</strong>
+                            </td>
+                            <td>@match.AwayTeamName</td>
+                            <td>
+                                @{
+                                            var statusClass = match.Status switch
+                                            {
+                                                "InProgress" => "badge bg-success",
+                                                "Finished" => "badge bg-secondary",
+                                                "Scheduled" => "badge bg-info",
+                                                _ => "badge bg-warning"
+                                            };
+                                            var statusText = match.Status switch
+                                            {
+                                                "InProgress" => "En cours",
+                                                "Finished" => "Terminé",
+                                                "Scheduled" => "Programmé",
+                                                _ => match.Status
+                                            };
+                                }
+                                <span class="@statusClass">@statusText</span>
+                            </td>
+                            <td>
+                                @if (match.Status == "InProgress")
+                                        {
+                                <a asp-page="/LiveScore" asp-route-matchId="@match.Id"
+                                   class="btn btn-sm btn-primary">Encoder</a>
+                                        }
+                                        else if (match.Status == "Scheduled")
+                                        {
+                                <button class="btn btn-sm btn-success"
+                                        onclick="startMatch(@match.Id)">
+                                    Démarrer
+                                </button>
+                                        }
+                                        else
+                                        {
+                                <a href="#" class="btn btn-sm btn-info">Détails</a>
+                                        }
+                            </td>
+                        </tr>
+                            }
+                    </tbody>
+                </table>
+            </div>
+            }
+            else
+            {
+            <p class="text-muted">Aucun match trouvé.</p>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Fonction pour démarrer un match
+        function startMatch(matchId) {
+            if (confirm('Voulez-vous vraiment démarrer ce match ?')) {
+                window.location.href = '/LiveScore?matchId=' + matchId + '&start=true';
+            }
+        }
+    </script>
+}

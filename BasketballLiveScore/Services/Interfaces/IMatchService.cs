@@ -15,5 +15,7 @@ namespace BasketballLiveScore.Services.Interfaces
         void CreateMatch(MatchDto matchDto);
         List<Match> GetAllMatches();
         Match GetMatchById(int id);
+      
+        void UpdateMatch(MatchDto matchDto);
     }
 }

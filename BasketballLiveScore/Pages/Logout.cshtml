@@ -1,0 +1,6 @@
+@page
+@{
+    // Déconnexion - Suppression de la session
+    HttpContext.Session.Clear();
+    Response.Redirect("/Login");
+}

@@ -1,0 +1,74 @@
+/* Styles globaux pour Basketball LiveScore */
+/* Ce fichier contient les styles communs à toute l'application */
+
+/* Variables CSS pour les couleurs du thème */
+:root {
+    --basketball-orange: #FF6B35;
+    --basketball-blue: #004E89;
+    --court-brown: #8B4513;
+}
+
+/* Style de base du body */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Conteneur principal flex pour le layout */
+main {
+    flex: 1;
+}
+
+/* Personnalisation de la barre de navigation */
+.navbar-dark {
+    background-color: #343a40 !important;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--basketball-orange) !important;
+}
+
+/* Style des cartes avec effet hover */
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: transform 0.3s ease-in-out;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+/* Footer fixe en bas */
+.footer {
+    background-color: #f8f9fa;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+/* Classes utilitaires pour les erreurs de validation */
+.field-validation-error {
+    color: #dc3545;
+    font-size: 0.875rem;
+}
+
+.validation-summary-errors {
+    color: #dc3545;
+}
+
+/* Styles pour les tables */
+.table-responsive {
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+/* Animation de chargement */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+}

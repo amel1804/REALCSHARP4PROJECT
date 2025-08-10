@@ -1,0 +1,173 @@
+@page
+@model BasketballLiveScore.Pages.MatchSetupModel
+@{
+    ViewData["Title"] = "Configuration du match";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Configuration d'un nouveau match</h1>
+
+    @* Affichage des erreurs *@
+    @if (!ViewData.ModelState.IsValid)
+    {
+    <div class="alert alert-danger">
+        <div asp-validation-summary="All"></div>
+    </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+    <div class="alert alert-success">
+        @Model.SuccessMessage
+    </div>
+    }
+
+    <form method="post">
+        @* Étape 1: Informations générales *@
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3>1. Informations générales</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="MatchSetup.ScheduledDate">Date et heure du match</label>
+                            <input asp-for="MatchSetup.ScheduledDate" type="datetime-local" class="form-control" required />
+                            <span asp-validation-for="MatchSetup.ScheduledDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="MatchSetup.Location">Lieu</label>
+                            <input asp-for="MatchSetup.Location" class="form-control" placeholder="Gymnase principal" />
+                            <span asp-validation-for="MatchSetup.Location" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Étape 2: Configuration des règles *@
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3>2. Configuration des règles</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label asp-for="MatchSetup.NumberOfQuarters">Nombre de quart-temps</label>
+                            <select asp-for="MatchSetup.NumberOfQuarters" class="form-control">
+                                <option value="4">4 (Standard)</option>
+                                <option value="2">2 (Mi-temps)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label asp-for="MatchSetup.QuarterDurationMinutes">Durée d'un quart-temps (minutes)</label>
+                            <input asp-for="MatchSetup.QuarterDurationMinutes" type="number" class="form-control" min="5" max="20" />
+                            <span asp-validation-for="MatchSetup.QuarterDurationMinutes" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label asp-for="MatchSetup.TimeoutDurationSeconds">Durée d'un timeout (secondes)</label>
+                            <input asp-for="MatchSetup.TimeoutDurationSeconds" type="number" class="form-control" min="30" max="120" />
+                            <span asp-validation-for="MatchSetup.TimeoutDurationSeconds" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Étape 3: Sélection des équipes *@
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3>3. Sélection des équipes</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="MatchSetup.HomeTeamName">Équipe domicile</label>
+                            <input asp-for="MatchSetup.HomeTeamName" class="form-control" placeholder="Nom de l'équipe domicile" required />
+                            <span asp-validation-for="MatchSetup.HomeTeamName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="MatchSetup.AwayTeamName">Équipe visiteur</label>
+                            <input asp-for="MatchSetup.AwayTeamName" class="form-control" placeholder="Nom de l'équipe visiteur" required />
+                            <span asp-validation-for="MatchSetup.AwayTeamName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Étape 4: Sélection des joueurs (5 de base) *@
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3>4. Composition des équipes (5 de base)</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @* Équipe domicile *@
+                    <div class="col-md-6">
+                        <h5>Équipe domicile - 5 de base</h5>
+                        @for (int i = 0; i < 5; i++)
+                        {
+                        <div class="row mb-2">
+                            <div class="col-8">
+                                <input type="text" name="HomeStarters[@i].Name"
+                                       class="form-control"
+                                       placeholder="Nom du joueur @(i + 1)" />
+                            </div>
+                            <div class="col-4">
+                                <input type="number" name="HomeStarters[@i].Number"
+                                       class="form-control"
+                                       placeholder="N°" min="0" max="99" />
+                            </div>
+                        </div>
+                        }
+                    </div>
+
+                    @* Équipe visiteur *@
+                    <div class="col-md-6">
+                        <h5>Équipe visiteur - 5 de base</h5>
+                        @for (int i = 0; i < 5; i++)
+                        {
+                        <div class="row mb-2">
+                            <div class="col-8">
+                                <input type="text" name="AwayStarters[@i].Name"
+                                       class="form-control"
+                                       placeholder="Nom du joueur @(i + 1)" />
+                            </div>
+                            <div class="col-4">
+                                <input type="number" name="AwayStarters[@i].Number"
+                                       class="form-control"
+                                       placeholder="N°" min="0" max="99" />
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Boutons d'action *@
+        <div class="row mb-4">
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-success btn-lg">Créer le match</button>
+                <a asp-page="/Dashboard" class="btn btn-secondary btn-lg">Annuler</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

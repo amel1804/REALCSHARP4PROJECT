@@ -71,5 +71,41 @@ namespace BasketballLiveScore.Services
                 throw new KeyNotFoundException($"Match with ID {id} not found");
             return match;
         }
+
+        /// <summary>
+        /// Met à jour un match existant
+        /// </summary>
+        public void UpdateMatch(MatchDto matchDto)
+        {
+            if (matchDto == null)
+                throw new ArgumentNullException(nameof(matchDto));
+
+            var match = _unitOfWork.Matches.GetById(matchDto.Id);
+            if (match == null)
+                throw new KeyNotFoundException($"Match with ID {matchDto.Id} not found");
+
+            // Mise à jour des propriétés
+            match.Status = Enum.TryParse<BasketballLiveScore.Models.MatchStatus>(matchDto.Status, out var status)
+                ? status
+                : match.Status;
+            match.CurrentQuarter = matchDto.CurrentQuarter;
+            match.HomeTeamScore = matchDto.HomeTeamScore;
+            match.AwayTeamScore = matchDto.AwayTeamScore;
+
+            // Si le match démarre, enregistrer l'heure de début
+            if (match.Status == BasketballLiveScore.Models.MatchStatus.InProgress && !match.StartTime.HasValue)
+            {
+                match.StartTime = DateTime.UtcNow;
+            }
+
+            // Si le match se termine, enregistrer l'heure de fin
+            if (match.Status == BasketballLiveScore.Models.MatchStatus.Finished && !match.EndTime.HasValue)
+            {
+                match.EndTime = DateTime.UtcNow;
+            }
+
+            _unitOfWork.Matches.Update(match);
+            _unitOfWork.Complete();
+        }
     }
 }

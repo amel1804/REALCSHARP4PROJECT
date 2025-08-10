@@ -1,0 +1,63 @@
+﻿@page
+@model BasketballLiveScore.Pages.IndexModel
+@{
+    ViewData["Title"] = "Accueil";
+    Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">🏀 Basketball LiveScore</h1>
+        <p class="lead">Application de suivi en temps réel des matchs de basketball</p>
+        <hr class="my-4">
+
+        @if (HttpContext.Session.GetString("Token") != null)
+        {
+        <p>Bienvenue @HttpContext.Session.GetString("Username") !</p>
+        <a class="btn btn-primary btn-lg" asp-page="/Dashboard" role="button">
+            Accéder au tableau de bord
+        </a>
+        }
+        else
+        {
+        <p>Connectez-vous pour commencer l'encodage des matchs</p>
+        <a class="btn btn-primary btn-lg" asp-page="/Login" role="button">
+            Se connecter
+        </a>
+        }
+    </div>
+
+    @* Fonctionnalités principales *@
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📝 Préparation des matchs</h5>
+                    <p class="card-text">
+                        Configurez les équipes, les joueurs, les règles du match et les compositions de départ.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">⏱️ Encodage temps réel</h5>
+                    <p class="card-text">
+                        Enregistrez les paniers, fautes, changements et timeouts pendant le match.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📊 Statistiques complètes</h5>
+                    <p class="card-text">
+                        Consultez l'historique complet des matchs et les statistiques détaillées.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

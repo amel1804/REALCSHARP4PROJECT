@@ -1,0 +1,469 @@
+﻿@page
+@model BasketballLiveScore.Pages.LiveScoreModel
+@{
+    ViewData["Title"] = "Score en direct";
+}
+
+@section Styles {
+    <style>
+        /* Styles spécifiques pour la page LiveScore */
+        .score-board {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-score {
+            font-size: 4rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .game-timer {
+            font-family: 'Courier New', monospace;
+            font-size: 3rem;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .quarter-indicator {
+            background-color: #FF6B35;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .action-button {
+            min-width: 120px;
+            margin: 5px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .action-button:hover {
+            transform: scale(1.05);
+        }
+
+        .action-button.points-1 {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .action-button.points-2 {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .action-button.points-3 {
+            background-color: #6610f2;
+            border-color: #6610f2;
+        }
+
+        .action-log {
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        .action-log-entry {
+            padding: 0.5rem;
+            border-bottom: 1px solid #dee2e6;
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        @@keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .control-panel {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+    </style>
+}
+
+<div class="container-fluid mt-3">
+    @if (Model.CurrentMatch == null)
+    {
+    <div class="alert alert-warning text-center">
+        <h4>Aucun match sélectionné</h4>
+        <p>Veuillez sélectionner un match depuis le tableau de bord.</p>
+        <a asp-page="/Dashboard" class="btn btn-primary">Retour au tableau de bord</a>
+    </div>
+    }
+    else
+    {
+    @* Tableau de score principal *@
+    <div class="score-board mb-4">
+        <div class="row text-center">
+            @* Équipe domicile *@
+            <div class="col-md-4">
+                <div class="team-name">@Model.CurrentMatch.HomeTeamName</div>
+                <div class="team-score" id="homeScore">@Model.CurrentMatch.HomeTeamScore</div>
+            </div>
+
+            @* Informations centrales *@
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <span class="quarter-indicator">Q<span id="currentQuarter">@Model.CurrentMatch.CurrentQuarter</span></span>
+                </div>
+                <div class="game-timer" id="gameTimer">
+                    <span id="minutes">10</span>:<span id="seconds">00</span>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-success" onclick="toggleTimer()">
+                        <span id="timerButton">▶ Démarrer</span>
+                    </button>
+                    <button class="btn btn-warning" onclick="resetTimer()">⏹ Reset</button>
+                </div>
+            </div>
+
+            @* Équipe visiteur *@
+            <div class="col-md-4">
+                <div class="team-name">@Model.CurrentMatch.AwayTeamName</div>
+                <div class="team-score" id="awayScore">@Model.CurrentMatch.AwayTeamScore</div>
+            </div>
+        </div>
+    </div>
+
+    @* Panneaux de contrôle pour chaque équipe *@
+    <div class="row">
+        @* Contrôles équipe domicile *@
+        <div class="col-md-6">
+            <div class="control-panel">
+                <h4 class="text-center mb-3">@Model.CurrentMatch.HomeTeamName</h4>
+
+                <div class="text-center mb-3">
+                    <button class="btn btn-success action-button points-1" onclick="addPoints('home', 1)">
+                        +1 Point
+                    </button>
+                    <button class="btn btn-info action-button points-2" onclick="addPoints('home', 2)">
+                        +2 Points
+                    </button>
+                    <button class="btn action-button points-3 text-white" onclick="addPoints('home', 3)">
+                        +3 Points
+                    </button>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-warning w-100" onclick="recordFoul('home')">
+                            Faute
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-secondary w-100" onclick="callTimeout('home')">
+                            Temps mort
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Contrôles équipe visiteur *@
+        <div class="col-md-6">
+            <div class="control-panel">
+                <h4 class="text-center mb-3">@Model.CurrentMatch.AwayTeamName</h4>
+
+                <div class="text-center mb-3">
+                    <button class="btn btn-success action-button points-1" onclick="addPoints('away', 1)">
+                        +1 Point
+                    </button>
+                    <button class="btn btn-info action-button points-2" onclick="addPoints('away', 2)">
+                        +2 Points
+                    </button>
+                    <button class="btn action-button points-3 text-white" onclick="addPoints('away', 3)">
+                        +3 Points
+                    </button>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-warning w-100" onclick="recordFoul('away')">
+                            Faute
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-secondary w-100" onclick="callTimeout('away')">
+                            Temps mort
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Contrôles généraux du match *@
+    <div class="control-panel mt-3 text-center">
+        <button class="btn btn-primary btn-lg mx-2" onclick="nextQuarter()">
+            Quart-temps suivant
+        </button>
+        <button class="btn btn-danger btn-lg mx-2" onclick="endMatch()">
+            Terminer le match
+        </button>
+    </div>
+
+    @* Journal des actions *@
+    <div class="mt-4">
+        <h4>Journal des actions</h4>
+        <div class="action-log" id="actionLog">
+            <div class="action-log-entry">Match démarré - Bon match !</div>
+        </div>
+    </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        /**
+         * JavaScript spécifique à la page LiveScore
+         * Gestion du chronomètre et des actions du match
+         */
+
+        // Variables globales du match
+        let timerRunning = false;
+        let timerInterval = null;
+        let minutes = 10;
+        let seconds = 0;
+        let currentQuarter = @(Model.CurrentMatch?.CurrentQuarter ?? 1);
+        let homeScore = @(Model.CurrentMatch?.HomeTeamScore ?? 0);
+        let awayScore = @(Model.CurrentMatch?.AwayTeamScore ?? 0);
+        const matchId = @(Model.CurrentMatch?.Id ?? 0);
+
+        /**
+         * Gestion du chronomètre du match
+         */
+        function toggleTimer() {
+            if (timerRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            timerRunning = true;
+            document.getElementById('timerButton').textContent = '⏸ Pause';
+
+            timerInterval = setInterval(function() {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        // Fin du quart-temps
+                        pauseTimer();
+                        showNotification('Fin du quart-temps !', 'warning');
+                        addLog('⏱️ Fin du quart-temps ' + currentQuarter);
+                        return;
+                    }
+                    minutes--;
+                    seconds = 59;
+                } else {
+                    seconds--;
+                }
+                updateTimerDisplay();
+            }, 1000);
+
+            addLog('⏱️ Chronomètre démarré');
+        }
+
+        function pauseTimer() {
+            timerRunning = false;
+            document.getElementById('timerButton').textContent = '▶ Démarrer';
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            addLog('⏱️ Chronomètre mis en pause');
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            minutes = 10;
+            seconds = 0;
+            updateTimerDisplay();
+            addLog('⏱️ Chronomètre réinitialisé');
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+
+        /**
+         * Gestion des points
+         */
+        function addPoints(team, points) {
+            const teamName = team === 'home' ? '@Model.CurrentMatch.HomeTeamName' : '@Model.CurrentMatch.AwayTeamName';
+
+            if (team === 'home') {
+                homeScore += points;
+                document.getElementById('homeScore').textContent = homeScore;
+                // Animation du score
+                document.getElementById('homeScore').style.animation = 'pulse 0.5s';
+            } else {
+                awayScore += points;
+                document.getElementById('awayScore').textContent = awayScore;
+                document.getElementById('awayScore').style.animation = 'pulse 0.5s';
+            }
+
+            // Reset animation
+            setTimeout(() => {
+                document.getElementById(team + 'Score').style.animation = '';
+            }, 500);
+
+            // Enregistrement dans le journal
+            addLog(`🏀 ${teamName} marque ${points} point(s) ! Score: ${homeScore}-${awayScore}`);
+
+            // Envoi à l'API
+            sendAction({
+                matchId: matchId,
+                actionType: 'Basket',
+                points: points,
+                quarter: currentQuarter,
+                timestamp: getCurrentGameTime()
+            });
+        }
+
+        /**
+         * Gestion des fautes
+         */
+        function recordFoul(team) {
+            const teamName = team === 'home' ? '@Model.CurrentMatch.HomeTeamName' : '@Model.CurrentMatch.AwayTeamName';
+            addLog(`⚠️ Faute personnelle - ${teamName}`);
+
+            sendAction({
+                matchId: matchId,
+                actionType: 'Fault',
+                faultType: 'P1',
+                quarter: currentQuarter,
+                timestamp: getCurrentGameTime()
+            });
+        }
+
+        /**
+         * Gestion des timeouts
+         */
+        function callTimeout(team) {
+            pauseTimer();
+            const teamName = team === 'home' ? '@Model.CurrentMatch.HomeTeamName' : '@Model.CurrentMatch.AwayTeamName';
+            addLog(`⏸️ Temps mort demandé par ${teamName}`);
+            showNotification(`Temps mort - ${teamName}`, 'info');
+
+            sendAction({
+                matchId: matchId,
+                actionType: 'Timeout',
+                quarter: currentQuarter,
+                timestamp: getCurrentGameTime()
+            });
+        }
+
+        /**
+         * Changement de quart-temps
+         */
+        function nextQuarter() {
+            if (currentQuarter < 4) {
+                currentQuarter++;
+                document.getElementById('currentQuarter').textContent = currentQuarter;
+                resetTimer();
+                addLog(`📢 Début du quart-temps ${currentQuarter}`);
+                showNotification(`Début du quart-temps ${currentQuarter}`, 'success');
+            } else {
+                showNotification('Le match est déjà au dernier quart-temps', 'warning');
+            }
+        }
+
+        /**
+         * Fin du match
+         */
+        function endMatch() {
+            if (confirm('Êtes-vous sûr de vouloir terminer le match ?')) {
+                pauseTimer();
+                const winner = homeScore > awayScore ? '@Model.CurrentMatch.HomeTeamName' :
+                              awayScore > homeScore ? '@Model.CurrentMatch.AwayTeamName' :
+                              'Match nul';
+
+                addLog(`🏆 Match terminé ! Score final: ${homeScore}-${awayScore}. ${winner !== 'Match nul' ? 'Victoire de ' + winner : winner}`);
+
+                setTimeout(() => {
+                    window.location.href = '/Dashboard';
+                }, 3000);
+            }
+        }
+
+        /**
+         * Obtenir le temps de jeu actuel
+         */
+        function getCurrentGameTime() {
+            const elapsedSeconds = (10 - minutes) * 60 + (60 - seconds);
+            return `00:${Math.floor(elapsedSeconds / 60).toString().padStart(2, '0')}:${(elapsedSeconds % 60).toString().padStart(2, '0')}`;
+        }
+
+        /**
+         * Envoyer une action à l'API
+         */
+        async function sendAction(action) {
+            try {
+                await callApi('GameAction', 'POST', action);
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi de l\'action:', error);
+                showNotification('Erreur lors de l\'enregistrement de l\'action', 'danger');
+            }
+        }
+
+        /**
+         * Ajouter une entrée au journal
+         */
+        function addLog(message) {
+            const log = document.getElementById('actionLog');
+            const time = new Date().toLocaleTimeString('fr-FR');
+            const entry = document.createElement('div');
+            entry.className = 'action-log-entry';
+            entry.innerHTML = `<strong>${time}</strong> - ${message}`;
+            log.insertBefore(entry, log.firstChild);
+
+            // Limiter le nombre d'entrées visibles
+            while (log.children.length > 50) {
+                log.removeChild(log.lastChild);
+            }
+        }
+
+        /**
+         * Animation de pulsation pour les scores
+         */
+        const style = document.createElement('style');
+        style.textContent = `
+            @@keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2); color: #FFD700; }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        /**
+         * Initialisation au chargement
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimerDisplay();
+        });
+    </script>
+}
