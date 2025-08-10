@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BasketballLiveScore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+99527332411c68c069ff71f0043a3accd781d070")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+effc6885e2d3762dcbd4d0ab1d067c611fe4291a")]
 [assembly: System.Reflection.AssemblyProductAttribute("BasketballLiveScore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BasketballLiveScore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

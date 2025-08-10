@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers",
-    "\\Data",
-    "\\Hubs",
-    "\\Migrations",
+    "\\DTOs",
+    "\\DTOs\\User",
+    "\\Models",
+    "\\Pages",
     "\\Repositories",
-    "\\Repositories\\Implementations",
     "\\Repositories\\Interfaces",
     "\\Services",
+    "\\Services\\Interfaces",
     "\\wwwroot"
   ],
-  "SelectedNode": "\\Pages\\Dashboard.cshtml.cs",
+  "SelectedNode": "\\appsettings.json",
   "PreviewInSolutionExplorer": false
 }
