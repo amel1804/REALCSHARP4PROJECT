@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +48,7 @@ namespace BasketballLiveScore.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la récupération du joueur {PlayerId}", id);
+                _logger.LogError(ex, "Erreur lors de la rï¿½cupï¿½ration du joueur {PlayerId}", id);
                 return null;
             }
         }
@@ -62,7 +62,7 @@ namespace BasketballLiveScore.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la récupération des joueurs");
+                _logger.LogError(ex, "Erreur lors de la rï¿½cupï¿½ration des joueurs");
                 return new List<Player>();
             }
         }
@@ -76,7 +76,7 @@ namespace BasketballLiveScore.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la récupération des joueurs de l'équipe {TeamId}", teamId);
+                _logger.LogError(ex, "Erreur lors de la rï¿½cupï¿½ration des joueurs de l'ï¿½quipe {TeamId}", teamId);
                 return new List<Player>();
             }
         }
@@ -91,29 +91,29 @@ namespace BasketballLiveScore.Services
                 // Validation
                 if (string.IsNullOrWhiteSpace(playerDto.FirstName) || string.IsNullOrWhiteSpace(playerDto.LastName))
                 {
-                    throw new ArgumentException("Le prénom et le nom sont obligatoires");
+                    throw new ArgumentException("Le prï¿½nom et le nom sont obligatoires");
                 }
 
                 if (playerDto.JerseyNumber < 0 || playerDto.JerseyNumber > 99)
                 {
-                    throw new ArgumentException("Le numéro de maillot doit être entre 0 et 99");
+                    throw new ArgumentException("Le numï¿½ro de maillot doit ï¿½tre entre 0 et 99");
                 }
 
-                // Vérifier l'équipe existe
+                // Vï¿½rifier l'ï¿½quipe existe
                 var team = _unitOfWork.Teams.GetById(playerDto.TeamId);
                 if (team == null)
                 {
-                    throw new InvalidOperationException($"L'équipe avec l'ID {playerDto.TeamId} n'existe pas");
+                    throw new InvalidOperationException($"L'ï¿½quipe avec l'ID {playerDto.TeamId} n'existe pas");
                 }
 
-                // Vérifier l'unicité du numéro dans l'équipe
+                // Vï¿½rifier l'unicitï¿½ du numï¿½ro dans l'ï¿½quipe
                 var existingNumber = _unitOfWork.Players
                     .Find(p => p.TeamId == playerDto.TeamId && p.JerseyNumber == playerDto.JerseyNumber)
                     .FirstOrDefault();
 
                 if (existingNumber != null)
                 {
-                    throw new InvalidOperationException($"Le numéro {playerDto.JerseyNumber} est déjà utilisé dans cette équipe");
+                    throw new InvalidOperationException($"Le numï¿½ro {playerDto.JerseyNumber} est dï¿½jï¿½ utilisï¿½ dans cette ï¿½quipe");
                 }
 
                 var player = new Player
@@ -127,12 +127,12 @@ namespace BasketballLiveScore.Services
                 _unitOfWork.Players.Add(player);
                 await _unitOfWork.CompleteAsync();
 
-                _logger.LogInformation("Joueur {PlayerName} créé avec succès", player.FullName);
+                _logger.LogInformation("Joueur {PlayerName} crï¿½ï¿½ avec succï¿½s", player.FullName);
                 return player;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la création du joueur");
+                _logger.LogError(ex, "Erreur lors de la crï¿½ation du joueur");
                 throw;
             }
         }
@@ -147,11 +147,11 @@ namespace BasketballLiveScore.Services
                 var player = _unitOfWork.Players.GetById(id);
                 if (player == null)
                 {
-                    _logger.LogWarning("Joueur {PlayerId} non trouvé", id);
+                    _logger.LogWarning("Joueur {PlayerId} non trouvï¿½", id);
                     return null;
                 }
 
-                // Validation du numéro si changé
+                // Validation du numï¿½ro si changï¿½
                 if (player.JerseyNumber != playerDto.JerseyNumber)
                 {
                     var existingNumber = _unitOfWork.Players
@@ -162,22 +162,22 @@ namespace BasketballLiveScore.Services
 
                     if (existingNumber != null)
                     {
-                        throw new InvalidOperationException($"Le numéro {playerDto.JerseyNumber} est déjà utilisé dans cette équipe");
+                        throw new InvalidOperationException($"Le numï¿½ro {playerDto.JerseyNumber} est dï¿½jï¿½ utilisï¿½ dans cette ï¿½quipe");
                     }
                 }
 
-                // Mise à jour des propriétés
+                // Mise ï¿½ jour des propriï¿½tï¿½s
                 player.FirstName = playerDto.FirstName;
                 player.LastName = playerDto.LastName;
                 player.JerseyNumber = playerDto.JerseyNumber;
 
                 if (playerDto.TeamId != player.TeamId)
                 {
-                    // Changement d'équipe
+                    // Changement d'ï¿½quipe
                     var newTeam = _unitOfWork.Teams.GetById(playerDto.TeamId);
                     if (newTeam == null)
                     {
-                        throw new InvalidOperationException($"L'équipe avec l'ID {playerDto.TeamId} n'existe pas");
+                        throw new InvalidOperationException($"L'ï¿½quipe avec l'ID {playerDto.TeamId} n'existe pas");
                     }
                     player.TeamId = playerDto.TeamId;
                 }
@@ -185,12 +185,12 @@ namespace BasketballLiveScore.Services
                 _unitOfWork.Players.Update(player);
                 await _unitOfWork.CompleteAsync();
 
-                _logger.LogInformation("Joueur {PlayerId} mis à jour avec succès", id);
+                _logger.LogInformation("Joueur {PlayerId} mis ï¿½ jour avec succï¿½s", id);
                 return player;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la mise à jour du joueur {PlayerId}", id);
+                _logger.LogError(ex, "Erreur lors de la mise ï¿½ jour du joueur {PlayerId}", id);
                 throw;
             }
         }
@@ -202,11 +202,11 @@ namespace BasketballLiveScore.Services
                 var player = _unitOfWork.Players.GetById(id);
                 if (player == null)
                 {
-                    _logger.LogWarning("Joueur {PlayerId} non trouvé pour suppression", id);
+                    _logger.LogWarning("Joueur {PlayerId} non trouvï¿½ pour suppression", id);
                     return false;
                 }
 
-                // Vérifier qu'il n'y a pas de statistiques de match associées
+                // Vï¿½rifier qu'il n'y a pas de statistiques de match associï¿½es
                 var hasMatchStats = _unitOfWork.MatchLineups
                     .Find(ml => ml.PlayerId == id)
                     .Any();
@@ -222,7 +222,7 @@ namespace BasketballLiveScore.Services
 
                 if (result > 0)
                 {
-                    _logger.LogInformation("Joueur {PlayerId} supprimé avec succès", id);
+                    _logger.LogInformation("Joueur {PlayerId} supprimï¿½ avec succï¿½s", id);
                 }
 
                 return result > 0;
@@ -241,7 +241,7 @@ namespace BasketballLiveScore.Services
                 var lineup = _unitOfWork.MatchLineups.GetPlayerLineup(matchId, playerId);
                 if (lineup == null)
                 {
-                    _logger.LogWarning("Statistiques non trouvées pour le joueur {PlayerId} dans le match {MatchId}",
+                    _logger.LogWarning("Statistiques non trouvï¿½es pour le joueur {PlayerId} dans le match {MatchId}",
                         playerId, matchId);
                     return null;
                 }
@@ -261,7 +261,7 @@ namespace BasketballLiveScore.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la récupération des statistiques du joueur");
+                _logger.LogError(ex, "Erreur lors de la rï¿½cupï¿½ration des statistiques du joueur");
                 return null;
             }
         }
@@ -272,18 +272,18 @@ namespace BasketballLiveScore.Services
             {
                 if (newNumber < 0 || newNumber > 99)
                 {
-                    _logger.LogWarning("Numéro de maillot invalide: {Number}", newNumber);
+                    _logger.LogWarning("Numï¿½ro de maillot invalide: {Number}", newNumber);
                     return false;
                 }
 
                 var player = _unitOfWork.Players.GetById(playerId);
                 if (player == null)
                 {
-                    _logger.LogWarning("Joueur {PlayerId} non trouvé", playerId);
+                    _logger.LogWarning("Joueur {PlayerId} non trouvï¿½", playerId);
                     return false;
                 }
 
-                // Vérifier l'unicité du numéro dans l'équipe
+                // Vï¿½rifier l'unicitï¿½ du numï¿½ro dans l'ï¿½quipe
                 var existingNumber = _unitOfWork.Players
                     .Find(p => p.TeamId == player.TeamId &&
                                p.JerseyNumber == newNumber &&
@@ -292,7 +292,7 @@ namespace BasketballLiveScore.Services
 
                 if (existingNumber != null)
                 {
-                    _logger.LogWarning("Le numéro {Number} est déjà utilisé dans l'équipe", newNumber);
+                    _logger.LogWarning("Le numï¿½ro {Number} est dï¿½jï¿½ utilisï¿½ dans l'ï¿½quipe", newNumber);
                     return false;
                 }
 
@@ -300,13 +300,13 @@ namespace BasketballLiveScore.Services
                 _unitOfWork.Players.Update(player);
                 await _unitOfWork.CompleteAsync();
 
-                _logger.LogInformation("Numéro de maillot du joueur {PlayerId} changé en {Number}",
+                _logger.LogInformation("Numï¿½ro de maillot du joueur {PlayerId} changï¿½ en {Number}",
                     playerId, newNumber);
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors du changement de numéro de maillot");
+                _logger.LogError(ex, "Erreur lors du changement de numï¿½ro de maillot");
                 return false;
             }
         }

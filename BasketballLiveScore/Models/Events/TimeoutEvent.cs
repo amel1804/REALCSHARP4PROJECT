@@ -1,22 +1,22 @@
-using System;
+ï»¿using System;
 using BasketballLiveScore.Models;
 using BasketballLiveScore.Models.Enums;
 
 namespace BasketballLiveScore.Models.Events
 {
     /// <summary>
-    /// Événement de temps mort
+    /// ï¿½vï¿½nement de temps mort
     /// </summary>
     public class TimeoutEvent : MatchEvent
     {
         /// <summary>
-        /// Identifiant de l'équipe qui a pris le temps mort
-        /// CORRECTION: Ajout de la clé étrangère selon les conventions EF vues en cours
+        /// Identifiant de l'ï¿½quipe qui a pris le temps mort
+        /// CORRECTION: Ajout de la clï¿½ ï¿½trangï¿½re selon les conventions EF vues en cours
         /// </summary>
         public int TeamId { get; set; }
 
         /// <summary>
-        /// Propriété de navigation vers l'équipe
+        /// Propriï¿½tï¿½ de navigation vers l'ï¿½quipe
         /// Pattern vu dans les exemples de cours (Game/GameGenre)
         /// </summary>
         public virtual Team Team { get; set; }

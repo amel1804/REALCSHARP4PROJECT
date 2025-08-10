@@ -1,272 +1,277 @@
-using BasketballLiveScore.DTOs.LiveScore;
+ï»¿using BasketballLiveScore.DTOs.LiveScore;
+using BasketballLiveScore.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Runtime.Remoting.Contexts;
 using System.Threading.Tasks;
 
 namespace BasketballLiveScore.Hubs
 {
     /// <summary>
-    /// Hub SignalR pour la diffusion en temps réel des scores et événements de match
+    /// Hub SignalR pour la diffusion en temps rÃ©el des scores
     /// </summary>
     [Authorize]
     public class LiveScoreHub : Hub
     {
-        private readonly ILogger<LiveScoreHub> _logger;
+        private const string MATCH_GROUP_PREFIX = "match-";
+        private const string ADMIN_GROUP = "admins";
+        private const string ENCODER_GROUP = "encoders";
 
-        public LiveScoreHub(ILogger<LiveScoreHub> logger)
+        private const string CLIENT_UPDATE_SCORE = "UpdateScore";
+        private const string CLIENT_UPDATE_CLOCK = "UpdateClock";
+        private const string CLIENT_NEW_EVENT = "NewEvent";
+        private const string CLIENT_PLAYER_SUBSTITUTION = "PlayerSubstitution";
+        private const string CLIENT_QUARTER_CHANGE = "QuarterChange";
+        private const string CLIENT_MATCH_STATUS = "MatchStatusChange";
+        private const string CLIENT_TIMEOUT = "TimeoutCalled";
+
+        private readonly ILiveScoreService _liveScoreService;
+        private readonly IMatchService _matchService;
+
+        public LiveScoreHub(ILiveScoreService liveScoreService, IMatchService matchService)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _liveScoreService = liveScoreService ?? throw new ArgumentNullException(nameof(liveScoreService));
+            _matchService = matchService ?? throw new ArgumentNullException(nameof(matchService));
         }
 
-        /// <summary>
-        /// Appelé quand un client se connecte au hub
-        /// </summary>
         public override async Task OnConnectedAsync()
         {
-            var userId = Context.UserIdentifier;
-            var connectionId = Context.ConnectionId;
+            var userRole = Context.User?.FindFirst("role")?.Value;
 
-            _logger.LogInformation("Client connecté: {ConnectionId} - User: {UserId}", connectionId, userId);
+            if (userRole == "Administrator")
+                await Groups.AddToGroupAsync(Context.ConnectionId, ADMIN_GROUP);
+            else if (userRole == "Encoder")
+                await Groups.AddToGroupAsync(Context.ConnectionId, ENCODER_GROUP);
 
-            await Clients.Caller.SendAsync("Connected", connectionId);
             await base.OnConnectedAsync();
         }
 
-        /// <summary>
-        /// Appelé quand un client se déconnecte du hub
-        /// </summary>
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var userId = Context.UserIdentifier;
-            var connectionId = Context.ConnectionId;
-
-            if (exception != null)
-            {
-                _logger.LogError(exception, "Client déconnecté avec erreur: {ConnectionId}", connectionId);
-            }
-            else
-            {
-                _logger.LogInformation("Client déconnecté: {ConnectionId} - User: {UserId}", connectionId, userId);
-            }
-
             await base.OnDisconnectedAsync(exception);
         }
 
-        /// <summary>
-        /// Rejoint un groupe de match pour recevoir les mises à jour
-        /// </summary>
         public async Task JoinMatch(int matchId)
         {
-            var groupName = GetMatchGroupName(matchId);
+            var groupName = $"{MATCH_GROUP_PREFIX}{matchId}";
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
-            _logger.LogInformation("Client {ConnectionId} a rejoint le match {MatchId}",
-                Context.ConnectionId, matchId);
-
-            await Clients.Caller.SendAsync("JoinedMatch", matchId);
+            var liveScore = await _liveScoreService.GetLiveScoreAsync(matchId);
+            await Clients.Caller.SendAsync(CLIENT_UPDATE_SCORE, liveScore);
         }
 
-        /// <summary>
-        /// Quitte un groupe de match
-        /// </summary>
         public async Task LeaveMatch(int matchId)
         {
-            var groupName = GetMatchGroupName(matchId);
+            var groupName = $"{MATCH_GROUP_PREFIX}{matchId}";
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-
-            _logger.LogInformation("Client {ConnectionId} a quitté le match {MatchId}",
-                Context.ConnectionId, matchId);
-
-            await Clients.Caller.SendAsync("LeftMatch", matchId);
         }
 
-        /// <summary>
-        /// Diffuse la mise à jour du score à tous les clients du match
-        /// </summary>
         [Authorize(Roles = "Administrator,Encoder")]
-        public async Task UpdateScore(int matchId, int homeScore, int awayScore)
+        public async Task RecordBasket(int matchId, BasketScoreDto basketDto)
         {
-            var groupName = GetMatchGroupName(matchId);
-
-            await Clients.Group(groupName).SendAsync("ScoreUpdated", new
+            try
             {
-                matchId,
-                homeScore,
-                awayScore,
-                timestamp = DateTime.UtcNow
-            });
+                var success = await _liveScoreService.RecordBasketAsync(matchId, basketDto);
 
-            _logger.LogInformation("Score mis à jour pour le match {MatchId}: {HomeScore}-{AwayScore}",
-                matchId, homeScore, awayScore);
+                if (success)
+                {
+                    var liveScore = await _liveScoreService.GetLiveScoreAsync(matchId);
+                    var groupName = $"{MATCH_GROUP_PREFIX}{matchId}";
+
+                    await Clients.Group(groupName).SendAsync(CLIENT_UPDATE_SCORE, liveScore);
+
+                    var eventDto = new RecentEventDto
+                    {
+                        EventTime = DateTime.UtcNow,
+                        Quarter = basketDto.Quarter,
+                        GameClock = basketDto.GameTime.ToString(@"mm\:ss"),
+                        EventType = "Basket",
+                        Description = $"{basketDto.Points} point(s) marquÃ©(s)"
+                    };
+
+                    await Clients.Group(groupName).SendAsync(CLIENT_NEW_EVENT, eventDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                await Clients.Caller.SendAsync("Error", $"Erreur lors de l'enregistrement du panier: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Diffuse un panier marqué
-        /// </summary>
         [Authorize(Roles = "Administrator,Encoder")]
-        public async Task BroadcastBasket(int matchId, BasketScoredDto basketDto)
+        public async Task RecordFoul(int matchId, FoulCommittedDto foulDto)
         {
-            var groupName = GetMatchGroupName(matchId);
-
-            await Clients.Group(groupName).SendAsync("BasketScored", new
+            try
             {
-                matchId,
-                playerId = basketDto.PlayerId,
-                points = basketDto.Points,
-                quarter = basketDto.Quarter,
-                gameTime = basketDto.GameTime,
-                timestamp = DateTime.UtcNow
-            });
+                var success = await _liveScoreService.RecordFoulAsync(matchId, foulDto);
 
-            _logger.LogInformation("Panier de {Points} points diffusé pour le match {MatchId}",
-                basketDto.Points, matchId);
+                if (success)
+                {
+                    var liveScore = await _liveScoreService.GetLiveScoreAsync(matchId);
+                    var groupName = $"{MATCH_GROUP_PREFIX}{matchId}";
+
+                    await Clients.Group(groupName).SendAsync(CLIENT_UPDATE_SCORE, liveScore);
+
+                    var eventDto = new RecentEventDto
+                    {
+                        EventTime = DateTime.UtcNow,
+                        Quarter = foulDto.Quarter,
+                        GameClock = foulDto.GameTime.ToString(@"mm\:ss"),
+                        EventType = "Foul",
+                        Description = $"Faute {foulDto.FoulType}"
+                    };
+
+                    await Clients.Group(groupName).SendAsync(CLIENT_NEW_EVENT, eventDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                await Clients.Caller.SendAsync("Error", $"Erreur lors de l'enregistrement de la faute: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Diffuse une faute commise
-        /// </summary>
         [Authorize(Roles = "Administrator,Encoder")]
-        public async Task BroadcastFoul(int matchId, FoulCommittedDto foulDto)
+        public async Task RecordSubstitution(int matchId, PlayerSubstitutionDto substitutionDto)
         {
-            var groupName = GetMatchGroupName(matchId);
-
-            await Clients.Group(groupName).SendAsync("FoulCommitted", new
+            try
             {
-                matchId,
-                playerId = foulDto.PlayerId,
-                foulType = foulDto.FoulType,
-                quarter = foulDto.Quarter,
-                gameTime = foulDto.GameTime,
-                timestamp = DateTime.UtcNow
-            });
+                var success = await _liveScoreService.RecordSubstitutionAsync(matchId, substitutionDto);
 
-            _logger.LogInformation("Faute {FoulType} diffusée pour le match {MatchId}",
-                foulDto.FoulType, matchId);
+                if (success)
+                {
+                    var liveScore = await _liveScoreService.GetLiveScoreAsync(matchId);
+                    var groupName = $"{MATCH_GROUP_PREFIX}{matchId}";
+
+                    await Clients.Group(groupName).SendAsync(CLIENT_PLAYER_SUBSTITUTION, liveScore.TeamsOnCourt);
+
+                    var eventDto = new RecentEventDto
+                    {
+                        EventTime = DateTime.UtcNow,
+                        Quarter = substitutionDto.Quarter,
+                        GameClock = substitutionDto.GameTime.ToString(@"mm\:ss"),
+                        EventType = "Substitution",
+                        Description = "Changement de joueur"
+                    };
+
+                    await Clients.Group(groupName).SendAsync(CLIENT_NEW_EVENT, eventDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                await Clients.Caller.SendAsync("Error", $"Erreur lors de la substitution: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Diffuse un changement de joueur
-        /// </summary>
         [Authorize(Roles = "Administrator,Encoder")]
-        public async Task BroadcastSubstitution(int matchId, PlayerSubstitutionDto substitutionDto)
+        public async Task CallTimeout(int matchId, int teamId)
         {
-            var groupName = GetMatchGroupName(matchId);
-
-            await Clients.Group(groupName).SendAsync("PlayerSubstitution", new
+            try
             {
-                matchId,
-                playerInId = substitutionDto.PlayerInId,
-                playerOutId = substitutionDto.PlayerOutId,
-                quarter = substitutionDto.Quarter,
-                gameTime = substitutionDto.GameTime,
-                timestamp = DateTime.UtcNow
-            });
+                var success = await _liveScoreService.RecordTimeoutAsync(matchId, teamId);
 
-            _logger.LogInformation("Changement diffusé pour le match {MatchId}: {PlayerOut} -> {PlayerIn}",
-                matchId, substitutionDto.PlayerOutId, substitutionDto.PlayerInId);
+                if (success)
+                {
+                    var groupName = $"{MATCH_GROUP_PREFIX}{matchId}";
+                    await Clients.Group(groupName).SendAsync(CLIENT_TIMEOUT, teamId);
+
+                    var eventDto = new RecentEventDto
+                    {
+                        EventTime = DateTime.UtcNow,
+                        EventType = "Timeout",
+                        Description = "Temps mort demandÃ©"
+                    };
+
+                    await Clients.Group(groupName).SendAsync(CLIENT_NEW_EVENT, eventDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                await Clients.Caller.SendAsync("Error", $"Erreur lors du temps mort: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Diffuse un timeout
-        /// </summary>
         [Authorize(Roles = "Administrator,Encoder")]
-        public async Task BroadcastTimeout(int matchId, TimeoutCalledDto timeoutDto)
+        public async Task UpdateGameClock(int matchId, UpdateGameClockDto clockDto)
         {
-            var groupName = GetMatchGroupName(matchId);
-
-            await Clients.Group(groupName).SendAsync("TimeoutCalled", new
+            try
             {
-                matchId,
-                teamId = timeoutDto.TeamId,
-                quarter = timeoutDto.Quarter,
-                gameClockSeconds = timeoutDto.GameClockSeconds,
-                timestamp = DateTime.UtcNow
-            });
+                var groupName = $"{MATCH_GROUP_PREFIX}{matchId}";
 
-            _logger.LogInformation("Timeout diffusé pour le match {MatchId}", matchId);
+                var gameClock = new GameClockDto
+                {
+                    RemainingSeconds = clockDto.GameClockSeconds,
+                    IsRunning = clockDto.IsRunning,
+                    CurrentQuarter = 1 // Ã€ rÃ©cupÃ©rer du match
+                };
+
+                await Clients.Group(groupName).SendAsync(CLIENT_UPDATE_CLOCK, gameClock);
+            }
+            catch (Exception ex)
+            {
+                await Clients.Caller.SendAsync("Error", $"Erreur lors de la mise Ã  jour du chrono: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Diffuse le changement de quart-temps
-        /// </summary>
         [Authorize(Roles = "Administrator,Encoder")]
-        public async Task BroadcastQuarterChange(int matchId, int newQuarter)
+        public async Task ChangeQuarter(int matchId, int newQuarter)
         {
-            var groupName = GetMatchGroupName(matchId);
-
-            await Clients.Group(groupName).SendAsync("QuarterChanged", new
+            try
             {
-                matchId,
-                quarter = newQuarter,
-                timestamp = DateTime.UtcNow
-            });
+                var groupName = $"{MATCH_GROUP_PREFIX}{matchId}";
+                await Clients.Group(groupName).SendAsync(CLIENT_QUARTER_CHANGE, newQuarter);
 
-            _logger.LogInformation("Changement de quart-temps diffusé pour le match {MatchId}: Q{Quarter}",
-                matchId, newQuarter);
+                var eventDto = new RecentEventDto
+                {
+                    EventTime = DateTime.UtcNow,
+                    Quarter = newQuarter,
+                    EventType = "QuarterChange",
+                    Description = $"DÃ©but du quart-temps {newQuarter}"
+                };
+
+                await Clients.Group(groupName).SendAsync(CLIENT_NEW_EVENT, eventDto);
+            }
+            catch (Exception ex)
+            {
+                await Clients.Caller.SendAsync("Error", $"Erreur lors du changement de quart-temps: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Diffuse la mise à jour du chronomètre
-        /// </summary>
         [Authorize(Roles = "Administrator,Encoder")]
-        public async Task BroadcastGameClock(int matchId, int remainingSeconds)
+        public async Task StartClock(int matchId)
         {
-            var groupName = GetMatchGroupName(matchId);
-
-            await Clients.Group(groupName).SendAsync("GameClockUpdated", new
+            try
             {
-                matchId,
-                remainingSeconds,
-                timestamp = DateTime.UtcNow
-            });
+                var success = await _liveScoreService.StartClockAsync(matchId);
+
+                if (success)
+                {
+                    var groupName = $"{MATCH_GROUP_PREFIX}{matchId}";
+                    await Clients.Group(groupName).SendAsync(CLIENT_MATCH_STATUS, "InProgress");
+                }
+            }
+            catch (Exception ex)
+            {
+                await Clients.Caller.SendAsync("Error", $"Erreur lors du dÃ©marrage du chrono: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Diffuse le début d'un match
-        /// </summary>
         [Authorize(Roles = "Administrator,Encoder")]
-        public async Task BroadcastMatchStart(int matchId)
+        public async Task StopClock(int matchId)
         {
-            var groupName = GetMatchGroupName(matchId);
-
-            await Clients.Group(groupName).SendAsync("MatchStarted", new
+            try
             {
-                matchId,
-                timestamp = DateTime.UtcNow
-            });
+                var success = await _liveScoreService.StopClockAsync(matchId);
 
-            _logger.LogInformation("Début du match {MatchId} diffusé", matchId);
-        }
-
-        /// <summary>
-        /// Diffuse la fin d'un match
-        /// </summary>
-        [Authorize(Roles = "Administrator,Encoder")]
-        public async Task BroadcastMatchEnd(int matchId, int finalHomeScore, int finalAwayScore)
-        {
-            var groupName = GetMatchGroupName(matchId);
-
-            await Clients.Group(groupName).SendAsync("MatchEnded", new
+                if (success)
+                {
+                    var groupName = $"{MATCH_GROUP_PREFIX}{matchId}";
+                    await Clients.Group(groupName).SendAsync(CLIENT_MATCH_STATUS, "Paused");
+                }
+            }
+            catch (Exception ex)
             {
-                matchId,
-                finalHomeScore,
-                finalAwayScore,
-                timestamp = DateTime.UtcNow
-            });
-
-            _logger.LogInformation("Fin du match {MatchId} diffusée. Score final: {HomeScore}-{AwayScore}",
-                matchId, finalHomeScore, finalAwayScore);
-        }
-
-        /// <summary>
-        /// Obtient le nom du groupe pour un match
-        /// </summary>
-        private string GetMatchGroupName(int matchId)
-        {
-            return $"match-{matchId}";
+                await Clients.Caller.SendAsync("Error", $"Erreur lors de l'arrÃªt du chrono: {ex.Message}");
+            }
         }
     }
 }

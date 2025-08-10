@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +8,6 @@ using BasketballLiveScore.Repositories.Interfaces;
 
 namespace BasketballLiveScore.Repositories.Implementations
 {
-    /// <summary>
-    /// Repository pour la gestion des joueurs
-    /// </summary>
     public class PlayerRepository : Repository<Player>, IPlayerRepository
     {
         private readonly BasketballDbContext context;
@@ -21,9 +17,6 @@ namespace BasketballLiveScore.Repositories.Implementations
             context = dbContext;
         }
 
-        /// <summary>
-        /// Récupère les joueurs d'une équipe
-        /// </summary>
         public async Task<IEnumerable<Player>> GetPlayersByTeamAsync(int teamId)
         {
             return await context.Players
@@ -32,18 +25,19 @@ namespace BasketballLiveScore.Repositories.Implementations
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// Récupère un joueur par son numéro et son équipe
-        /// </summary>
+        public async Task<Player?> GetPlayerWithStats(int playerId)
+        {
+            return await context.Players
+                .Include(p => p.Stats) // adapte selon ta navigation Stats
+                .FirstOrDefaultAsync(p => p.Id == playerId);
+        }
+
         public async Task<Player> GetPlayerByNumberAndTeamAsync(int number, int teamId)
         {
             return await context.Players
                 .FirstOrDefaultAsync(p => p.JerseyNumber == number && p.TeamId == teamId);
         }
 
-        /// <summary>
-        /// Vérifie si un numéro est déjà pris dans une équipe
-        /// </summary>
         public async Task<bool> IsNumberTakenInTeamAsync(int number, int teamId)
         {
             return await context.Players

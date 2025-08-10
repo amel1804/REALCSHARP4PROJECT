@@ -1,10 +1,10 @@
-using System;
+ï»¿using System;
 using System.Threading.Tasks;
 
 namespace BasketballLiveScore.Repositories.Interfaces
 {
     /// <summary>
-    /// Interface Unit of Work pour gérer les transactions
+    /// Interface Unit of Work pour gï¿½rer les transactions
     /// Pattern vu dans les cours sur Entity Framework
     /// </summary>
     public interface IUnitOfWork : IDisposable

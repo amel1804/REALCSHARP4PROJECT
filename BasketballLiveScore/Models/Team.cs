@@ -1,17 +1,17 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BasketballLiveScore.Models
 {
     /// <summary>
-    /// Représente une équipe de basketball
+    /// Reprï¿½sente une ï¿½quipe de basketball
     /// </summary>
     public class Team
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Le nom de l'équipe est obligatoire")]
+        [Required(ErrorMessage = "Le nom de l'ï¿½quipe est obligatoire")]
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
 
@@ -44,12 +44,12 @@ namespace BasketballLiveScore.Models
         public virtual List<MatchLineup> MatchLineups { get; set; } = new();
 
         /// <summary>
-        /// Obtient le nom complet de l'équipe (Ville + Nom)
+        /// Obtient le nom complet de l'ï¿½quipe (Ville + Nom)
         /// </summary>
         public string FullName => string.IsNullOrWhiteSpace(City) ? Name : $"{City} {Name}";
 
         /// <summary>
-        /// Obtient le nombre total de matchs joués
+        /// Obtient le nombre total de matchs jouï¿½s
         /// </summary>
         public int TotalMatches => HomeMatches.Count + AwayMatches.Count;
     }

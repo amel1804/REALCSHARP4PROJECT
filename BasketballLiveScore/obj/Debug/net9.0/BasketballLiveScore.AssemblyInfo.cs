@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BasketballLiveScore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+391d0edb0fc9cf1ea86d4acaa8696470ce0e7c96")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+466959e1419cc50a43f0712a9ca161620a2668dd")]
 [assembly: System.Reflection.AssemblyProductAttribute("BasketballLiveScore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BasketballLiveScore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

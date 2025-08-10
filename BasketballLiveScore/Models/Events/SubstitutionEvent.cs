@@ -1,11 +1,11 @@
-using System;
+ï»¿using System;
 using BasketballLiveScore.Models;
 using BasketballLiveScore.Models.Enums;
 
 namespace BasketballLiveScore.Models.Events
 {
     /// <summary>
-    /// Événement de changement de joueur
+    /// ï¿½vï¿½nement de changement de joueur
     /// </summary>
     public class SubstitutionEvent : MatchEvent
     {

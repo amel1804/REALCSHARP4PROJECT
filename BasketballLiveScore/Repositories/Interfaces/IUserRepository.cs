@@ -1,21 +1,14 @@
-using System;
+ï»¿using System.Threading.Tasks;
 using BasketballLiveScore.Models;
 
 namespace BasketballLiveScore.Repositories.Interfaces
 {
-    /// <summary>
-    /// Interface pour le repository des utilisateurs
-    /// </summary>
     public interface IUserRepository : IRepository<User>
     {
-        /// <summary>
-        /// Vérifie si un utilisateur existe
-        /// </summary>
         bool UserExists(string username);
-
-        /// <summary>
-        /// Récupère un utilisateur par nom et mot de passe
-        /// </summary>
-        User GetByUsernameAndPassword(string username, string password);
+        Task<User?> GetByEmailAsync(string email);
+        User? GetByUsernameAndPassword(string username, string password);
+        User? GetByUsername(string username);
+        Task<IEnumerable<User>> GetActiveUsersAsync();
     }
 }

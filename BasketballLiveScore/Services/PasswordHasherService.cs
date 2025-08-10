@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using BasketballLiveScore.Services.Interfaces;
@@ -15,17 +15,17 @@ namespace BasketballLiveScore.Services
     }
 
     /// <summary>
-    /// Service de hashage sécurisé des mots de passe utilisant PBKDF2-SHA256
+    /// Service de hashage sï¿½curisï¿½ des mots de passe utilisant PBKDF2-SHA256
     /// </summary>
     public class PasswordHasherService : IPasswordHasherService
     {
         // Configuration du hashage
         private const int SALT_SIZE = 128 / 8; // 128 bits
         private const int HASH_SIZE = 256 / 8; // 256 bits
-        private const int ITERATIONS = 10000;  // Nombre d'itérations PBKDF2
+        private const int ITERATIONS = 10000;  // Nombre d'itï¿½rations PBKDF2
 
         /// <summary>
-        /// Hash un mot de passe avec un salt aléatoire
+        /// Hash un mot de passe avec un salt alï¿½atoire
         /// </summary>
         public string HashPassword(string password)
         {
@@ -34,7 +34,7 @@ namespace BasketballLiveScore.Services
                 throw new ArgumentNullException(nameof(password));
             }
 
-            // Génération d'un salt aléatoire
+            // Gï¿½nï¿½ration d'un salt alï¿½atoire
             byte[] salt = new byte[SALT_SIZE];
             using (var rng = RandomNumberGenerator.Create())
             {
@@ -54,7 +54,7 @@ namespace BasketballLiveScore.Services
         }
 
         /// <summary>
-        /// Vérifie qu'un mot de passe correspond à son hash
+        /// Vï¿½rifie qu'un mot de passe correspond ï¿½ son hash
         /// </summary>
         public bool VerifyPassword(string password, string hashedPassword)
         {
@@ -65,7 +65,7 @@ namespace BasketballLiveScore.Services
 
             try
             {
-                // Support pour migration des anciens mots de passe non hashés
+                // Support pour migration des anciens mots de passe non hashï¿½s
                 if (!hashedPassword.Contains("."))
                 {
                     // Ancien mot de passe en clair (migration)
@@ -90,7 +90,7 @@ namespace BasketballLiveScore.Services
                     iterationCount: ITERATIONS,
                     numBytesRequested: HASH_SIZE);
 
-                // Comparaison sécurisée
+                // Comparaison sï¿½curisï¿½e
                 return SlowEquals(storedHash, computedHash);
             }
             catch
@@ -100,7 +100,7 @@ namespace BasketballLiveScore.Services
         }
 
         /// <summary>
-        /// Comparaison sécurisée résistante aux timing attacks
+        /// Comparaison sï¿½curisï¿½e rï¿½sistante aux timing attacks
         /// </summary>
         private bool SlowEquals(byte[] a, byte[] b)
         {

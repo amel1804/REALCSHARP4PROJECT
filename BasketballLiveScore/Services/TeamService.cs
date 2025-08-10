@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace BasketballLiveScore.Services
 {
     /// <summary>
-    /// Interface pour le service de gestion des équipes
+    /// Interface pour le service de gestion des ï¿½quipes
     /// </summary>
     public interface ITeamService
     {
@@ -25,7 +25,7 @@ namespace BasketballLiveScore.Services
     }
 
     /// <summary>
-    /// Service pour la gestion des équipes de basketball
+    /// Service pour la gestion des ï¿½quipes de basketball
     /// </summary>
     public class TeamService : ITeamService
     {
@@ -47,7 +47,7 @@ namespace BasketballLiveScore.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la récupération de l'équipe {TeamId}", id);
+                _logger.LogError(ex, "Erreur lors de la rï¿½cupï¿½ration de l'ï¿½quipe {TeamId}", id);
                 return null;
             }
         }
@@ -61,7 +61,7 @@ namespace BasketballLiveScore.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la récupération des équipes");
+                _logger.LogError(ex, "Erreur lors de la rï¿½cupï¿½ration des ï¿½quipes");
                 return new List<Team>();
             }
         }
@@ -75,25 +75,25 @@ namespace BasketballLiveScore.Services
             {
                 // Validation
                 if (string.IsNullOrWhiteSpace(team.Name))
-                    throw new ArgumentException("Le nom de l'équipe est obligatoire");
+                    throw new ArgumentException("Le nom de l'ï¿½quipe est obligatoire");
 
-                // Vérifier l'unicité du nom
+                // Vï¿½rifier l'unicitï¿½ du nom
                 var existingTeam = _unitOfWork.Teams.Find(t => t.Name == team.Name).FirstOrDefault();
                 if (existingTeam != null)
                 {
-                    throw new InvalidOperationException($"Une équipe avec le nom '{team.Name}' existe déjà");
+                    throw new InvalidOperationException($"Une ï¿½quipe avec le nom '{team.Name}' existe dï¿½jï¿½");
                 }
 
                 team.CreatedAt = DateTime.UtcNow;
                 _unitOfWork.Teams.Add(team);
                 await _unitOfWork.CompleteAsync();
 
-                _logger.LogInformation("Équipe {TeamName} créée avec succès", team.Name);
+                _logger.LogInformation("ï¿½quipe {TeamName} crï¿½ï¿½e avec succï¿½s", team.Name);
                 return team;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la création de l'équipe");
+                _logger.LogError(ex, "Erreur lors de la crï¿½ation de l'ï¿½quipe");
                 throw;
             }
         }
@@ -108,11 +108,11 @@ namespace BasketballLiveScore.Services
                 var existingTeam = _unitOfWork.Teams.GetById(id);
                 if (existingTeam == null)
                 {
-                    _logger.LogWarning("Équipe {TeamId} non trouvée", id);
+                    _logger.LogWarning("ï¿½quipe {TeamId} non trouvï¿½e", id);
                     return null;
                 }
 
-                // Mise à jour des propriétés
+                // Mise ï¿½ jour des propriï¿½tï¿½s
                 existingTeam.Name = team.Name;
                 existingTeam.City = team.City;
                 existingTeam.Coach = team.Coach;
@@ -120,12 +120,12 @@ namespace BasketballLiveScore.Services
                 _unitOfWork.Teams.Update(existingTeam);
                 await _unitOfWork.CompleteAsync();
 
-                _logger.LogInformation("Équipe {TeamId} mise à jour avec succès", id);
+                _logger.LogInformation("ï¿½quipe {TeamId} mise ï¿½ jour avec succï¿½s", id);
                 return existingTeam;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la mise à jour de l'équipe {TeamId}", id);
+                _logger.LogError(ex, "Erreur lors de la mise ï¿½ jour de l'ï¿½quipe {TeamId}", id);
                 throw;
             }
         }
@@ -137,18 +137,18 @@ namespace BasketballLiveScore.Services
                 var team = _unitOfWork.Teams.GetById(id);
                 if (team == null)
                 {
-                    _logger.LogWarning("Équipe {TeamId} non trouvée pour suppression", id);
+                    _logger.LogWarning("ï¿½quipe {TeamId} non trouvï¿½e pour suppression", id);
                     return false;
                 }
 
-                // Vérifier qu'il n'y a pas de matchs associés
+                // Vï¿½rifier qu'il n'y a pas de matchs associï¿½s
                 var hasMatches = _unitOfWork.Matches
                     .Find(m => m.HomeTeamId == id || m.AwayTeamId == id)
                     .Any();
 
                 if (hasMatches)
                 {
-                    _logger.LogWarning("Impossible de supprimer l'équipe {TeamId} car elle a des matchs associés", id);
+                    _logger.LogWarning("Impossible de supprimer l'ï¿½quipe {TeamId} car elle a des matchs associï¿½s", id);
                     return false;
                 }
 
@@ -157,14 +157,14 @@ namespace BasketballLiveScore.Services
 
                 if (result > 0)
                 {
-                    _logger.LogInformation("Équipe {TeamId} supprimée avec succès", id);
+                    _logger.LogInformation("ï¿½quipe {TeamId} supprimï¿½e avec succï¿½s", id);
                 }
 
                 return result > 0;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la suppression de l'équipe {TeamId}", id);
+                _logger.LogError(ex, "Erreur lors de la suppression de l'ï¿½quipe {TeamId}", id);
                 return false;
             }
         }
@@ -178,7 +178,7 @@ namespace BasketballLiveScore.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de la récupération des joueurs de l'équipe {TeamId}", teamId);
+                _logger.LogError(ex, "Erreur lors de la rï¿½cupï¿½ration des joueurs de l'ï¿½quipe {TeamId}", teamId);
                 return new List<Player>();
             }
         }
@@ -192,7 +192,7 @@ namespace BasketballLiveScore.Services
 
                 if (team == null || player == null)
                 {
-                    _logger.LogWarning("Équipe ou joueur non trouvé");
+                    _logger.LogWarning("ï¿½quipe ou joueur non trouvï¿½");
                     return false;
                 }
 
@@ -200,12 +200,12 @@ namespace BasketballLiveScore.Services
                 _unitOfWork.Players.Update(player);
                 await _unitOfWork.CompleteAsync();
 
-                _logger.LogInformation("Joueur {PlayerId} ajouté à l'équipe {TeamId}", playerId, teamId);
+                _logger.LogInformation("Joueur {PlayerId} ajoutï¿½ ï¿½ l'ï¿½quipe {TeamId}", playerId, teamId);
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors de l'ajout du joueur à l'équipe");
+                _logger.LogError(ex, "Erreur lors de l'ajout du joueur ï¿½ l'ï¿½quipe");
                 return false;
             }
         }
@@ -218,20 +218,20 @@ namespace BasketballLiveScore.Services
 
                 if (player == null || player.TeamId != teamId)
                 {
-                    _logger.LogWarning("Joueur non trouvé ou n'appartient pas à l'équipe");
+                    _logger.LogWarning("Joueur non trouvï¿½ ou n'appartient pas ï¿½ l'ï¿½quipe");
                     return false;
                 }
 
-                player.TeamId = 0; // Retirer de l'équipe
+                player.TeamId = 0; // Retirer de l'ï¿½quipe
                 _unitOfWork.Players.Update(player);
                 await _unitOfWork.CompleteAsync();
 
-                _logger.LogInformation("Joueur {PlayerId} retiré de l'équipe {TeamId}", playerId, teamId);
+                _logger.LogInformation("Joueur {PlayerId} retirï¿½ de l'ï¿½quipe {TeamId}", playerId, teamId);
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors du retrait du joueur de l'équipe");
+                _logger.LogError(ex, "Erreur lors du retrait du joueur de l'ï¿½quipe");
                 return false;
             }
         }

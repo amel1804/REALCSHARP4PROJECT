@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +8,6 @@ using BasketballLiveScore.Repositories.Interfaces;
 
 namespace BasketballLiveScore.Repositories.Implementations
 {
-    /// <summary>
-    /// Repository pour la gestion des équipes
-    /// </summary>
     public class TeamRepository : Repository<Team>, ITeamRepository
     {
         private readonly BasketballDbContext context;
@@ -21,19 +17,37 @@ namespace BasketballLiveScore.Repositories.Implementations
             context = dbContext;
         }
 
-        /// <summary>
-        /// Récupère une équipe avec ses joueurs
-        /// </summary>
-        public async Task<Team> GetTeamWithPlayersAsync(int teamId)
+        public override async Task<IEnumerable<Team>> GetAllAsync()
+        {
+            return await context.Teams.ToListAsync();
+        }
+
+        public override async Task<Team?> GetByIdAsync(int id)
+        {
+            return await context.Teams.FindAsync(id);
+        }
+
+        public override async Task AddAsync(Team team)
+        {
+            await context.Teams.AddAsync(team);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<Team?> GetTeamWithPlayersAsync(int teamId)
         {
             return await context.Teams
                 .Include(t => t.Players)
                 .FirstOrDefaultAsync(t => t.Id == teamId);
         }
 
-        /// <summary>
-        /// Récupère les équipes par ville
-        /// </summary>
+        public async Task<IEnumerable<Team>> GetActiveTeamsAsync()
+        {
+            return await context.Teams
+                .Where(t => t.IsActive)  // Supposant un bool IsActive dans Team
+                .OrderBy(t => t.Name)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Team>> GetTeamsByCityAsync(string city)
         {
             return await context.Teams
@@ -42,9 +56,6 @@ namespace BasketballLiveScore.Repositories.Implementations
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// Vérifie si une équipe existe déjà
-        /// </summary>
         public async Task<bool> TeamExistsAsync(string name)
         {
             return await context.Teams

@@ -1,10 +1,10 @@
-using System;
+ï»¿using System;
 using BasketballLiveScore.Models.Enums;
 
 namespace BasketballLiveScore.Models.Events
 {
     /// <summary>
-    /// Événement représentant un panier marqué pendant le match
+    /// ï¿½vï¿½nement reprï¿½sentant un panier marquï¿½ pendant le match
     /// </summary>
     public class BasketScoredEvent : MatchEvent
     {
@@ -22,7 +22,7 @@ namespace BasketballLiveScore.Models.Events
 
         public BasketScoredEvent()
         {
-            // Calculer automatiquement les points à la création
+            // Calculer automatiquement les points ï¿½ la crï¿½ation
             CalculatePoints();
         }
 
@@ -42,8 +42,8 @@ namespace BasketballLiveScore.Models.Events
         }
 
         /// <summary>
-        /// Description textuelle de l'événement
-        /// Implémentation de la méthode abstraite selon le pattern Template Method
+        /// Description textuelle de l'ï¿½vï¿½nement
+        /// Implï¿½mentation de la mï¿½thode abstraite selon le pattern Template Method
         /// </summary>
         public override string GetDescription()
         {
