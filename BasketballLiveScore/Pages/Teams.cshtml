@@ -1,0 +1,224 @@
+@* ============================= Teams.cshtml ============================= *@
+@page
+@model BasketballLiveScore.Pages.TeamsModel
+@{
+    ViewData["Title"] = "Gestion des équipes";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Gestion des équipes</h1>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTeamModal">
+            <i class="bi bi-plus-circle"></i> Nouvelle équipe
+        </button>
+    </div>
+
+    @* Messages de feedback *@
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @Model.SuccessMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    }
+
+    @* Liste des équipes *@
+    <div class="row">
+        @if (Model.Teams != null && Model.Teams.Any())
+        {
+        @foreach (var team in Model.Teams)
+            {
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 team-card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">@team.Name</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Ville:</strong> @team.City<br />
+                        <strong>Coach:</strong> @team.Coach<br />
+                        <strong>Joueurs:</strong> @team.PlayerCount<br />
+                        <small class="text-muted">Créée le @team.CreatedAt.ToString("dd/MM/yyyy")</small>
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="btn-group w-100" role="group">
+                        <a asp-page="/Players" asp-route-teamId="@team.Id"
+                           class="btn btn-sm btn-info">
+                            <i class="bi bi-people"></i> Joueurs
+                        </a>
+                        <button type="button" class="btn btn-sm btn-warning"
+                                onclick="editTeam(@team.Id, '@team.Name', '@team.City', '@team.Coach')">
+                            <i class="bi bi-pencil"></i> Modifier
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger"
+                                onclick="deleteTeam(@team.Id, '@team.Name')">
+                            <i class="bi bi-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            }
+        }
+        else
+        {
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <h4>Aucune équipe trouvée</h4>
+                <p>Commencez par créer votre première équipe.</p>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+@* Modal d'ajout d'équipe *@
+<div class="modal fade" id="addTeamModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Create">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nouvelle équipe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label asp-for="NewTeam.Name" class="form-label">Nom de l'équipe</label>
+                        <input asp-for="NewTeam.Name" class="form-control" required />
+                        <span asp-validation-for="NewTeam.Name" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NewTeam.City" class="form-label">Ville</label>
+                        <input asp-for="NewTeam.City" class="form-control" />
+                        <span asp-validation-for="NewTeam.City" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NewTeam.Coach" class="form-label">Coach</label>
+                        <input asp-for="NewTeam.Coach" class="form-control" />
+                        <span asp-validation-for="NewTeam.Coach" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Créer l'équipe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* Modal de modification d'équipe *@
+<div class="modal fade" id="editTeamModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Update">
+                <input type="hidden" id="editTeamId" name="UpdateTeam.Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier l'équipe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nom de l'équipe</label>
+                        <input id="editTeamName" name="UpdateTeam.Name" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ville</label>
+                        <input id="editTeamCity" name="UpdateTeam.City" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Coach</label>
+                        <input id="editTeamCoach" name="UpdateTeam.Coach" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-warning">Enregistrer les modifications</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Fonction pour ouvrir le modal de modification
+        function editTeam(id, name, city, coach) {
+            document.getElementById('editTeamId').value = id;
+            document.getElementById('editTeamName').value = name;
+            document.getElementById('editTeamCity').value = city;
+            document.getElementById('editTeamCoach').value = coach;
+
+            var modal = new bootstrap.Modal(document.getElementById('editTeamModal'));
+            modal.show();
+        }
+
+        // Fonction pour supprimer une équipe
+        function deleteTeam(id, name) {
+            if (confirm(`Êtes-vous sûr de vouloir supprimer l'équipe "${name}" ?\nCette action est irréversible.`)) {
+                // Créer un formulaire pour la suppression
+                var form = document.createElement('form');
+                form.method = 'post';
+                form.action = '?handler=Delete';
+
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = id;
+                form.appendChild(input);
+
+                // Token anti-forgery
+                var token = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (token) {
+                    form.appendChild(token.cloneNode());
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        .team-card {
+            transition: transform 0.2s;
+            border: 1px solid #dee2e6;
+        }
+
+            .team-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            }
+
+        .card-header {
+            font-weight: bold;
+        }
+
+        .btn-group .btn {
+            border-radius: 0;
+        }
+
+            .btn-group .btn:first-child {
+                border-top-left-radius: 0.25rem;
+                border-bottom-left-radius: 0.25rem;
+            }
+
+            .btn-group .btn:last-child {
+                border-top-right-radius: 0.25rem;
+                border-bottom-right-radius: 0.25rem;
+            }
+    </style>
+}

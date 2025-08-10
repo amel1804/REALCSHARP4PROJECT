@@ -14,7 +14,7 @@ namespace BasketballLiveScore.Services
 
         public UpdateService(BasketballDbContext context)
         {
-            _context = context; // Correction: utiliser _context au lieu de _dataContext
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <summary>
@@ -36,7 +36,20 @@ namespace BasketballLiveScore.Services
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
             if (user != null)
             {
-                user.Name = name;
+                // Mise à jour du username et/ou du nom complet
+                user.Username = name;  // Utiliser Username au lieu de Name
+
+                // Optionnel : Si le paramètre 'name' contient un nom complet, le séparer
+                var nameParts = name.Split(' ', 2);
+                if (nameParts.Length > 0)
+                {
+                    user.FirstName = nameParts[0];
+                    if (nameParts.Length > 1)
+                    {
+                        user.LastName = nameParts[1];
+                    }
+                }
+
                 user.Role = role;
 
                 try

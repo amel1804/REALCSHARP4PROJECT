@@ -38,5 +38,8 @@ namespace BasketballLiveScore.Models
         /// Matchs à l'extérieur
         /// </summary>
         public List<Match> AwayMatches { get; set; } = new();
+
+        public List<MatchLineup> MatchLineups { get; set; } = new List<MatchLineup>();
+
     }
 }

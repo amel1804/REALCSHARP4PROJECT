@@ -1,80 +1,91 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Json;
-using BasketballLiveScore.DTOs;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using BasketballLiveScore.DTOs.User;
+using Microsoft.Extensions.Logging;
 
 namespace BasketballLiveScore.Pages
 {
-    /// <summary>
-    /// Page de connexion - Gère l'authentification des utilisateurs
-    /// Utilise HttpClient comme dans les exemples de cours
-    /// </summary>
     public class LoginModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<LoginModel> _logger;
 
         // Constantes pour éviter les valeurs magiques
         private const string HTTP_CLIENT_NAME = "BasketballAPI";
         private const string TOKEN_SESSION_KEY = "Token";
         private const string USERNAME_SESSION_KEY = "Username";
         private const string ROLE_SESSION_KEY = "Role";
+        private const string USER_ID_SESSION_KEY = "UserId";
+        private const int SESSION_TIMEOUT_HOURS = 8;
 
-        public LoginModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public LoginModel(
+            IHttpClientFactory httpClientFactory,
+            IConfiguration configuration,
+            ILogger<LoginModel> logger)
         {
             _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        /// <summary>
-        /// Modèle de liaison pour le formulaire de connexion
-        /// </summary>
         [BindProperty]
         public LoginInputModel LoginInput { get; set; } = new LoginInputModel();
 
-        /// <summary>
-        /// Message d'erreur à afficher
-        /// </summary>
+        [TempData]
         public string ErrorMessage { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Classe interne pour les données du formulaire - Pattern vu en cours
-        /// </summary>
+        [TempData]
+        public string SuccessMessage { get; set; } = string.Empty;
+
+        public string ReturnUrl { get; set; } = "/Dashboard";
+
         public class LoginInputModel
         {
             [Required(ErrorMessage = "Le nom d'utilisateur est obligatoire")]
             [Display(Name = "Nom d'utilisateur")]
-            public string Name { get; set; } = string.Empty;
+            public string Username { get; set; } = string.Empty;
 
             [Required(ErrorMessage = "Le mot de passe est obligatoire")]
             [DataType(DataType.Password)]
             [Display(Name = "Mot de passe")]
             public string Password { get; set; } = string.Empty;
+
+            [Display(Name = "Se souvenir de moi")]
+            public bool RememberMe { get; set; }
         }
 
-        /// <summary>
-        /// Gestion du GET - Affichage du formulaire
-        /// </summary>
-        public IActionResult OnGet()
+        public IActionResult OnGet(string returnUrl = null)
         {
-            // Si déjà connecté, rediriger vers le tableau de bord
-            if (HttpContext.Session.GetString(TOKEN_SESSION_KEY) != null)
+            // Si déjà connecté, rediriger
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString(TOKEN_SESSION_KEY)))
             {
+                _logger.LogInformation("Utilisateur déjà connecté, redirection vers le dashboard");
                 return RedirectToPage("/Dashboard");
+            }
+
+            ReturnUrl = returnUrl ?? "/Dashboard";
+
+            // Vérifier si on vient de la page d'inscription
+            if (TempData.ContainsKey("SuccessMessage"))
+            {
+                SuccessMessage = TempData["SuccessMessage"]?.ToString() ?? string.Empty;
             }
 
             return Page();
         }
 
-        /// <summary>
-        /// Gestion du POST - Traitement de la connexion
-        /// Pattern async/await comme vu dans les cours
-        /// </summary>
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            // Validation du modèle
+            ReturnUrl = returnUrl ?? "/Dashboard";
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -82,71 +93,136 @@ namespace BasketballLiveScore.Pages
 
             try
             {
-                // Création du client HTTP - Pattern vu dans les notes HttpClient
                 var client = _httpClientFactory.CreateClient(HTTP_CLIENT_NAME);
 
-                // Préparation des données de connexion
-                var loginDto = new UserConnectionDto
+                // Construire l'URL de l'API
+                var baseUrl = _configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7001";
+                if (!baseUrl.EndsWith("/"))
                 {
-                    Name = LoginInput.Name,
+                    baseUrl += "/";
+                }
+
+                var loginDto = new UserLoginDto
+                {
+                    Username = LoginInput.Username,
                     Password = LoginInput.Password
                 };
 
-                // Sérialisation en JSON
                 var jsonContent = JsonSerializer.Serialize(loginDto);
                 var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-                // Appel à l'API
-                var response = await client.PostAsync("api/Authentication/Login", httpContent);
+                _logger.LogInformation("Tentative de connexion pour l'utilisateur: {Username}", LoginInput.Username);
+
+                var response = await client.PostAsync($"{baseUrl}api/Authentication/Login", httpContent);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Lecture de la réponse
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent);
 
-                    if (tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.Token))
+                    _logger.LogInformation("Réponse reçue: {StatusCode}", response.StatusCode);
+
+                    try
                     {
-                        // Stockage du token et des informations utilisateur en session
-                        HttpContext.Session.SetString(TOKEN_SESSION_KEY, tokenResponse.Token);
-                        HttpContext.Session.SetString(USERNAME_SESSION_KEY, LoginInput.Name);
+                        using var document = JsonDocument.Parse(responseContent);
+                        var root = document.RootElement;
 
-                        // Extraction du rôle depuis le token (si nécessaire)
-                        // Pour simplifier, on stocke un rôle par défaut
-                        HttpContext.Session.SetString(ROLE_SESSION_KEY, "Encoder");
+                        // Récupérer le token
+                        if (root.TryGetProperty("token", out var tokenElement) ||
+                            root.TryGetProperty("Token", out tokenElement))
+                        {
+                            var token = tokenElement.GetString();
 
-                        return RedirectToPage("/Dashboard");
+                            if (!string.IsNullOrEmpty(token))
+                            {
+                                // Stocker les informations dans la session
+                                HttpContext.Session.SetString(TOKEN_SESSION_KEY, token);
+                                HttpContext.Session.SetString(USERNAME_SESSION_KEY, LoginInput.Username);
+
+                                // Récupérer le rôle depuis la réponse
+                                if (root.TryGetProperty("role", out var roleElement) ||
+                                    root.TryGetProperty("Role", out roleElement))
+                                {
+                                    var role = roleElement.GetString() ?? "Viewer";
+                                    HttpContext.Session.SetString(ROLE_SESSION_KEY, role);
+                                    _logger.LogInformation("Rôle de l'utilisateur: {Role}", role);
+                                }
+
+                                // Récupérer l'ID utilisateur si disponible
+                                if (root.TryGetProperty("userId", out var userIdElement) ||
+                                    root.TryGetProperty("UserId", out userIdElement))
+                                {
+                                    var userId = userIdElement.GetString();
+                                    if (!string.IsNullOrEmpty(userId))
+                                    {
+                                        HttpContext.Session.SetString(USER_ID_SESSION_KEY, userId);
+                                    }
+                                }
+
+                                _logger.LogInformation("Connexion réussie pour: {Username}", LoginInput.Username);
+
+                                // Si "Se souvenir de moi" est coché, étendre la durée du cookie
+                                if (LoginInput.RememberMe)
+                                {
+                                    HttpContext.Session.SetString("RememberMe", "true");
+                                }
+
+                                // Redirection selon le rôle
+                                return RedirectToPage(ReturnUrl);
+                            }
+                            else
+                            {
+                                _logger.LogWarning("Token vide reçu pour: {Username}", LoginInput.Username);
+                                ErrorMessage = "Erreur lors de la connexion : token invalide";
+                            }
+                        }
+                        else
+                        {
+                            _logger.LogWarning("Token non trouvé dans la réponse pour: {Username}", LoginInput.Username);
+                            ErrorMessage = "Erreur lors de la connexion : réponse invalide";
+                        }
+                    }
+                    catch (JsonException ex)
+                    {
+                        _logger.LogError(ex, "Erreur lors du parsing JSON pour: {Username}", LoginInput.Username);
+                        ErrorMessage = "Erreur lors de la connexion : format de réponse invalide";
                     }
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
+                    _logger.LogWarning("Échec de connexion (401) pour: {Username}", LoginInput.Username);
                     ErrorMessage = "Nom d'utilisateur ou mot de passe incorrect";
                 }
                 else
                 {
-                    ErrorMessage = "Une erreur est survenue lors de la connexion";
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogError("Erreur API ({StatusCode}): {Error}", response.StatusCode, errorContent);
+                    ErrorMessage = $"Erreur lors de la connexion (Code: {response.StatusCode})";
                 }
             }
             catch (HttpRequestException ex)
             {
-                // Log de l'erreur en production
-                ErrorMessage = $"Impossible de contacter le serveur : {ex.Message}";
+                _logger.LogError(ex, "Erreur HTTP lors de la connexion");
+                ErrorMessage = "Impossible de contacter le serveur. Vérifiez que l'API est démarrée.";
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger.LogError(ex, "Timeout lors de la connexion");
+                ErrorMessage = "La connexion au serveur a expiré. Veuillez réessayer.";
             }
             catch (Exception ex)
             {
-                // Log de l'erreur en production
-                ErrorMessage = $"Une erreur inattendue est survenue : {ex.Message}";
+                _logger.LogError(ex, "Erreur inattendue lors de la connexion");
+                ErrorMessage = "Une erreur inattendue est survenue. Veuillez réessayer.";
             }
 
             return Page();
         }
 
-        /// <summary>
-        /// Classe pour désérialiser la réponse du token
-        /// </summary>
-        private class TokenResponse
+        public IActionResult OnPostQuickLogin(string username, string password)
         {
-            public string Token { get; set; } = string.Empty;
+            LoginInput.Username = username;
+            LoginInput.Password = password;
+            return OnPostAsync().Result;
         }
     }
 }

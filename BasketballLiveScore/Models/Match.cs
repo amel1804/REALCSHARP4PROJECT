@@ -53,7 +53,6 @@ namespace BasketballLiveScore.Models
 
         // Collections
         public List<User> LiveEncoders { get; set; } = new();
-        public List<MatchEvent> Events { get; set; } = new(); // Import depuis Models.Events
         public List<MatchLineup> Lineups { get; set; } = new();
 
         // Ajout des propriétés manquantes
@@ -66,7 +65,9 @@ namespace BasketballLiveScore.Models
         /// Liste des actions du jeu (si vous avez ce concept)
         /// Correspond à GameActions utilisé dans le DbContext
         /// </summary>
+       
         public virtual List<GameAction> GameActions { get; set; } = new List<GameAction>();
+        public List<MatchLineup> MatchLineups { get; set; } = new();
 
     }
 

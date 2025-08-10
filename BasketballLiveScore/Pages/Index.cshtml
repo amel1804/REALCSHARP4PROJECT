@@ -3,61 +3,516 @@
 @{
     ViewData["Title"] = "Accueil";
     Layout = "_Layout";
+    var isAuthenticated = !string.IsNullOrEmpty(HttpContext.Session.GetString("Token"));
+    var username = HttpContext.Session.GetString("Username");
+    var role = HttpContext.Session.GetString("Role");
 }
 
-<div class="container mt-5">
-    <div class="jumbotron text-center">
-        <h1 class="display-4">🏀 Basketball LiveScore</h1>
-        <p class="lead">Application de suivi en temps réel des matchs de basketball</p>
-        <hr class="my-4">
+<style>
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 100px 0;
+        border-radius: 20px;
+        margin-bottom: 50px;
+        position: relative;
+        overflow: hidden;
+    }
 
-        @if (HttpContext.Session.GetString("Token") != null)
-        {
-        <p>Bienvenue @HttpContext.Session.GetString("Username") !</p>
-        <a class="btn btn-primary btn-lg" asp-page="/Dashboard" role="button">
-            Accéder au tableau de bord
-        </a>
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: rotate 30s linear infinite;
+    }
+
+    @@keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-title {
+        font-size: 4rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        animation: fadeInDown 1s ease;
+    }
+
+    .hero-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        opacity: 0.95;
+        animation: fadeInUp 1s ease 0.3s both;
+    }
+
+    @@keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
         }
-        else
-        {
-        <p>Connectez-vous pour commencer l'encodage des matchs</p>
-        <a class="btn btn-primary btn-lg" asp-page="/Login" role="button">
-            Se connecter
-        </a>
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 0.95;
+            transform: translateY(0);
+        }
+    }
+
+    /* Feature Cards */
+    .feature-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        height: 100%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .feature-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .feature-description {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    /* Stats Section */
+    .stats-section {
+        background: #f8f9fa;
+        padding: 60px 0;
+        border-radius: 20px;
+        margin: 50px 0;
+    }
+
+    .stat-card {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 1.1rem;
+        margin-top: 10px;
+    }
+
+    /* Action Buttons */
+    .btn-hero {
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        border-radius: 50px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        margin: 10px;
+        display: inline-block;
+    }
+
+    .btn-primary-hero {
+        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+        color: white;
+        border: none;
+    }
+
+    .btn-primary-hero:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+        color: white;
+    }
+
+    .btn-secondary-hero {
+        background: white;
+        color: #667eea;
+        border: 2px solid white;
+    }
+
+    .btn-secondary-hero:hover {
+        background: rgba(255,255,255,0.1);
+        color: white;
+        transform: translateY(-3px);
+    }
+
+    /* Quick Actions Grid */
+    .quick-action-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+
+    .quick-action-card:hover {
+        border-color: #667eea;
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    }
+
+    .quick-action-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: #667eea;
+    }
+
+    /* Live Matches Ticker */
+    .live-ticker {
+        background: #1a1a2e;
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 30px 0;
+        overflow: hidden;
+    }
+
+    .live-ticker-content {
+        display: flex;
+        animation: scroll 20s linear infinite;
+    }
+
+    @@keyframes scroll {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+
+    .ticker-item {
+        white-space: nowrap;
+        padding: 0 50px;
+        display: flex;
+        align-items: center;
+    }
+
+    .live-indicator {
+        width: 10px;
+        height: 10px;
+        background: #ff0000;
+        border-radius: 50%;
+        margin-right: 10px;
+        animation: pulse 1s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+</style>
+
+<div class="container-fluid px-4">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content text-center">
+            <h1 class="hero-title">🏀 Basketball LiveScore</h1>
+            <p class="hero-subtitle">Système professionnel d'encodage en temps réel des matchs de basketball</p>
+
+            @if (isAuthenticated)
+            {
+            <div class="mt-4">
+                <h3>Bienvenue, @username ! 👋</h3>
+                <p>Vous êtes connecté en tant que <span class="badge bg-light text-dark">@role</span></p>
+                <div class="mt-4">
+                    <a href="/Dashboard" class="btn btn-hero btn-primary-hero">
+                        <i class="bi bi-speedometer2"></i> Tableau de bord
+                    </a>
+                    <a href="/LiveScore" class="btn btn-hero btn-secondary-hero">
+                        <i class="bi bi-broadcast"></i> Score en direct
+                    </a>
+                </div>
+            </div>
+            }
+            else
+            {
+            <div class="mt-4">
+                <a href="/Login" class="btn btn-hero btn-primary-hero">
+                    <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                </a>
+                <a href="/Register" class="btn btn-hero btn-secondary-hero">
+                    <i class="bi bi-person-plus"></i> S'inscrire
+                </a>
+            </div>
+            }
+        </div>
     </div>
 
-    @* Fonctionnalités principales *@
-    <div class="row mt-5">
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">📝 Préparation des matchs</h5>
-                    <p class="card-text">
-                        Configurez les équipes, les joueurs, les règles du match et les compositions de départ.
-                    </p>
-                </div>
+    <!-- Live Ticker (si des matchs sont en cours) -->
+    <div class="live-ticker">
+        <div class="live-ticker-content">
+            <div class="ticker-item">
+                <span class="live-indicator"></span>
+                <strong>EN DIRECT:</strong> Lakers vs Warriors - Q3 - 78:82
+            </div>
+            <div class="ticker-item">
+                <span class="live-indicator"></span>
+                <strong>EN DIRECT:</strong> Bulls vs Celtics - Q2 - 45:43
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">⏱️ Encodage temps réel</h5>
-                    <p class="card-text">
-                        Enregistrez les paniers, fautes, changements et timeouts pendant le match.
-                    </p>
-                </div>
+    </div>
+
+    @if (isAuthenticated)
+    {
+        <!-- Quick Actions for Authenticated Users -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Actions Rapides</h2>
+        </div>
+        @if (role == "Administrator" || role == "Encoder")
+            {
+        <div class="col-md-3 mb-3">
+            <div class="quick-action-card" onclick="window.location.href='/MatchSetup'">
+                <i class="bi bi-plus-circle quick-action-icon"></i>
+                <h5>Nouveau Match</h5>
+                <p class="text-muted">Configurer un match</p>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">📊 Statistiques complètes</h5>
-                    <p class="card-text">
-                        Consultez l'historique complet des matchs et les statistiques détaillées.
-                    </p>
+        <div class="col-md-3 mb-3">
+            <div class="quick-action-card" onclick="window.location.href='/Teams'">
+                <i class="bi bi-people quick-action-icon"></i>
+                <h5>Gérer Équipes</h5>
+                <p class="text-muted">Équipes et joueurs</p>
+            </div>
+        </div>
+            }
+        <div class="col-md-3 mb-3">
+            <div class="quick-action-card" onclick="window.location.href='/LiveScore'">
+                <i class="bi bi-broadcast-pin quick-action-icon"></i>
+                <h5>Score Live</h5>
+                <p class="text-muted">Voir les matchs</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="quick-action-card" onclick="window.location.href='/Dashboard'">
+                <i class="bi bi-graph-up quick-action-icon"></i>
+                <h5>Statistiques</h5>
+                <p class="text-muted">Analyses détaillées</p>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-4">Fonctionnalités Principales</h2>
+            <p class="lead text-muted">Tout ce dont vous avez besoin pour gérer vos matchs de basketball</p>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3 class="feature-title">Préparation Complète</h3>
+                <p class="feature-description">
+                    Configuration détaillée des matchs : équipes, joueurs, numéros, durée des quart-temps,
+                    timeouts et composition du 5 de base.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3 class="feature-title">Encodage Temps Réel</h3>
+                <p class="feature-description">
+                    Enregistrement instantané des paniers (1, 2 ou 3 points), fautes (P0-P1-P2-P3),
+                    changements de joueurs et gestion du chronomètre.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Statistiques Détaillées</h3>
+                <p class="feature-description">
+                    Historique complet des matchs, statistiques par joueur et équipe,
+                    analyses de performance et rapports détaillés.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3 class="feature-title">Synchronisation Live</h3>
+                <p class="feature-description">
+                    Mise à jour en temps réel grâce à SignalR. Tous les spectateurs voient
+                    les changements instantanément.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3 class="feature-title">Multi-utilisateurs</h3>
+                <p class="feature-description">
+                    Système de rôles complet : Administrateurs, Encodeurs et Spectateurs
+                    avec permissions adaptées.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title">Sécurité Renforcée</h3>
+                <p class="feature-description">
+                    Authentification JWT, mots de passe hashés avec PBKDF2,
+                    et protection contre les attaques courantes.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2 class="display-4">Notre Plateforme en Chiffres</h2>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="150">0</div>
+                    <div class="stat-label">Matchs Encodés</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="24">0</div>
+                    <div class="stat-label">Équipes Actives</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="320">0</div>
+                    <div class="stat-label">Joueurs Enregistrés</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="95">0</div>
+                    <div class="stat-label">% Satisfaction</div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- CTA Section -->
+    @if (!isAuthenticated)
+    {
+    <div class="text-center py-5">
+        <h2 class="display-4 mb-4">Prêt à Commencer ?</h2>
+        <p class="lead mb-4">Rejoignez la plateforme de référence pour l'encodage des matchs de basketball</p>
+        <div>
+            <a href="/Register" class="btn btn-hero btn-primary-hero">
+                <i class="bi bi-rocket-takeoff"></i> Commencer Maintenant
+            </a>
+        </div>
+        <p class="mt-3 text-muted">
+            Déjà un compte ? <a href="/Login" class="text-decoration-none">Connectez-vous ici</a>
+        </p>
+    </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        // Animation des compteurs
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200;
+
+            const animateCounters = () => {
+                counters.forEach(counter => {
+                    const updateCount = () => {
+                        const target = +counter.getAttribute('data-target');
+                        const count = +counter.innerText;
+                        const inc = target / speed;
+
+                        if (count < target) {
+                            counter.innerText = Math.ceil(count + inc);
+                            setTimeout(updateCount, 10);
+                        } else {
+                            counter.innerText = target;
+                            // Ajouter le symbole % pour la satisfaction
+                            if (counter.getAttribute('data-target') === '95') {
+                                counter.innerText = target + '%';
+                            }
+                        }
+                    };
+                    updateCount();
+                });
+            };
+
+            // Observer pour déclencher l'animation quand visible
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        observer.disconnect();
+                    }
+                });
+            });
+
+            const statsSection = document.querySelector('.stats-section');
+            if (statsSection) {
+                observer.observe(statsSection);
+            }
+        });
+    </script>
+}

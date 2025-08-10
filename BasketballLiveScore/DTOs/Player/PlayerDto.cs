@@ -1,10 +1,5 @@
-﻿using System;
-
-namespace BasketballLiveScore.DTOs.Player
+﻿namespace BasketballLiveScore.DTOs.Player
 {
-    /// <summary>
-    /// DTO pour l'affichage d'un joueur
-    /// </summary>
     public class PlayerDto
     {
         public int Id { get; set; }

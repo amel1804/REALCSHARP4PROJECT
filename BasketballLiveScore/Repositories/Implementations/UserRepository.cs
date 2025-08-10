@@ -104,17 +104,19 @@ namespace BasketballLiveScore.Repositories.Implementations
             _dbSet.RemoveRange(entities);
         }
 
+        // Remplacez ces méthodes dans votre UserRepository.cs :
+
         /// <summary>
         /// Récupère un utilisateur par son nom et mot de passe
         /// Utilisé pour l'authentification
         /// </summary>
-        public User GetByUsernameAndPassword(string username, string password)
+        public User? GetByUsernameAndPassword(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return null;
 
             return _dbSet.FirstOrDefault(u =>
-                u.Name == username &&
+                u.Username == username &&  // Utiliser Username au lieu de Name
                 u.Password == password &&
                 u.IsActive);
         }
@@ -127,20 +129,19 @@ namespace BasketballLiveScore.Repositories.Implementations
             if (string.IsNullOrEmpty(username))
                 return false;
 
-            return _dbSet.Any(u => u.Name == username);
+            return _dbSet.Any(u => u.Username == username);  // Utiliser Username au lieu de Name
         }
 
         /// <summary>
         /// Récupère un utilisateur par son nom
         /// </summary>
-        public User GetByUsername(string username)
+        public User? GetByUsername(string username)
         {
             if (string.IsNullOrEmpty(username))
                 return null;
 
-            return _dbSet.FirstOrDefault(u => u.Name == username);
+            return _dbSet.FirstOrDefault(u => u.Username == username);  // Utiliser Username au lieu de Name
         }
-
         /// <summary>
         /// Récupère les utilisateurs actifs
         /// </summary>

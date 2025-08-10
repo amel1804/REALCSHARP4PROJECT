@@ -17,7 +17,7 @@ namespace BasketballLiveScore.Services.Interfaces
         /// <summary>
         /// Récupère un joueur par son identifiant
         /// </summary>
-        Task<PlayerDto> GetPlayerByIdAsync(int id);
+        Task<PlayerDto?> GetPlayerByIdAsync(int id);
 
         /// <summary>
         /// Récupère les joueurs d'une équipe
@@ -33,6 +33,10 @@ namespace BasketballLiveScore.Services.Interfaces
         /// Met à jour un joueur existant
         /// </summary>
         Task<PlayerDto> UpdatePlayerAsync(int id, UpdatePlayerDto updatePlayerDto);
+        /// <summary>
+        /// Définit les 5 joueurs de base pour un match
+        /// </summary>
+        Task SetStartingFiveAsync(int matchId, int teamId, List<int> playerIds);
 
         /// <summary>
         /// Supprime un joueur

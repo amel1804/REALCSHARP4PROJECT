@@ -38,9 +38,6 @@ namespace BasketballLiveScore.Migrations
                     b.Property<int>("CreatedById")
                         .HasColumnType("int");
 
-                    b.Property<int>("CreatedById1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(21)
@@ -50,9 +47,6 @@ namespace BasketballLiveScore.Migrations
                         .HasColumnType("time");
 
                     b.Property<int>("MatchId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MatchId1")
                         .HasColumnType("int");
 
                     b.Property<int?>("PlayerId")
@@ -68,11 +62,7 @@ namespace BasketballLiveScore.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("CreatedById1");
-
                     b.HasIndex("MatchId");
-
-                    b.HasIndex("MatchId1");
 
                     b.HasIndex("PlayerId");
 
@@ -96,16 +86,27 @@ namespace BasketballLiveScore.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FaultType")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<TimeSpan>("GameTime")
+                        .HasColumnType("time");
+
                     b.Property<int>("MatchId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PlayerName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int?>("PlayerId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlayerInId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlayerOutId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Points")
                         .HasColumnType("int");
@@ -113,12 +114,15 @@ namespace BasketballLiveScore.Migrations
                     b.Property<int>("Quarter")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("Timestamp")
-                        .HasColumnType("time");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MatchId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.HasIndex("PlayerInId");
+
+                    b.HasIndex("PlayerOutId");
 
                     b.ToTable("GameActions");
                 });
@@ -206,6 +210,9 @@ namespace BasketballLiveScore.Migrations
                     b.Property<int>("MatchId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MatchId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("PlayerId")
                         .HasColumnType("int");
 
@@ -216,11 +223,13 @@ namespace BasketballLiveScore.Migrations
 
                     b.HasIndex("MatchId");
 
+                    b.HasIndex("MatchId1");
+
                     b.HasIndex("PlayerId");
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("MatchLineup");
+                    b.ToTable("MatchLineups");
                 });
 
             modelBuilder.Entity("BasketballLiveScore.Models.Player", b =>
@@ -248,6 +257,8 @@ namespace BasketballLiveScore.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
 
                     b.HasIndex("TeamId", "JerseyNumber")
                         .IsUnique();
@@ -317,11 +328,6 @@ namespace BasketballLiveScore.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -409,15 +415,9 @@ namespace BasketballLiveScore.Migrations
 
             modelBuilder.Entity("BasketballLiveScore.Models.Events.MatchEvent", b =>
                 {
-                    b.HasOne("BasketballLiveScore.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("BasketballLiveScore.Models.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById1")
+                        .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -426,10 +426,6 @@ namespace BasketballLiveScore.Migrations
                         .HasForeignKey("MatchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("BasketballLiveScore.Models.Match", null)
-                        .WithMany("Events")
-                        .HasForeignKey("MatchId1");
 
                     b.HasOne("BasketballLiveScore.Models.Player", "Player")
                         .WithMany()
@@ -451,7 +447,25 @@ namespace BasketballLiveScore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BasketballLiveScore.Models.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId");
+
+                    b.HasOne("BasketballLiveScore.Models.Player", "PlayerIn")
+                        .WithMany()
+                        .HasForeignKey("PlayerInId");
+
+                    b.HasOne("BasketballLiveScore.Models.Player", "PlayerOut")
+                        .WithMany()
+                        .HasForeignKey("PlayerOutId");
+
                     b.Navigation("Match");
+
+                    b.Navigation("Player");
+
+                    b.Navigation("PlayerIn");
+
+                    b.Navigation("PlayerOut");
                 });
 
             modelBuilder.Entity("BasketballLiveScore.Models.Match", b =>
@@ -484,21 +498,25 @@ namespace BasketballLiveScore.Migrations
             modelBuilder.Entity("BasketballLiveScore.Models.MatchLineup", b =>
                 {
                     b.HasOne("BasketballLiveScore.Models.Match", "Match")
-                        .WithMany("Lineups")
+                        .WithMany("MatchLineups")
                         .HasForeignKey("MatchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BasketballLiveScore.Models.Match", null)
+                        .WithMany("Lineups")
+                        .HasForeignKey("MatchId1");
+
                     b.HasOne("BasketballLiveScore.Models.Player", "Player")
-                        .WithMany()
+                        .WithMany("MatchLineups")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BasketballLiveScore.Models.Team", "Team")
-                        .WithMany()
+                        .WithMany("MatchLineups")
                         .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Match");
@@ -566,13 +584,18 @@ namespace BasketballLiveScore.Migrations
 
             modelBuilder.Entity("BasketballLiveScore.Models.Match", b =>
                 {
-                    b.Navigation("Events");
-
                     b.Navigation("GameActions");
 
                     b.Navigation("Lineups");
 
                     b.Navigation("MatchEvents");
+
+                    b.Navigation("MatchLineups");
+                });
+
+            modelBuilder.Entity("BasketballLiveScore.Models.Player", b =>
+                {
+                    b.Navigation("MatchLineups");
                 });
 
             modelBuilder.Entity("BasketballLiveScore.Models.Team", b =>
@@ -580,6 +603,8 @@ namespace BasketballLiveScore.Migrations
                     b.Navigation("AwayMatches");
 
                     b.Navigation("HomeMatches");
+
+                    b.Navigation("MatchLineups");
 
                     b.Navigation("Players");
                 });

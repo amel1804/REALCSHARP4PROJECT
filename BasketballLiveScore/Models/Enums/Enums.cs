@@ -5,9 +5,9 @@ namespace BasketballLiveScore.Models.Enums
     /// </summary>
     public enum MatchEventType
     {
-        Basket,         // au lieu de BasketScored
-        Foul,           // au lieu de FoulCommitted
-        Substitution,   // au lieu de PlayerSubstitution
+        Basket,         
+        Foul,           
+        Substitution,   
         Timeout,
         QuarterStart,
         QuarterEnd

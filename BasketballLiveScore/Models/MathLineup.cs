@@ -27,4 +27,8 @@ namespace BasketballLiveScore.Models
         public Player? Player { get; set; }
         public Team? Team { get; set; }
     }
-}
+
+   
+
+
+    }

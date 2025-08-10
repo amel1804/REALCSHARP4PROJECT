@@ -31,5 +31,8 @@ namespace BasketballLiveScore.Models
 
         // Propriété calculée pour le nom complet
         public string FullName => $"{FirstName} {LastName}";
+        public List<MatchLineup> MatchLineups { get; set; } = new List<MatchLineup>();
+
+
     }
 }

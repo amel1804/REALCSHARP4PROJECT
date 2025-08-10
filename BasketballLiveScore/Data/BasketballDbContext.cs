@@ -1,259 +1,279 @@
-using BasketballLiveScore.Models;
+ï»¿using BasketballLiveScore.Models;
 using BasketballLiveScore.Models.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using SystemMatch = System.Text.RegularExpressions.Match; // Alias pour éviter le conflit
 
 namespace BasketballLiveScore.Data
 {
-	/// <summary>
-	/// Contexte de base de données pour l'application Basketball LiveScore
-	/// Gère la configuration et l'accès aux données selon les patterns Entity Framework vus en cours
-	/// </summary>
-	public class BasketballDbContext : DbContext
-	{
-		// Constructeur par défaut nécessaire pour les migrations
-		public BasketballDbContext()
-		{
-		}
+    /// <summary>
+    /// Contexte de base de donnÃ©es pour l'application Basketball LiveScore
+    /// GÃ¨re la configuration et l'accÃ¨s aux donnÃ©es selon les patterns Entity Framework
+    /// </summary>
+    public class BasketballDbContext : DbContext
+    {
+        // Constructeur par dÃ©faut nÃ©cessaire pour les migrations
+        public BasketballDbContext()
+        {
+        }
 
-		// Constructeur avec options pour l'injection de dépendances selon les patterns vus en cours
-		public BasketballDbContext(DbContextOptions<BasketballDbContext> options)
-			: base(options)
-		{
-		}
+        // Constructeur avec options pour l'injection de dÃ©pendances
+        public BasketballDbContext(DbContextOptions<BasketballDbContext> options)
+            : base(options)
+        {
+        }
 
-		// DbSets pour chaque entité du modèle selon les conventions Entity Framework vues en cours
-		public DbSet<User> Users { get; set; }
-		public DbSet<Team> Teams { get; set; }
-		public DbSet<Player> Players { get; set; }
-		public DbSet<Models.Match> Matches { get; set; } // Qualification explicite pour éviter le conflit
-		public DbSet<MatchEvent> MatchEvents { get; set; }
-		public DbSet<FoulEvent> FoulEvents { get; set; }
-		public DbSet<SubstitutionEvent> SubstitutionEvents { get; set; }
-		public DbSet<TimeoutEvent> TimeoutEvents { get; set; }
-		public DbSet<GameAction> GameActions { get; set; }
+        // DbSets pour chaque entitÃ© du modÃ¨le
+        public DbSet<User> Users { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<Player> Players { get; set; }
+        public DbSet<Models.Match> Matches { get; set; } // Qualification explicite pour Ã©viter le conflit
+        public DbSet<MatchEvent> MatchEvents { get; set; }
+        public DbSet<FoulEvent> FoulEvents { get; set; }
+        public DbSet<SubstitutionEvent> SubstitutionEvents { get; set; }
+        public DbSet<TimeoutEvent> TimeoutEvents { get; set; }
+        public DbSet<GameAction> GameActions { get; set; }
 
-		/// <summary>
-		/// Configuration du modèle et des relations Entity Framework
-		/// Résout les problèmes de cascade multiples selon les bonnes pratiques vues en cours
-		/// Utilise l'API Fluent pour les configurations complexes comme vu dans les exemples de cours
-		/// </summary>
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			base.OnModelCreating(modelBuilder);
+        // Ajout du DbSet pour MatchLineup
+        public DbSet<MatchLineup> MatchLineups { get; set; }
 
-			// Configuration de la hiérarchie MatchEvent avec TPH (Table Per Hierarchy)
-			// Pattern d'héritage vu en cours pour gérer les différents types d'événements
-			modelBuilder.Entity<MatchEvent>()
-				.HasDiscriminator<string>("Discriminator")
-				.HasValue<MatchEvent>("MatchEvent")
-				.HasValue<FoulEvent>("FoulEvent")
-				.HasValue<SubstitutionEvent>("SubstitutionEvent")
-				.HasValue<TimeoutEvent>("TimeoutEvent");
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-			// === RELATIONS AVEC CASCADE AUTORISÉE (pas de conflit) ===
-			// Ces relations peuvent utiliser CASCADE car elles sont directes et uniques
+            // --- HÃ©ritage TPH (Table Per Hierarchy) pour MatchEvent ---
+            modelBuilder.Entity<MatchEvent>()
+                .HasDiscriminator<string>("Discriminator")
+                .HasValue<MatchEvent>("MatchEvent")
+                .HasValue<FoulEvent>("FoulEvent")
+                .HasValue<SubstitutionEvent>("SubstitutionEvent")
+                .HasValue<TimeoutEvent>("TimeoutEvent");
 
-			// Player -> Team : CASCADE OK car relation directe unique
-			// Un joueur appartient à une seule équipe, suppression en cascade logique
-			modelBuilder.Entity<Player>()
-				.HasOne(p => p.Team)
-				.WithMany(t => t.Players)
-				.HasForeignKey(p => p.TeamId)
-				.OnDelete(DeleteBehavior.Cascade);
+            // --- Relations avec cascade autorisÃ©e ---
 
-			// GameAction -> Match : CASCADE OK car relation directe unique
-			// Les actions de jeu appartiennent au match, suppression en cascade logique
-			modelBuilder.Entity<GameAction>()
-				.HasOne(ga => ga.Match)
-				.WithMany(m => m.GameActions)
-				.HasForeignKey(ga => ga.MatchId)
-				.OnDelete(DeleteBehavior.Cascade);
+            // Player -> Team (Cascade)
+            modelBuilder.Entity<Player>()
+                .HasOne(p => p.Team)
+                .WithMany(t => t.Players)
+                .HasForeignKey(p => p.TeamId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-			// MatchEvent -> Match : CASCADE OK car relation directe unique
-			// Les événements appartiennent au match, suppression en cascade logique
-			modelBuilder.Entity<MatchEvent>()
-				.HasOne(me => me.Match)
-				.WithMany(m => m.MatchEvents)
-				.HasForeignKey(me => me.MatchId)
-				.OnDelete(DeleteBehavior.Cascade);
+            // GameAction -> Match (Cascade)
+            modelBuilder.Entity<GameAction>()
+                .HasOne(ga => ga.Match)
+                .WithMany(m => m.GameActions)
+                .HasForeignKey(ga => ga.MatchId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-			// === RELATIONS SANS CASCADE (éviter les chemins multiples) ===
-			// Ces relations utilisent NoAction pour éviter les cycles de cascade selon les bonnes pratiques vues en cours
+            // MatchEvent -> Match (Cascade)
+            modelBuilder.Entity<MatchEvent>()
+                .HasOne(me => me.Match)
+                .WithMany(m => m.MatchEvents)
+                .HasForeignKey(me => me.MatchId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-			// **Configuration Many-to-Many BIDIRECTIONNELLE : Match.LiveEncoders <-> User.EncodedMatches**
-			// Configuration Many-to-Many avec navigation inverse selon les patterns EF Core vus en cours
-			modelBuilder.Entity<Models.Match>()
-				.HasMany(m => m.LiveEncoders)
-				.WithMany(u => u.EncodedMatches) // Navigation inverse bidirectionnelle
-				.UsingEntity<Dictionary<string, object>>(
-					"MatchLiveEncoders", // Nom de la table de jonction
-					j => j.HasOne<User>().WithMany().HasForeignKey("UserId"),
-					j => j.HasOne<Models.Match>().WithMany().HasForeignKey("MatchId"),
-					j =>
-					{
-						j.ToTable("MatchLiveEncoders"); // Nom explicite de la table de jonction
-						j.HasKey("MatchId", "UserId"); // Clé composite
-					}
-				);
+            // --- Relations sans cascade (NoAction) pour Ã©viter conflits ---
 
-			// **Configuration relation bidirectionnelle User.PreparedMatches <-> Match.PreparedByUser**
-			// Configuration selon les patterns de relations One-to-Many vus en cours
-			modelBuilder.Entity<Models.Match>()
-				.HasOne(m => m.PreparedByUser)
-				.WithMany(u => u.PreparedMatches) // Navigation inverse pour la relation bidirectionnelle
-				.HasForeignKey(m => m.PreparedByUserId)
-				.OnDelete(DeleteBehavior.NoAction); // NoAction pour éviter les cycles de cascade
+            // Many-to-Many Match.LiveEncoders <-> User.EncodedMatches
+            modelBuilder.Entity<Models.Match>()
+                .HasMany(m => m.LiveEncoders)
+                .WithMany(u => u.EncodedMatches)
+                .UsingEntity<Dictionary<string, object>>(
+                    "MatchLiveEncoders",
+                    j => j.HasOne<User>().WithMany().HasForeignKey("UserId"),
+                    j => j.HasOne<Models.Match>().WithMany().HasForeignKey("MatchId"),
+                    j =>
+                    {
+                        j.ToTable("MatchLiveEncoders");
+                        j.HasKey("MatchId", "UserId");
+                    });
 
-			// **Configuration des relations inverses Team -> Match**
-			// Configuration selon les patterns de relations multiples vus en cours
-			// Une équipe peut jouer plusieurs matchs à domicile et à l'extérieur
+            // User.PreparedMatches <-> Match.PreparedByUser (One-to-Many)
+            modelBuilder.Entity<Models.Match>()
+                .HasOne(m => m.PreparedByUser)
+                .WithMany(u => u.PreparedMatches)
+                .HasForeignKey(m => m.PreparedByUserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-			// Relation Team -> HomeMatches (quand l'équipe joue à domicile)
-			modelBuilder.Entity<Team>()
-				.HasMany(t => t.HomeMatches)
-				.WithOne(m => m.HomeTeam)
-				.HasForeignKey(m => m.HomeTeamId)
-				.OnDelete(DeleteBehavior.NoAction); // NoAction pour éviter les conflits avec AwayTeam
+            // Team -> HomeMatches (NoAction)
+            modelBuilder.Entity<Team>()
+                .HasMany(t => t.HomeMatches)
+                .WithOne(m => m.HomeTeam)
+                .HasForeignKey(m => m.HomeTeamId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-			// Relation Team -> AwayMatches (quand l'équipe joue à l'extérieur)
-			modelBuilder.Entity<Team>()
-				.HasMany(t => t.AwayMatches)
-				.WithOne(m => m.AwayTeam)
-				.HasForeignKey(m => m.AwayTeamId)
-				.OnDelete(DeleteBehavior.NoAction); // NoAction pour éviter les conflits avec HomeTeam
+            // Team -> AwayMatches (NoAction)
+            modelBuilder.Entity<Team>()
+                .HasMany(t => t.AwayMatches)
+                .WithOne(m => m.AwayTeam)
+                .HasForeignKey(m => m.AwayTeamId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-			// MatchEvent -> Player : NO ACTION pour éviter cascade multiple
-			// Un événement peut référencer un joueur, mais pas de cascade pour éviter les conflits
-			modelBuilder.Entity<MatchEvent>()
-				.HasOne(me => me.Player)
-				.WithMany()
-				.HasForeignKey(me => me.PlayerId)
-				.OnDelete(DeleteBehavior.NoAction);
+            // MatchEvent -> Player (NoAction)
+            modelBuilder.Entity<MatchEvent>()
+                .HasOne(me => me.Player)
+                .WithMany()
+                .HasForeignKey(me => me.PlayerId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-			// MatchEvent -> User (CreatedBy) : NO ACTION pour éviter cascade multiple
-			// Un événement est créé par un utilisateur, mais pas de cascade
-			modelBuilder.Entity<MatchEvent>()
-				.HasOne<User>()
-				.WithMany()
-				.HasForeignKey(me => me.CreatedById)
-				.OnDelete(DeleteBehavior.NoAction);
+            // SubstitutionEvent -> PlayerIn (NoAction)
+            modelBuilder.Entity<SubstitutionEvent>()
+                .HasOne(se => se.PlayerIn)
+                .WithMany()
+                .HasForeignKey(se => se.PlayerInId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-			// SubstitutionEvent -> PlayerIn : NO ACTION pour éviter cascade multiple
-			// Référence au joueur qui entre dans la substitution
-			modelBuilder.Entity<SubstitutionEvent>()
-				.HasOne(se => se.PlayerIn)
-				.WithMany()
-				.HasForeignKey(se => se.PlayerInId)
-				.OnDelete(DeleteBehavior.NoAction);
+            // SubstitutionEvent -> PlayerOut (NoAction)
+            modelBuilder.Entity<SubstitutionEvent>()
+                .HasOne(se => se.PlayerOut)
+                .WithMany()
+                .HasForeignKey(se => se.PlayerOutId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-			// SubstitutionEvent -> PlayerOut : NO ACTION pour éviter cascade multiple
-			// Référence au joueur qui sort dans la substitution
-			modelBuilder.Entity<SubstitutionEvent>()
-				.HasOne(se => se.PlayerOut)
-				.WithMany()
-				.HasForeignKey(se => se.PlayerOutId)
-				.OnDelete(DeleteBehavior.NoAction);
+            // TimeoutEvent -> Team (NoAction)
+            modelBuilder.Entity<TimeoutEvent>()
+                .HasOne(te => te.Team)
+                .WithMany()
+                .HasForeignKey(te => te.TeamId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-			// TimeoutEvent -> Team : NO ACTION pour éviter cascade multiple
-			// Un timeout appartient à une équipe mais pas de cascade
-			modelBuilder.Entity<TimeoutEvent>()
-				.HasOne(te => te.Team)
-				.WithMany()
-				.HasForeignKey(te => te.TeamId)
-				.OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<MatchLineup>(entity =>
+            {
+                entity.HasKey(ml => ml.Id);
 
-			// === CONFIGURATION DES INDEX POUR LES PERFORMANCES ===
-			// Configuration des index selon les bonnes pratiques vues en cours
+                entity.HasOne(ml => ml.Match)
+                      .WithMany(m => m.MatchLineups)
+                      .HasForeignKey(ml => ml.MatchId)
+                      .IsRequired()
+                      .OnDelete(DeleteBehavior.Cascade);
 
-			// Index unique sur le nom d'utilisateur pour l'authentification
-			modelBuilder.Entity<User>()
-				.HasIndex(u => u.Username)
-				.IsUnique();
+                entity.HasOne(ml => ml.Player)
+                      .WithMany(p => p.MatchLineups)
+                      .HasForeignKey(ml => ml.PlayerId)
+                      .IsRequired()
+                      .OnDelete(DeleteBehavior.Cascade);
 
-			// Index unique sur l'email pour éviter les doublons
-			modelBuilder.Entity<User>()
-				.HasIndex(u => u.Email)
-				.IsUnique();
+                entity.HasOne(ml => ml.Team)
+                      .WithMany(t => t.MatchLineups)
+                      .HasForeignKey(ml => ml.TeamId)
+                      .IsRequired()
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
 
-			// Index composite unique : un numéro de maillot unique par équipe
-			// Respecte les règles métier du basketball
-			modelBuilder.Entity<Player>()
-				.HasIndex(p => new { p.TeamId, p.JerseyNumber })
-				.IsUnique();
+            // --- Indexes pour la performance ---
 
-			// === CONFIGURATION DES VALEURS PAR DÉFAUT ===
-			// Configuration des valeurs par défaut avec SQL Server selon les patterns vus en cours
+            // User.Username unique
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
 
-			// Valeur par défaut pour la date de création des matchs
-			modelBuilder.Entity<Models.Match>()
-				.Property(m => m.CreatedAt)
-				.HasDefaultValueSql("GETDATE()");
+            // User.Email unique
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
 
-			// Valeur par défaut pour la date de création des équipes
-			modelBuilder.Entity<Team>()
-				.Property(t => t.CreatedAt)
-				.HasDefaultValueSql("GETDATE()");
+            // Player : numÃ©ro de maillot unique par Ã©quipe
+            modelBuilder.Entity<Player>()
+                .HasIndex(p => new { p.TeamId, p.JerseyNumber })
+                .IsUnique();
 
-			// Valeur par défaut pour la date de création des utilisateurs
-			modelBuilder.Entity<User>()
-				.Property(u => u.CreatedAt)
-				.HasDefaultValueSql("GETDATE()");
+            // Ajout index sur Foreign Keys pour optimiser les jointures (optionnel)
+            modelBuilder.Entity<Player>()
+                .HasIndex(p => p.TeamId);
 
-			// Valeur par défaut pour le statut actif des utilisateurs
-			modelBuilder.Entity<User>()
-				.Property(u => u.IsActive)
-				.HasDefaultValue(true);
+            modelBuilder.Entity<GameAction>()
+                .HasIndex(ga => ga.MatchId);
 
-			// Valeur par défaut pour la date de création des événements
-			modelBuilder.Entity<MatchEvent>()
-				.Property(me => me.CreatedAt)
-				.HasDefaultValueSql("GETDATE()");
-		}
+            modelBuilder.Entity<MatchEvent>()
+                .HasIndex(me => me.MatchId);
 
-		/// <summary>
-		/// Configuration de la connexion pour le mode développement
-		/// Utilisé uniquement lors de la création des migrations selon les patterns vus en cours
-		/// </summary>
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			if (!optionsBuilder.IsConfigured)
-			{
-				optionsBuilder.UseSqlServer(
-					"Server=(localdb)\\MSSQLLocalDB;Database=BasketballLiveScoreDb;Trusted_Connection=True;");
-			}
-		}
-	}
+            modelBuilder.Entity<MatchEvent>()
+                .HasIndex(me => me.PlayerId);
 
-	/// <summary>
-	/// Factory pour la création du contexte lors des migrations Entity Framework
-	/// Implémente IDesignTimeDbContextFactory selon les bonnes pratiques vues en cours
-	/// Nécessaire pour les outils Entity Framework CLI et Package Manager Console
-	/// </summary>
-	public class BasketballDbContextFactory : IDesignTimeDbContextFactory<BasketballDbContext>
-	{
-		/// <summary>
-		/// Crée une instance du contexte pour les migrations
-		/// Utilise la configuration depuis appsettings.json selon les patterns vus en cours
-		/// </summary>
-		/// <param name="args">Arguments de ligne de commande (non utilisés)</param>
-		/// <returns>Instance configurée du BasketballDbContext</returns>
-		public BasketballDbContext CreateDbContext(string[] args)
-		{
-			// Configuration selon les patterns de configuration vus en cours
-			var configuration = new ConfigurationBuilder()
-				.AddJsonFile("appsettings.json")
-				.Build();
+            modelBuilder.Entity<MatchEvent>()
+                .HasIndex(me => me.CreatedById);
 
-			// Construction des options avec la chaîne de connexion
-			var optionsBuilder = new DbContextOptionsBuilder<BasketballDbContext>();
-			optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            modelBuilder.Entity<SubstitutionEvent>()
+                .HasIndex(se => se.PlayerInId);
 
-			// Retour de l'instance configurée
-			return new BasketballDbContext(optionsBuilder.Options);
-		}
-	}
+            modelBuilder.Entity<SubstitutionEvent>()
+                .HasIndex(se => se.PlayerOutId);
+
+            modelBuilder.Entity<TimeoutEvent>()
+                .HasIndex(te => te.TeamId);
+
+            // --- Contraintes supplÃ©mentaires (exemples) ---
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Username)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Email)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Team>()
+                .Property(t => t.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Player>()
+                .Property(p => p.FirstName)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<Player>()
+                .Property(p => p.LastName)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            // --- Valeurs par dÃ©faut ---
+
+            modelBuilder.Entity<Models.Match>()
+                .Property(m => m.CreatedAt)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Team>()
+                .Property(t => t.CreatedAt)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.CreatedAt)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.IsActive)
+                .HasDefaultValue(true);
+
+            modelBuilder.Entity<MatchEvent>()
+                .Property(me => me.CreatedAt)
+                .HasDefaultValueSql("GETDATE()");
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(
+                    "Server=(localdb)\\MSSQLLocalDB;Database=BasketballLiveScoreDb;Trusted_Connection=True;");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Classe pour la crÃ©ation du contexte Ã  la conception (migrations)
+    /// </summary>
+    public class BasketballDbContextFactory : IDesignTimeDbContextFactory<BasketballDbContext>
+    {
+        public BasketballDbContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<BasketballDbContext>();
+            optionsBuilder.UseSqlServer(
+                "Server=(localdb)\\MSSQLLocalDB;Database=BasketballLiveScoreDb;Trusted_Connection=True;");
+
+            return new BasketballDbContext(optionsBuilder.Options);
+        }
+    }
 }

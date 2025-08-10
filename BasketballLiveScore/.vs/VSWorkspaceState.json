@@ -3,12 +3,14 @@
     "",
     "\\Controllers",
     "\\Data",
-    "\\Models",
-    "\\Models\\Events",
-    "\\Pages",
-    "\\Pages\\Shared",
-    "\\Services\\Interfaces"
+    "\\Hubs",
+    "\\Migrations",
+    "\\Repositories",
+    "\\Repositories\\Implementations",
+    "\\Repositories\\Interfaces",
+    "\\Services",
+    "\\wwwroot"
   ],
-  "SelectedNode": "\\Pages\\LiveScore.cshtml",
+  "SelectedNode": "\\Pages\\Dashboard.cshtml.cs",
   "PreviewInSolutionExplorer": false
 }

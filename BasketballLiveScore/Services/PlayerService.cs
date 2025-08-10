@@ -153,6 +153,67 @@ namespace BasketballLiveScore.Services
 
             return true;
         }
+        /// <summary>
+        /// Définit les 5 joueurs de base pour un match
+        /// </summary>
+        public async Task SetStartingFiveAsync(int matchId, int teamId, List<int> playerIds)
+        {
+            const int STARTING_FIVE_COUNT = 5;
+
+            if (playerIds == null || playerIds.Count != STARTING_FIVE_COUNT)
+            {
+                throw new ArgumentException($"Exactement {STARTING_FIVE_COUNT} joueurs doivent être sélectionnés");
+            }
+
+            try
+            {
+                var match = await _unitOfWork.Matches.GetMatchWithDetailsAsync(matchId);
+                if (match == null)
+                {
+                    throw new InvalidOperationException($"Match {matchId} non trouvé");
+                }
+
+                // Vérifier que tous les joueurs existent et sont dans l'équipe
+                foreach (var playerId in playerIds)
+                {
+                    var player = await _unitOfWork.Players.GetByIdAsync(playerId);
+                    if (player == null || player.TeamId != teamId)
+                    {
+                        throw new InvalidOperationException($"Joueur {playerId} invalide ou pas dans l'équipe {teamId}");
+                    }
+                }
+
+                // Supprimer les anciens starters de cette équipe
+                var oldStarters = match.Lineups.Where(l => l.TeamId == teamId && l.IsStarter).ToList();
+                foreach (var oldStarter in oldStarters)
+                {
+                    match.Lineups.Remove(oldStarter);
+                }
+
+                // Ajouter les nouveaux starters
+                foreach (var playerId in playerIds)
+                {
+                    match.Lineups.Add(new MatchLineup
+                    {
+                        MatchId = matchId,
+                        PlayerId = playerId,
+                        TeamId = teamId,
+                        IsStarter = true
+                    });
+                }
+
+                await _unitOfWork.CompleteAsync();
+
+                // Si vous avez un logger
+                // _logger.LogInformation("5 de base défini pour l'équipe {TeamId} dans le match {MatchId}", teamId, matchId);
+            }
+            catch (Exception ex) when (!(ex is ArgumentException || ex is InvalidOperationException))
+            {
+                // Si vous avez un logger
+                // _logger.LogError(ex, "Erreur lors de la définition du 5 de base");
+                throw;
+            }
+        }
 
         /// <summary>
         /// Récupère les statistiques d'un joueur pour un match

@@ -3,10 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BasketballLiveScore.Models
 {
-    /// <summary>
-    /// Représente une action de jeu durant un match
-    /// Basé sur le pattern Entity vu dans les codes de cours
-    /// </summary>
     public class GameAction
     {
         public int Id { get; set; }
@@ -14,25 +10,32 @@ namespace BasketballLiveScore.Models
         [Required]
         public int MatchId { get; set; }
 
-        [MaxLength(100)]
-        public string? PlayerName { get; set; }
+        public int? PlayerId { get; set; }
 
         [Required]
         [MaxLength(50)]
-        public string ActionType { get; set; } = string.Empty;
+        public string ActionType { get; set; } = string.Empty; // Basket, Fault, Substitution, Timeout
 
-        public int Points { get; set; }
+        public int Points { get; set; } // Pour les paniers (1, 2 ou 3)
 
         [MaxLength(10)]
-        public string? FaultType { get; set; }
+        public string? FaultType { get; set; } // P0, P1, P2, P3
+
+        public int? PlayerInId { get; set; } // Pour les changements
+        public int? PlayerOutId { get; set; } // Pour les changements
 
         [Required]
         public int Quarter { get; set; }
 
         [Required]
-        public TimeSpan Timestamp { get; set; }
+        public TimeSpan GameTime { get; set; }
 
-        // Navigation property - comme dans ef_relations.cs
-        public Match? Match { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation properties
+        public virtual Match? Match { get; set; }
+        public virtual Player? Player { get; set; }
+        public virtual Player? PlayerIn { get; set; }
+        public virtual Player? PlayerOut { get; set; }
     }
 }

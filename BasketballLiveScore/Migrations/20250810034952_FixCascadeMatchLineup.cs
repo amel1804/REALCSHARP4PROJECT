@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BasketballLiveScore.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialWithCascadeFix : Migration
+    public partial class FixCascadeMatchLineup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,7 +37,6 @@ namespace BasketballLiveScore.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
@@ -120,12 +119,15 @@ namespace BasketballLiveScore.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MatchId = table.Column<int>(type: "int", nullable: false),
-                    PlayerName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    PlayerId = table.Column<int>(type: "int", nullable: true),
                     ActionType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Points = table.Column<int>(type: "int", nullable: false),
                     FaultType = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    PlayerInId = table.Column<int>(type: "int", nullable: true),
+                    PlayerOutId = table.Column<int>(type: "int", nullable: true),
                     Quarter = table.Column<int>(type: "int", nullable: false),
-                    Timestamp = table.Column<TimeSpan>(type: "time", nullable: false)
+                    GameTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -136,6 +138,21 @@ namespace BasketballLiveScore.Migrations
                         principalTable: "Matches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GameActions_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_GameActions_Players_PlayerInId",
+                        column: x => x.PlayerInId,
+                        principalTable: "Players",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_GameActions_Players_PlayerOutId",
+                        column: x => x.PlayerOutId,
+                        principalTable: "Players",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -151,9 +168,7 @@ namespace BasketballLiveScore.Migrations
                     Points = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     CreatedById = table.Column<int>(type: "int", nullable: false),
-                    CreatedById1 = table.Column<int>(type: "int", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
-                    MatchId1 = table.Column<int>(type: "int", nullable: true),
                     FoulType = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     PlayerInId = table.Column<int>(type: "int", nullable: true),
                     PlayerOutId = table.Column<int>(type: "int", nullable: true),
@@ -168,11 +183,6 @@ namespace BasketballLiveScore.Migrations
                         principalTable: "Matches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MatchEvents_Matches_MatchId1",
-                        column: x => x.MatchId1,
-                        principalTable: "Matches",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MatchEvents_Players_PlayerId",
                         column: x => x.PlayerId,
@@ -197,17 +207,12 @@ namespace BasketballLiveScore.Migrations
                         name: "FK_MatchEvents_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_MatchEvents_Users_CreatedById1",
-                        column: x => x.CreatedById1,
-                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MatchLineup",
+                name: "MatchLineups",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -215,29 +220,34 @@ namespace BasketballLiveScore.Migrations
                     MatchId = table.Column<int>(type: "int", nullable: false),
                     PlayerId = table.Column<int>(type: "int", nullable: false),
                     TeamId = table.Column<int>(type: "int", nullable: false),
-                    IsStarter = table.Column<bool>(type: "bit", nullable: false)
+                    IsStarter = table.Column<bool>(type: "bit", nullable: false),
+                    MatchId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MatchLineup", x => x.Id);
+                    table.PrimaryKey("PK_MatchLineups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MatchLineup_Matches_MatchId",
+                        name: "FK_MatchLineups_Matches_MatchId",
                         column: x => x.MatchId,
                         principalTable: "Matches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MatchLineup_Players_PlayerId",
+                        name: "FK_MatchLineups_Matches_MatchId1",
+                        column: x => x.MatchId1,
+                        principalTable: "Matches",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MatchLineups_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MatchLineup_Teams_TeamId",
+                        name: "FK_MatchLineups_Teams_TeamId",
                         column: x => x.TeamId,
                         principalTable: "Teams",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -270,6 +280,21 @@ namespace BasketballLiveScore.Migrations
                 column: "MatchId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GameActions_PlayerId",
+                table: "GameActions",
+                column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GameActions_PlayerInId",
+                table: "GameActions",
+                column: "PlayerInId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GameActions_PlayerOutId",
+                table: "GameActions",
+                column: "PlayerOutId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Matches_AwayTeamId",
                 table: "Matches",
                 column: "AwayTeamId");
@@ -290,19 +315,9 @@ namespace BasketballLiveScore.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MatchEvents_CreatedById1",
-                table: "MatchEvents",
-                column: "CreatedById1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MatchEvents_MatchId",
                 table: "MatchEvents",
                 column: "MatchId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MatchEvents_MatchId1",
-                table: "MatchEvents",
-                column: "MatchId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MatchEvents_PlayerId",
@@ -325,24 +340,34 @@ namespace BasketballLiveScore.Migrations
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MatchLineup_MatchId",
-                table: "MatchLineup",
+                name: "IX_MatchLineups_MatchId",
+                table: "MatchLineups",
                 column: "MatchId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MatchLineup_PlayerId",
-                table: "MatchLineup",
+                name: "IX_MatchLineups_MatchId1",
+                table: "MatchLineups",
+                column: "MatchId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MatchLineups_PlayerId",
+                table: "MatchLineups",
                 column: "PlayerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MatchLineup_TeamId",
-                table: "MatchLineup",
+                name: "IX_MatchLineups_TeamId",
+                table: "MatchLineups",
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MatchLiveEncoders_UserId",
                 table: "MatchLiveEncoders",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Players_TeamId",
+                table: "Players",
+                column: "TeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Players_TeamId_JerseyNumber",
@@ -373,7 +398,7 @@ namespace BasketballLiveScore.Migrations
                 name: "MatchEvents");
 
             migrationBuilder.DropTable(
-                name: "MatchLineup");
+                name: "MatchLineups");
 
             migrationBuilder.DropTable(
                 name: "MatchLiveEncoders");

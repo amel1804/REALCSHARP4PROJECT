@@ -1,13 +1,33 @@
-﻿namespace BasketballLiveScore.DTOs
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace BasketballLiveScore.DTOs
 {
+    /// <summary>
+    /// DTO pour enregistrer une action de jeu
+    /// </summary>
     public class GameActionDto
     {
+        [Required(ErrorMessage = "L'ID du match est obligatoire")]
         public int MatchId { get; set; }
-        public string? PlayerName { get; set; }
-        public string? ActionType { get; set; } // Exemple : "Basket", "Fault", "Substitution"
-        public int Points { get; set; } // Points marqués (si applicable)
-        public string? FaultType { get; set; } // Exemple : "P0", "P1", etc.
+
+        [Required(ErrorMessage = "L'ID du joueur est obligatoire")]
+        public int PlayerId { get; set; } // FIX: plus de PlayerName
+
+        [Required(ErrorMessage = "Le type d'action est obligatoire")]
+        [MaxLength(50)]
+        public string ActionType { get; set; } = string.Empty;
+
+        public int? Points { get; set; }
+
+        [MaxLength(50)]
+        public string? FaultType { get; set; }
+
+        [Required(ErrorMessage = "Le numéro du quart-temps est obligatoire")]
+        [Range(1, 4, ErrorMessage = "Le quart-temps doit être entre 1 et 4")]
         public int Quarter { get; set; }
-        public TimeSpan Timestamp { get; set; }
+
+        [Required(ErrorMessage = "Le temps de jeu est obligatoire")]
+        public TimeSpan GameTime { get; set; } // FIX: remplace Timestamp
     }
 }

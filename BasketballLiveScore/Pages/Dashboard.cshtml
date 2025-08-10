@@ -1,132 +1,818 @@
-@page
+﻿@page
 @model BasketballLiveScore.Pages.DashboardModel
 @{
     ViewData["Title"] = "Tableau de bord";
     Layout = "_Layout";
+    var username = HttpContext.Session.GetString("Username");
+    var role = HttpContext.Session.GetString("Role");
+    var isAdmin = role == "Administrator";
+    var isEncoder = role == "Encoder";
+    var canManage = isAdmin || isEncoder;
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">Tableau de bord</h1>
+<style>
+    /* Styles pour le Dashboard */
+    .dashboard-wrapper {
+        background: #f5f6fa;
+        min-height: calc(100vh - 100px);
+        padding: 20px 0;
+    }
 
-    @* Section des actions rapides *@
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Nouveau Match</h5>
-                    <p class="card-text">Cr�er et configurer un nouveau match</p>
-                    <a asp-page="/MatchSetup" class="btn btn-primary">Cr�er un match</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Matchs en cours</h5>
-                    <p class="card-text">@Model.ActiveMatchesCount match(s) en cours</p>
-                    <a asp-page="/LiveScore" class="btn btn-success">Voir les scores</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Historique</h5>
-                    <p class="card-text">@Model.TotalMatchesCount matchs au total</p>
-                    <a href="#matches-list" class="btn btn-info">Voir l'historique</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 30px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
 
-    @* Liste des matchs r�cents *@
-    <div class="card" id="matches-list">
-        <div class="card-header">
-            <h3>Matchs r�cents</h3>
+    .dashboard-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 40%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.1);
+        transform: rotate(35deg);
+    }
+
+    .welcome-message {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        animation: slideInLeft 0.8s ease;
+    }
+
+    .user-info {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    @@keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Cards de statistiques */
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+
+    .stat-card.primary::before { background: linear-gradient(180deg, #4e73df 0%, #224abe 100%); }
+    .stat-card.success::before { background: linear-gradient(180deg, #1cc88a 0%, #13855c 100%); }
+    .stat-card.info::before { background: linear-gradient(180deg, #36b9cc 0%, #258391 100%); }
+    .stat-card.warning::before { background: linear-gradient(180deg, #f6c23e 0%, #dda20a 100%); }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+
+    .stat-icon.primary { background: rgba(78, 115, 223, 0.1); color: #4e73df; }
+    .stat-icon.success { background: rgba(28, 200, 138, 0.1); color: #1cc88a; }
+    .stat-icon.info { background: rgba(54, 185, 204, 0.1); color: #36b9cc; }
+    .stat-icon.warning { background: rgba(246, 194, 62, 0.1); color: #f6c23e; }
+
+    .stat-value {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: #2d3436;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+    }
+
+    .stat-change {
+        font-size: 0.9rem;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-weight: normal;
+    }
+
+    .stat-change.positive {
+        background: rgba(28, 200, 138, 0.1);
+        color: #1cc88a;
+    }
+
+    .stat-change.negative {
+        background: rgba(231, 74, 59, 0.1);
+        color: #e74a3b;
+    }
+
+    .stat-label {
+        color: #858796;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Action Cards */
+    .action-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+        height: 100%;
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        border-color: #667eea;
+    }
+
+    .action-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    /* Live Match Card */
+    .live-match-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .live-match-card.active {
+        border: 2px solid #1cc88a;
+        animation: pulse-border 2s infinite;
+    }
+
+    @@keyframes pulse-border {
+        0% { box-shadow: 0 0 0 0 rgba(28, 200, 138, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(28, 200, 138, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(28, 200, 138, 0); }
+    }
+
+    .live-indicator {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .live-dot {
+        width: 10px;
+        height: 10px;
+        background: #e74a3b;
+        border-radius: 50%;
+        animation: blink 1.5s infinite;
+    }
+
+    @@keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+
+    .live-text {
+        color: #e74a3b;
+        font-weight: bold;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+
+    .match-teams {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .team-info {
+        text-align: center;
+    }
+
+    .team-name {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #2d3436;
+        margin-bottom: 10px;
+    }
+
+    .team-score {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .vs-separator {
+        font-size: 1.5rem;
+        color: #b2bec3;
+        font-weight: bold;
+    }
+
+    .match-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-top: 1px solid #ecf0f1;
+        margin-top: 15px;
+    }
+
+    .match-detail {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #636e72;
+        font-size: 0.9rem;
+    }
+
+    /* Recent Activities */
+    .activity-list {
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.2rem;
+    }
+
+    .activity-icon.basket { background: rgba(28, 200, 138, 0.1); color: #1cc88a; }
+    .activity-icon.foul { background: rgba(246, 194, 62, 0.1); color: #f6c23e; }
+    .activity-icon.timeout { background: rgba(231, 74, 59, 0.1); color: #e74a3b; }
+    .activity-icon.substitution { background: rgba(54, 185, 204, 0.1); color: #36b9cc; }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        font-weight: 600;
+        color: #2d3436;
+        margin-bottom: 3px;
+    }
+
+    .activity-time {
+        font-size: 0.85rem;
+        color: #95a5a6;
+    }
+
+    /* Charts Section */
+    .chart-container {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        height: 100%;
+    }
+
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .chart-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2d3436;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .welcome-message {
+            font-size: 1.8rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+        }
+
+        .team-score {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="dashboard-wrapper">
+    <div class="container-fluid px-4">
+        <!-- Header Section -->
+        <div class="dashboard-header">
+            <div class="welcome-message">
+                👋 Bienvenue, @username !
+            </div>
+            <div class="user-info">
+                <span>Connecté en tant que </span>
+                <span class="badge bg-light text-dark px-3 py-2">@role</span>
+                <span class="ms-3">📅 @DateTime.Now.ToString("dddd d MMMM yyyy", new System.Globalization.CultureInfo("fr-FR"))</span>
+            </div>
         </div>
-        <div class="card-body">
-            @if (Model.RecentMatches != null && Model.RecentMatches.Any())
-            {
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>�quipe domicile</th>
-                            <th>Score</th>
-                            <th>�quipe visiteur</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var match in Model.RecentMatches)
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card primary">
+                    <div class="stat-icon primary">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+                    <div class="stat-value">
+                        @Model.TotalMatchesCount
+                        <span class="stat-change positive">+12%</span>
+                    </div>
+                    <div class="stat-label">Total des Matchs</div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card success">
+                    <div class="stat-icon success">
+                        <i class="bi bi-broadcast"></i>
+                    </div>
+                    <div class="stat-value">
+                        @Model.ActiveMatchesCount
+                        @if (Model.ActiveMatchesCount > 0)
+                        {
+                        <span class="live-dot"></span>
+                        }
+                    </div>
+                    <div class="stat-label">Matchs en Direct</div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card info">
+                    <div class="stat-icon info">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="stat-value">
+                        24
+                        <span class="stat-change positive">+2</span>
+                    </div>
+                    <div class="stat-label">Équipes Actives</div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card warning">
+                    <div class="stat-icon warning">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <div class="stat-value">
+                        186
+                        <span class="stat-change positive">+8</span>
+                    </div>
+                    <div class="stat-label">Joueurs Inscrits</div>
+                </div>
+            </div>
+        </div>
+
+        @if (canManage)
+        {
+            <!-- Quick Actions for Admin/Encoder -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3 class="mb-3">
+                    <i class="bi bi-lightning-charge-fill text-warning"></i> Actions Rapides
+                </h3>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="action-card" onclick="window.location.href='/MatchSetup'">
+                    <div class="action-icon">
+                        <i class="bi bi-plus-lg"></i>
+                    </div>
+                    <h5>Nouveau Match</h5>
+                    <p class="text-muted mb-3">Configurer un nouveau match</p>
+                    <button class="btn btn-primary btn-sm px-4">
+                        <i class="bi bi-arrow-right"></i> Créer
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="action-card" onclick="window.location.href='/Teams'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #00d2ff 0%, #3a47d5 100%);">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h5>Gérer Équipes</h5>
+                    <p class="text-muted mb-3">Équipes et compositions</p>
+                    <button class="btn btn-info btn-sm px-4">
+                        <i class="bi bi-arrow-right"></i> Gérer
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="action-card" onclick="window.location.href='/Players'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <h5>Gérer Joueurs</h5>
+                    <p class="text-muted mb-3">Joueurs et statistiques</p>
+                    <button class="btn btn-success btn-sm px-4">
+                        <i class="bi bi-arrow-right"></i> Gérer
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="action-card" onclick="window.location.href='/LiveScore'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <i class="bi bi-broadcast-pin"></i>
+                    </div>
+                    <h5>Encoder Live</h5>
+                    <p class="text-muted mb-3">Encoder un match en direct</p>
+                    <button class="btn btn-warning btn-sm px-4">
+                        <i class="bi bi-arrow-right"></i> Encoder
+                    </button>
+                </div>
+            </div>
+        </div>
+        }
+
+        <div class="row">
+            <!-- Live Matches Section -->
+            <div class="col-lg-8 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h4 class="mb-0">
+                            <i class="bi bi-controller text-primary"></i> Matchs Récents et En Cours
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.RecentMatches != null && Model.RecentMatches.Any())
+                        {
+                        @foreach (var match in Model.RecentMatches.Take(5))
                             {
-                        <tr>
-                            <td>@match.ScheduledDate.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@match.HomeTeamName</td>
-                            <td class="text-center">
-                                <strong>@match.HomeTeamScore - @match.AwayTeamScore</strong>
-                            </td>
-                            <td>@match.AwayTeamName</td>
-                            <td>
-                                @{
-                                            var statusClass = match.Status switch
+                                var isLive = match.Status == "InProgress";
+                        <div class="live-match-card @(isLive ? "active" : "")">
+                            @if (isLive)
+                                    {
+                            <div class="live-indicator">
+                                <span class="live-dot"></span>
+                                <span class="live-text">EN DIRECT</span>
+                            </div>
+                                    }
+
+                            <div class="match-teams">
+                                <div class="team-info">
+                                    <div class="team-name">@match.HomeTeamName</div>
+                                    <div class="team-score">@match.HomeTeamScore</div>
+                                </div>
+                                <div class="vs-separator">VS</div>
+                                <div class="team-info">
+                                    <div class="team-name">@match.AwayTeamName</div>
+                                    <div class="team-score">@match.AwayTeamScore</div>
+                                </div>
+                            </div>
+
+                            <div class="match-info">
+                                <div class="match-detail">
+                                    <i class="bi bi-calendar3"></i>
+                                    <span>@match.ScheduledDate.ToString("dd/MM HH:mm")</span>
+                                </div>
+
+                                @if (match.CurrentQuarter > 0)
+                                        {
+                                <div class="match-detail">
+                                    <i class="bi bi-clock"></i>
+                                    <span>Q@match.CurrentQuarter</span>
+                                </div>
+                                        }
+
+                                <div class="match-detail">
+                                    @if (match.Status == "InProgress")
                                             {
-                                                "InProgress" => "badge bg-success",
-                                                "Finished" => "badge bg-secondary",
-                                                "Scheduled" => "badge bg-info",
-                                                _ => "badge bg-warning"
-                                            };
-                                            var statusText = match.Status switch
+                                    <a href="/LiveScore?matchId=@match.Id" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-play-circle"></i> Encoder
+                                    </a>
+                                            }
+                                            else if (match.Status == "Scheduled" && canManage)
                                             {
-                                                "InProgress" => "En cours",
-                                                "Finished" => "Termin�",
-                                                "Scheduled" => "Programm�",
-                                                _ => match.Status
-                                            };
-                                }
-                                <span class="@statusClass">@statusText</span>
-                            </td>
-                            <td>
-                                @if (match.Status == "InProgress")
-                                        {
-                                <a asp-page="/LiveScore" asp-route-matchId="@match.Id"
-                                   class="btn btn-sm btn-primary">Encoder</a>
-                                        }
-                                        else if (match.Status == "Scheduled")
-                                        {
-                                <button class="btn btn-sm btn-success"
-                                        onclick="startMatch(@match.Id)">
-                                    D�marrer
-                                </button>
-                                        }
-                                        else
-                                        {
-                                <a href="#" class="btn btn-sm btn-info">D�tails</a>
-                                        }
-                            </td>
-                        </tr>
+                                    <button class="btn btn-sm btn-success" onclick="startMatch(@match.Id)">
+                                        <i class="bi bi-play-fill"></i> Démarrer
+                                    </button>
+                                            }
+                                            else if (match.Status == "Finished")
+                                            {
+                                    <span class="badge bg-secondary">Terminé</span>
+                                            }
+                                            else
+                                            {
+                                    <span class="badge bg-info">Programmé</span>
+                                            }
+                                </div>
+                            </div>
+                        </div>
                             }
-                    </tbody>
-                </table>
+                        }
+                        else
+                        {
+                        <div class="text-center py-5">
+                            <i class="bi bi-calendar-x" style="font-size: 3rem; color: #dfe6e9;"></i>
+                            <p class="text-muted mt-3">Aucun match récent</p>
+                            @if (canManage)
+                                {
+                            <a href="/MatchSetup" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Créer un match
+                            </a>
+                                }
+                        </div>
+                        }
+                    </div>
+                </div>
             </div>
-            }
-            else
-            {
-            <p class="text-muted">Aucun match trouv�.</p>
-            }
+
+            <!-- Recent Activities -->
+            <div class="col-lg-4 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h4 class="mb-0">
+                            <i class="bi bi-activity text-success"></i> Activités Récentes
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon basket">
+                                    <i class="bi bi-trophy"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Panier à 3 points</div>
+                                    <div class="activity-time">Lakers vs Warriors - Il y a 5 min</div>
+                                </div>
+                            </div>
+
+                            <div class="activity-item">
+                                <div class="activity-icon foul">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Faute personnelle</div>
+                                    <div class="activity-time">Bulls vs Celtics - Il y a 12 min</div>
+                                </div>
+                            </div>
+
+                            <div class="activity-item">
+                                <div class="activity-icon substitution">
+                                    <i class="bi bi-arrow-left-right"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Changement de joueur</div>
+                                    <div class="activity-time">Heat vs Nets - Il y a 18 min</div>
+                                </div>
+                            </div>
+
+                            <div class="activity-item">
+                                <div class="activity-icon timeout">
+                                    <i class="bi bi-pause-circle"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Temps mort</div>
+                                    <div class="activity-time">Spurs vs Rockets - Il y a 25 min</div>
+                                </div>
+                            </div>
+
+                            <div class="activity-item">
+                                <div class="activity-icon basket">
+                                    <i class="bi bi-trophy"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Lancer franc réussi</div>
+                                    <div class="activity-time">Lakers vs Warriors - Il y a 30 min</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Chart -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h4 class="chart-title">
+                            <i class="bi bi-graph-up text-primary"></i> Performance de la Semaine
+                        </h4>
+                        <select class="form-select form-select-sm" style="width: auto;">
+                            <option>Cette semaine</option>
+                            <option>Semaine dernière</option>
+                            <option>Ce mois</option>
+                        </select>
+                    </div>
+                    <canvas id="performanceChart" height="150"></canvas>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h4 class="chart-title">
+                            <i class="bi bi-pie-chart text-success"></i> Répartition des Actions
+                        </h4>
+                        <button class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-download"></i> Export
+                        </button>
+                    </div>
+                    <canvas id="actionsChart" height="150"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Fonction pour d�marrer un match
+        // Fonction pour démarrer un match
         function startMatch(matchId) {
-            if (confirm('Voulez-vous vraiment d�marrer ce match ?')) {
+            if (confirm('Êtes-vous sûr de vouloir démarrer ce match ?')) {
                 window.location.href = '/LiveScore?matchId=' + matchId + '&start=true';
             }
         }
+
+        // Chart de performance
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(performanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                datasets: [{
+                    label: 'Points marqués',
+                    data: [85, 92, 78, 95, 88, 102, 96],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Points encaissés',
+                    data: [78, 88, 82, 91, 79, 95, 89],
+                    borderColor: '#764ba2',
+                    backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            borderDash: [5, 5]
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart des actions
+        const actionsCtx = document.getElementById('actionsChart').getContext('2d');
+        new Chart(actionsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Paniers 2pts', 'Paniers 3pts', 'Lancers francs', 'Fautes', 'Timeouts'],
+                datasets: [{
+                    data: [145, 67, 89, 42, 18],
+                    backgroundColor: [
+                        '#667eea',
+                        '#764ba2',
+                        '#1cc88a',
+                        '#f6c23e',
+                        '#e74a3b'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Auto-refresh si des matchs sont en cours
+        @if (Model.ActiveMatchesCount > 0)
+        {
+            <text>
+            // Rafraîchir toutes les 30 secondes
+            setInterval(function() {
+                console.log('Rafraîchissement automatique...');
+                // Ici on pourrait faire un appel AJAX pour mettre à jour uniquement les scores
+                // Pour l'instant on recharge la page
+                location.reload();
+            }, 30000);
+            </text>
+        }
+
+        // Animation des compteurs au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            const statValues = document.querySelectorAll('.stat-value');
+            statValues.forEach(stat => {
+                const value = parseInt(stat.textContent);
+                if (!isNaN(value)) {
+                    let current = 0;
+                    const increment = value / 30;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= value) {
+                            current = value;
+                            clearInterval(timer);
+                        }
+                        stat.firstChild.textContent = Math.floor(current);
+                    }, 30);
+                }
+            });
+        });
     </script>
 }

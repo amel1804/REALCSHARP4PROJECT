@@ -48,7 +48,7 @@ namespace BasketballLiveScore.Repositories.Implementations
             return await _context.Matches
                 .Include(m => m.HomeTeam).ThenInclude(t => t.Players)
                 .Include(m => m.AwayTeam).ThenInclude(t => t.Players)
-                .Include(m => m.Events)
+                .Include(m => m.MatchEvents)
                 .FirstOrDefaultAsync(m => m.Id == matchId);
         }
     }
