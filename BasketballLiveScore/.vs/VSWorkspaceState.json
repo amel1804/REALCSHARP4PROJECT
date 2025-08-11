@@ -1,17 +1,17 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers",
-    "\\Models",
-    "\\Models\\Events",
-    "\\Pages",
-    "\\Pages\\Shared",
+    "\\Data",
+    "\\DTOs",
+    "\\DTOs\\Player",
+    "\\DTOs\\Team",
+    "\\DTOs\\User",
+    "\\Migrations",
     "\\Repositories",
-    "\\Repositories\\Implementations",
     "\\Repositories\\Interfaces",
     "\\Services",
     "\\Services\\Interfaces"
   ],
-  "SelectedNode": "\\Services\\PlayerService.cs",
+  "SelectedNode": "\\Models\\GameAction.cs",
   "PreviewInSolutionExplorer": false
 }

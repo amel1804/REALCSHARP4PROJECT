@@ -1,0 +1,124 @@
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using BasketballLiveScore.DTOs.Match;
+using BasketballLiveScore.Models;
+using BasketballLiveScore.Models.Enums;
+using BasketballLiveScore.Repositories.Interfaces;
+using BasketballLiveScore.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+
+namespace BasketballLiveScore.Pages
+{
+    public class LiveScoreModel : PageModel
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILiveScoreService _liveScoreService;
+        private readonly ILogger<LiveScoreModel> _logger;
+
+        public LiveScoreModel(
+            IUnitOfWork unitOfWork,
+            ILiveScoreService liveScoreService,
+            ILogger<LiveScoreModel> logger)
+        {
+            _unitOfWork = unitOfWork;
+            _liveScoreService = liveScoreService;
+            _logger = logger;
+        }
+
+        public MatchDto? CurrentMatch { get; set; }
+        public int MatchId { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(int? matchId, bool? start)
+        {
+            // Vérifier l'authentification
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Login");
+            }
+
+            // Vérifier le rôle (seuls Admin et Encoder peuvent encoder)
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Administrator" && role != "Encoder")
+            {
+                return RedirectToPage("/Dashboard");
+            }
+
+            try
+            {
+                if (matchId.HasValue)
+                {
+                    MatchId = matchId.Value;
+
+                    var match = _unitOfWork.Matches.GetById(MatchId);
+                    if (match != null)
+                    {
+                        CurrentMatch = new MatchDto
+                        {
+                            Id = match.Id,
+                            ScheduledDate = match.ScheduledDate,
+                            HomeTeamName = match.HomeTeam?.Name ?? "Équipe domicile",
+                            AwayTeamName = match.AwayTeam?.Name ?? "Équipe extérieure",
+                            HomeTeamScore = match.HomeTeamScore,
+                            AwayTeamScore = match.AwayTeamScore,
+                            Status = match.Status.ToString(),
+                            CurrentQuarter = match.CurrentQuarter
+                        };
+
+                        // Si demandé, démarrer le match
+                        if (start == true && match.Status == Models.Enums.MatchStatus.Scheduled)
+                        {
+                            var started = await _liveScoreService.StartMatchAsync(MatchId);
+                            if (started)
+                            {
+                                _logger.LogInformation("Match {MatchId} démarré depuis la page LiveScore", MatchId);
+                                // Recharger les données du match
+                                match = _unitOfWork.Matches.GetById(MatchId);
+                                CurrentMatch.Status = match.Status.ToString();
+                                CurrentMatch.CurrentQuarter = match.CurrentQuarter;
+                            }
+                            else
+                            {
+                                _logger.LogWarning("Impossible de démarrer le match {MatchId}", MatchId);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Si pas de match spécifié, prendre le premier match en cours
+                    var activeMatch = _unitOfWork.Matches
+                        .Find(m => m.Status == Models.Enums.MatchStatus.InProgress)
+                        .FirstOrDefault();
+
+                    if (activeMatch != null)
+                    {
+                        MatchId = activeMatch.Id;
+                        CurrentMatch = new MatchDto
+                        {
+                            Id = activeMatch.Id,
+                            ScheduledDate = activeMatch.ScheduledDate,
+                            HomeTeamName = activeMatch.HomeTeam?.Name ?? "Équipe domicile",
+                            AwayTeamName = activeMatch.AwayTeam?.Name ?? "Équipe extérieure",
+                            HomeTeamScore = activeMatch.HomeTeamScore,
+                            AwayTeamScore = activeMatch.AwayTeamScore,
+                            Status = activeMatch.Status.ToString(),
+                            CurrentQuarter = activeMatch.CurrentQuarter
+                        };
+                    }
+                }
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors du chargement de la page LiveScore");
+                return RedirectToPage("/Dashboard");
+            }
+        }
+    }
+}

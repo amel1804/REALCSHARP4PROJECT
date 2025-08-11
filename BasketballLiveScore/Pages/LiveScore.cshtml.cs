@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BasketballLiveScore.DTOs.Match;
 using BasketballLiveScore.Models;
+using BasketballLiveScore.Models.Enums;
 using BasketballLiveScore.Repositories.Interfaces;
 using BasketballLiveScore.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -69,7 +70,7 @@ namespace BasketballLiveScore.Pages
                         };
 
                         // Si demandé, démarrer le match
-                        if (start == true && match.Status == MatchStatus.Scheduled)
+                        if (start == true && match.Status == Models.Enums.MatchStatus.Scheduled)
                         {
                             var started = await _liveScoreService.StartMatchAsync(MatchId);
                             if (started)
@@ -91,7 +92,7 @@ namespace BasketballLiveScore.Pages
                 {
                     // Si pas de match spécifié, prendre le premier match en cours
                     var activeMatch = _unitOfWork.Matches
-                        .Find(m => m.Status == MatchStatus.InProgress)
+                        .Find(m => m.Status == Models.Enums.MatchStatus.InProgress)
                         .FirstOrDefault();
 
                     if (activeMatch != null)

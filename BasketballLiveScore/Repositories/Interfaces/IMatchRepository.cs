@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BasketballLiveScore.Models;
+using BasketballLiveScore.Models.Enums;
 
 
 namespace BasketballLiveScore.Repositories.Interfaces
@@ -9,11 +10,12 @@ namespace BasketballLiveScore.Repositories.Interfaces
     {
         Task<List<Match>> GetMatchesWithTeamsAsync();
 
-        // Utilisation de l'enum MatchStatus du namespace BasketballLiveScore.Models
-        Task<List<Match>> GetMatchesByStatusAsync(MatchStatus status);
+        // Utilisation de l'enum MatchStatus du namespace Models.Enums
+        Task<List<Match>> GetMatchesByStatusAsync(Models.Enums.MatchStatus status);
 
         Task<List<Match>> GetMatchesByTeamAsync(int teamId);
 
         Task<Match> GetMatchWithDetailsAsync(int matchId);
     }
 }
+//             return await context.Teams

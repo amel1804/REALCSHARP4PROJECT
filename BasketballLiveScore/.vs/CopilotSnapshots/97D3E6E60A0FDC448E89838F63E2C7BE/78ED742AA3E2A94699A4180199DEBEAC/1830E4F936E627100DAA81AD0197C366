@@ -1,0 +1,621 @@
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using BasketballLiveScore.Data;
+using BasketballLiveScore.DTOs.LiveScore;
+using BasketballLiveScore.Models;
+using BasketballLiveScore.Models.Events;
+using BasketballLiveScore.Models.Enums;
+using BasketballLiveScore.Services.Interfaces;
+
+namespace BasketballLiveScore.Services
+{
+    /// <summary>
+    /// Service pour la gestion du score en temps r�el
+    /// Impl�mente toute la logique m�tier pour l'encodage live
+    /// </summary>
+    public class LiveScoreService : ILiveScoreService
+    {
+        // Constantes pour �viter les valeurs magiques
+        private const int QUARTER_DURATION_SECONDS = 600; // 10 minutes par d�faut
+        private const int MAX_PERSONAL_FOULS = 5;
+        private const int MAX_TIMEOUTS_PER_HALF = 3;
+        private const int PLAYERS_ON_COURT = 5;
+
+        private readonly BasketballDbContext _context;
+        private readonly ILogger<LiveScoreService> _logger;
+
+        public LiveScoreService(BasketballDbContext context, ILogger<LiveScoreService> logger)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        /// <summary>
+        /// D�marre le chronom�tre du match
+        /// </summary>
+        public async Task<bool> StartClockAsync(int matchId)
+        {
+            try
+            {
+                var match = await _context.Matches
+                    .Include(m => m.HomeTeam)
+                    .Include(m => m.AwayTeam)
+                    .FirstOrDefaultAsync(m => m.Id == matchId);
+
+                if (match == null)
+                {
+                    _logger.LogWarning("Match {MatchId} non trouvé", matchId);
+                    return false;
+                }
+
+                // Vérifier que le match peut être démarré
+                // Utilisation explicite du namespace pour éviter l'ambiguïté
+                if (match.Status != Models.Enums.MatchStatus.Scheduled && 
+                    match.Status != Models.Enums.MatchStatus.InProgress)
+                {
+                    _logger.LogWarning("Le match {MatchId} ne peut pas être démarré (status: {Status})", matchId, match.Status);
+                    return false;
+                }
+
+                match.Status = Models.Enums.MatchStatus.InProgress;
+
+                // Si c'est le premier démarrage
+                if (!match.StartTime.HasValue)
+                {
+                    match.StartTime = DateTime.UtcNow;
+                    match.CurrentQuarter = 1;
+                    match.RemainingTimeSeconds = match.QuarterDurationMinutes * 60;
+                }
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Chronomètre démarré pour le match {MatchId}", matchId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors du démarrage du chronomètre pour le match {MatchId}", matchId);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Arr�te le chronom�tre du match
+        /// </summary>
+        public async Task<bool> StopClockAsync(int matchId)
+        {
+            try
+            {
+                var match = await _context.Matches.FindAsync(matchId);
+
+                if (match == null)
+                {
+                    _logger.LogWarning("Match {MatchId} non trouv�", matchId);
+                    return false;
+                }
+
+                // Le chronom�tre peut �tre arr�t� � tout moment pendant le match
+                // Mais on ne change pas le statut du match (il reste InProgress)
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Chronom�tre arr�t� pour le match {MatchId}", matchId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de l'arr�t du chronom�tre pour le match {MatchId}", matchId);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Enregistre un panier marqu�
+        /// </summary>
+        public async Task<bool> RecordBasketAsync(int matchId, BasketScoreDto basketDto)
+        {
+            try
+            {
+                var match = await _context.Matches
+                    .Include(m => m.HomeTeam)
+                        .ThenInclude(t => t != null ? t.Players : null)
+                    .Include(m => m.AwayTeam)
+                        .ThenInclude(t => t != null ? t.Players : null)
+                    .FirstOrDefaultAsync(m => m.Id == matchId);
+
+                if (match == null || match.Status != Models.Enums.MatchStatus.InProgress)
+                {
+                    _logger.LogWarning("Match {MatchId} non trouv� ou pas en cours", matchId);
+                    return false;
+                }
+
+                // V�rifier que le joueur existe et appartient � une des �quipes du match
+                var player = await _context.Players
+                    .Include(p => p.Team)
+                    .FirstOrDefaultAsync(p => p.Id == basketDto.PlayerId);
+
+                if (player == null)
+                {
+                    _logger.LogWarning("Joueur {PlayerId} non trouv�", basketDto.PlayerId);
+                    return false;
+                }
+
+                bool isHomeTeam = player.TeamId == match.HomeTeamId;
+                bool isAwayTeam = player.TeamId == match.AwayTeamId;
+
+                if (!isHomeTeam && !isAwayTeam)
+                {
+                    _logger.LogWarning("Le joueur {PlayerId} n'appartient � aucune �quipe du match", basketDto.PlayerId);
+                    return false;
+                }
+
+                // D�terminer le type de panier
+                var basketType = basketDto.Points switch
+                {
+                    1 => BasketType.FreeThrow,
+                    2 => BasketType.TwoPoints,
+                    3 => BasketType.ThreePoints,
+                    _ => throw new InvalidOperationException($"Nombre de points invalide: {basketDto.Points}")
+                };
+
+                // Cr�er l'�v�nement de panier
+                var basketEvent = new BasketScoredEvent
+                {
+                    MatchId = matchId,
+                    Match = match,
+                    PlayerId = basketDto.PlayerId,
+                    Player = player,
+                    Quarter = basketDto.Quarter,
+                    GameTime = basketDto.GameTime,
+                    BasketType = basketType,
+                    Points = basketDto.Points,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedById = 1 // TODO: R�cup�rer l'utilisateur actuel
+                };
+
+                // Calculer les points automatiquement
+                basketEvent.CalculatePoints();
+
+                // Mettre � jour le score du match
+                if (isHomeTeam)
+                {
+                    match.HomeTeamScore += basketDto.Points;
+                }
+                else
+                {
+                    match.AwayTeamScore += basketDto.Points;
+                }
+
+                // Ajouter aussi dans GameActions pour compatibilit�
+                var gameAction = new GameAction
+                {
+                    MatchId = matchId,
+                    PlayerId = basketDto.PlayerId,
+                    ActionType = "Basket",
+                    Points = basketDto.Points,
+                    Quarter = basketDto.Quarter,
+                    GameTime = basketDto.GameTime,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.MatchEvents.Add(basketEvent);
+                _context.GameActions.Add(gameAction);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Panier de {Points} points enregistr� pour le joueur {PlayerId} (�quipe: {Team})",
+                    basketDto.Points, basketDto.PlayerId, isHomeTeam ? "domicile" : "visiteur");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de l'enregistrement du panier pour le match {MatchId}", matchId);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Enregistre une faute commise
+        /// </summary>
+        public async Task<bool> RecordFoulAsync(int matchId, FoulCommittedDto foulDto)
+        {
+            try
+            {
+                var match = await _context.Matches
+                    .Include(m => m.HomeTeam)
+                        .ThenInclude(t => t != null ? t.Players : null)
+                    .Include(m => m.AwayTeam)
+                        .ThenInclude(t => t != null ? t.Players : null)
+                    .FirstOrDefaultAsync(m => m.Id == matchId);
+
+                if (match == null || match.Status != Models.Enums.MatchStatus.InProgress)
+                {
+                    _logger.LogWarning("Match {MatchId} non trouv� ou pas en cours", matchId);
+                    return false;
+                }
+
+                // V�rifier que le joueur existe
+                var player = await _context.Players.FindAsync(foulDto.PlayerId);
+                if (player == null)
+                {
+                    _logger.LogWarning("Joueur {PlayerId} non trouv�", foulDto.PlayerId);
+                    return false;
+                }
+
+                // Compter les fautes existantes du joueur dans ce match
+                var existingFouls = await _context.Set<FoulEvent>()
+                    .CountAsync(f => f.MatchId == matchId && f.PlayerId == foulDto.PlayerId);
+
+                if (existingFouls >= MAX_PERSONAL_FOULS)
+                {
+                    _logger.LogWarning("Le joueur {PlayerId} a d�j� {MaxFouls} fautes", foulDto.PlayerId, MAX_PERSONAL_FOULS);
+                    // Le joueur est �limin� mais on peut quand m�me enregistrer la faute
+                }
+
+                // Cr�er l'�v�nement de faute
+                var foulEvent = new FoulEvent
+                {
+                    MatchId = matchId,
+                    Match = match,
+                    PlayerId = foulDto.PlayerId,
+                    Player = player,
+                    Quarter = foulDto.Quarter,
+                    GameTime = foulDto.GameTime,
+                    FoulType = foulDto.FoulType.ToUpper(),
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedById = 1 // TODO: R�cup�rer l'utilisateur actuel
+                };
+
+                // Ajouter aussi dans GameActions pour compatibilit�
+                var gameAction = new GameAction
+                {
+                    MatchId = matchId,
+                    PlayerId = foulDto.PlayerId,
+                    ActionType = "Fault",
+                    FaultType = foulDto.FoulType.ToUpper(),
+                    Quarter = foulDto.Quarter,
+                    GameTime = foulDto.GameTime,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.MatchEvents.Add(foulEvent);
+                _context.GameActions.Add(gameAction);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Faute {FoulType} enregistr�e pour le joueur {PlayerId} (total: {TotalFouls})",
+                    foulDto.FoulType, foulDto.PlayerId, existingFouls + 1);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de l'enregistrement de la faute pour le match {MatchId}", matchId);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Enregistre un changement de joueur
+        /// </summary>
+        public async Task<bool> RecordSubstitutionAsync(int matchId, PlayerSubstitutionDto substitutionDto)
+        {
+            try
+            {
+                var match = await _context.Matches
+                    .Include(m => m.Lineups)
+                    .FirstOrDefaultAsync(m => m.Id == matchId);
+
+                if (match == null || match.Status != Models.Enums.MatchStatus.InProgress)
+                {
+                    _logger.LogWarning("Match {MatchId} non trouv� ou pas en cours", matchId);
+                    return false;
+                }
+
+                // V�rifier que les deux joueurs existent
+                var playerIn = await _context.Players.FindAsync(substitutionDto.PlayerInId);
+                var playerOut = await _context.Players.FindAsync(substitutionDto.PlayerOutId);
+
+                if (playerIn == null || playerOut == null)
+                {
+                    _logger.LogWarning("Joueur entrant ({PlayerIn}) ou sortant ({PlayerOut}) non trouv�",
+                        substitutionDto.PlayerInId, substitutionDto.PlayerOutId);
+                    return false;
+                }
+
+                // V�rifier qu'ils sont dans la m�me �quipe
+                if (playerIn.TeamId != playerOut.TeamId)
+                {
+                    throw new InvalidOperationException("Les joueurs doivent �tre de la m�me �quipe");
+                }
+
+                // Cr�er l'�v�nement de substitution
+                var substitutionEvent = new SubstitutionEvent
+                {
+                    MatchId = matchId,
+                    Match = match,
+                    PlayerInId = substitutionDto.PlayerInId,
+                    PlayerIn = playerIn,
+                    PlayerOutId = substitutionDto.PlayerOutId,
+                    PlayerOut = playerOut,
+                    Quarter = substitutionDto.Quarter,
+                    GameTime = substitutionDto.GameTime,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedById = 1 // TODO: R�cup�rer l'utilisateur actuel
+                };
+
+                // Ajouter aussi dans GameActions pour compatibilit�
+                var gameAction = new GameAction
+                {
+                    MatchId = matchId,
+                    ActionType = "Substitution",
+                    PlayerInId = substitutionDto.PlayerInId,
+                    PlayerOutId = substitutionDto.PlayerOutId,
+                    Quarter = substitutionDto.Quarter,
+                    GameTime = substitutionDto.GameTime,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.MatchEvents.Add(substitutionEvent);
+                _context.GameActions.Add(gameAction);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Substitution: {PlayerOut} remplac� par {PlayerIn} au match {MatchId}",
+                    playerOut.FullName, playerIn.FullName, matchId);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de l'enregistrement de la substitution pour le match {MatchId}", matchId);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Enregistre un timeout
+        /// </summary>
+        public async Task<bool> RecordTimeoutAsync(int matchId, int teamId)
+        {
+            try
+            {
+                var match = await _context.Matches
+                    .Include(m => m.MatchEvents)
+                    .FirstOrDefaultAsync(m => m.Id == matchId);
+
+                if (match == null || match.Status != Models.Enums.MatchStatus.InProgress)
+                {
+                    _logger.LogWarning("Match {MatchId} non trouv� ou pas en cours", matchId);
+                    return false;
+                }
+
+                var team = await _context.Teams.FindAsync(teamId);
+                if (team == null)
+                {
+                    _logger.LogWarning("�quipe {TeamId} non trouv�e", teamId);
+                    return false;
+                }
+
+                // V�rifier que l'�quipe participe au match
+                if (teamId != match.HomeTeamId && teamId != match.AwayTeamId)
+                {
+                    throw new InvalidOperationException("L'�quipe ne participe pas � ce match");
+                }
+
+                // Compter les timeouts d�j� pris
+                var currentHalf = match.CurrentQuarter <= 2 ? 1 : 2;
+                var timeoutsInHalf = match.MatchEvents
+                    .OfType<TimeoutEvent>()
+                    .Count(t => t.TeamId == teamId &&
+                           (currentHalf == 1 ? t.Quarter <= 2 : t.Quarter > 2));
+
+                if (timeoutsInHalf >= MAX_TIMEOUTS_PER_HALF)
+                {
+                    throw new InvalidOperationException($"L'�quipe a d�j� utilis� ses {MAX_TIMEOUTS_PER_HALF} timeouts pour cette mi-temps");
+                }
+
+                // Cr�er l'�v�nement de timeout
+                var timeoutEvent = new TimeoutEvent
+                {
+                    MatchId = matchId,
+                    Match = match,
+                    TeamId = teamId,
+                    Team = team,
+                    Quarter = match.CurrentQuarter,
+                    GameTime = TimeSpan.FromSeconds(match.RemainingTimeSeconds),
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedById = 1 // TODO: R�cup�rer l'utilisateur actuel
+                };
+
+                // Ajouter aussi dans GameActions pour compatibilit�
+                var gameAction = new GameAction
+                {
+                    MatchId = matchId,
+                    ActionType = "Timeout",
+                    Quarter = match.CurrentQuarter,
+                    GameTime = TimeSpan.FromSeconds(match.RemainingTimeSeconds),
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.MatchEvents.Add(timeoutEvent);
+                _context.GameActions.Add(gameAction);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Timeout enregistr� pour l'�quipe {TeamName} au match {MatchId}",
+                    team.Name, matchId);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de l'enregistrement du timeout pour le match {MatchId}", matchId);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// R�cup�re les informations de score en direct
+        /// </summary>
+        public async Task<LiveScoreUpdateDto> GetLiveScoreAsync(int matchId)
+        {
+            try
+            {
+                var match = await _context.Matches
+                    .Include(m => m.HomeTeam)
+                        .ThenInclude(t => t != null ? t.Players : null)
+                    .Include(m => m.AwayTeam)
+                        .ThenInclude(t => t != null ? t.Players : null)
+                    .Include(m => m.Lineups)
+                        .ThenInclude(l => l.Player)
+                    .Include(m => m.MatchEvents)
+                        .ThenInclude(e => e.Player)
+                    .FirstOrDefaultAsync(m => m.Id == matchId);
+
+                if (match == null)
+                {
+                    _logger.LogWarning("Match {MatchId} non trouv�", matchId);
+                    return new LiveScoreUpdateDto(); // Retourner un objet vide au lieu de null
+                }
+
+                // R�cup�rer les joueurs sur le terrain
+                var homePlayersOnCourt = await GetPlayersOnCourtAsync(matchId, match.HomeTeamId);
+                var awayPlayersOnCourt = await GetPlayersOnCourtAsync(matchId, match.AwayTeamId);
+
+                var liveScoreDto = new LiveScoreUpdateDto
+                {
+                    MatchId = matchId,
+                    HomeTeamScore = match.HomeTeamScore,
+                    AwayTeamScore = match.AwayTeamScore,
+                    CurrentQuarter = match.CurrentQuarter,
+                    RemainingTimeSeconds = match.RemainingTimeSeconds,
+                    Status = match.Status.ToString(),
+                    TeamsOnCourt = new TeamsOnCourtDto
+                    {
+                        HomeTeamPlayers = homePlayersOnCourt,
+                        AwayTeamPlayers = awayPlayersOnCourt
+                    }
+                };
+
+                return liveScoreDto;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la r�cup�ration du score en direct pour le match {MatchId}", matchId);
+                return new LiveScoreUpdateDto(); // Retourner un objet vide au lieu de null
+            }
+        }
+
+        /// <summary>
+        /// M�thode priv�e pour r�cup�rer les joueurs sur le terrain
+        /// </summary>
+        private async Task<List<PlayerOnCourtDto>> GetPlayersOnCourtAsync(int matchId, int teamId)
+        {
+            try
+            {
+                // R�cup�rer les 5 de base ou les derniers joueurs entr�s
+                var starters = await _context.MatchLineups
+                    .Include(ml => ml.Player)
+                    .Where(ml => ml.MatchId == matchId && ml.TeamId == teamId && ml.IsStarter)
+                    .Select(ml => ml.Player)
+                    .ToListAsync();
+
+                // Appliquer les substitutions
+                var substitutions = await _context.Set<SubstitutionEvent>()
+                    .Where(s => s.MatchId == matchId)
+                    .OrderBy(s => s.Quarter)
+                    .ThenBy(s => s.GameTime)
+                    .ToListAsync();
+
+                var playersOnCourt = starters.Where(p => p != null).ToList();
+
+                foreach (var sub in substitutions)
+                {
+                    var playerOut = playersOnCourt.FirstOrDefault(p => p != null && p.Id == sub.PlayerOutId);
+                    if (playerOut != null)
+                    {
+                        playersOnCourt.Remove(playerOut);
+                        var playerIn = await _context.Players.FindAsync(sub.PlayerInId);
+                        if (playerIn != null)
+                        {
+                            playersOnCourt.Add(playerIn);
+                        }
+                    }
+                }
+
+                // Calculer les statistiques pour chaque joueur
+                var playerDtos = new List<PlayerOnCourtDto>();
+                foreach (var player in playersOnCourt.Take(PLAYERS_ON_COURT))
+                {
+                    if (player == null) continue;
+
+                    var fouls = await _context.Set<FoulEvent>()
+                        .CountAsync(f => f.MatchId == matchId && f.PlayerId == player.Id);
+
+                    var points = await _context.Set<BasketScoredEvent>()
+                        .Where(b => b.MatchId == matchId && b.PlayerId == player.Id)
+                        .SumAsync(b => b.Points);
+
+                    playerDtos.Add(new PlayerOnCourtDto
+                    {
+                        PlayerId = player.Id,
+                        PlayerName = player.FullName,
+                        JerseyNumber = player.JerseyNumber,
+                        PersonalFouls = fouls,
+                        Points = points
+                    });
+                }
+
+                return playerDtos;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la r�cup�ration des joueurs sur le terrain");
+                return new List<PlayerOnCourtDto>();
+            }
+        }
+
+        /// <summary>
+        /// D�marrer un match
+        /// </summary>
+        public async Task<bool> StartMatchAsync(int matchId)
+        {
+            try
+            {
+                var match = await _context.Matches
+                    .Include(m => m.HomeTeam)
+                    .Include(m => m.AwayTeam)
+                    .FirstOrDefaultAsync(m => m.Id == matchId);
+
+                if (match == null)
+                {
+                    _logger.LogWarning("Match {MatchId} non trouvé", matchId);
+                    return false;
+                }
+
+                if (match.Status != Models.Enums.MatchStatus.Scheduled)
+                {
+                    _logger.LogWarning("Le match {MatchId} ne peut pas être démarré (status: {Status})", matchId, match.Status);
+                    return false;
+                }
+
+                match.Status = Models.Enums.MatchStatus.InProgress;
+                match.StartTime = DateTime.UtcNow;
+                match.CurrentQuarter = 1;
+                match.RemainingTimeSeconds = match.QuarterDurationMinutes * 60;
+
+                await _context.SaveChangesAsync();
+                
+                _logger.LogInformation("Match {MatchId} démarré", matchId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors du démarrage du match {MatchId}", matchId);
+                return false;
+            }
+        }
+    }
+}

@@ -1,8 +1,9 @@
 using BasketballLiveScore.Data;
 using BasketballLiveScore.Models;
+using BasketballLiveScore.Models.Enums;
+using BasketballLiveScore.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using BasketballLiveScore.Repositories.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace BasketballLiveScore.Repositories.Implementations
                 .ToListAsync();
         }
 
-        public async Task<List<Match>> GetMatchesByStatusAsync(MatchStatus status)
+        public async Task<List<Match>> GetMatchesByStatusAsync(Models.Enums.MatchStatus status)
         {
             return await _context.Matches
                 .Include(m => m.HomeTeam)

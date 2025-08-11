@@ -1,0 +1,74 @@
+﻿```csharp
+using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace BasketballLiveScore.Migrations
+{
+    public partial class AddTeamColumns : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: "Arena",
+                table: "Teams",
+                type: "nvarchar(200)",
+                maxLength: 200,
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsActive",
+                table: "Teams",
+                type: "bit",
+                nullable: false,
+                defaultValue: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "LogoUrl",
+                table: "Teams",
+                type: "nvarchar(500)",
+                maxLength: 500,
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<string>(
+                name: "PrimaryColor",
+                table: "Teams",
+                type: "nvarchar(10)",
+                maxLength: 10,
+                nullable: false,
+                defaultValue: "#000000");
+
+            migrationBuilder.AddColumn<string>(
+                name: "SecondaryColor",
+                table: "Teams",
+                type: "nvarchar(10)",
+                maxLength: 10,
+                nullable: false,
+                defaultValue: "#FFFFFF");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "Arena",
+                table: "Teams");
+
+            migrationBuilder.DropColumn(
+                name: "IsActive",
+                table: "Teams");
+
+            migrationBuilder.DropColumn(
+                name: "LogoUrl",
+                table: "Teams");
+
+            migrationBuilder.DropColumn(
+                name: "PrimaryColor",
+                table: "Teams");
+
+            migrationBuilder.DropColumn(
+                name: "SecondaryColor",
+                table: "Teams");
+        }
+    }
+}
+```

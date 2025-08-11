@@ -3,12 +3,63 @@
   "WorkspaceRootPath": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\PlayerService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\PlayerService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\GameAction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\GameAction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Match.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Match.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\MatchLineup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\MatchLineup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\User.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\User.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Team.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Team.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Data\\BasketballDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Data\\BasketballDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/BasketballLiveScoreDb/True/SqlTable/dbo.Users.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\LiveScoreService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\LiveScoreService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\MatchService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\MatchService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\LiveScore.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Pages\\LiveScore.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ILiveScoreService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\Interfaces\\ILiveScoreService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\PlayerRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Implementations\\PlayerRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\PlayerService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\PlayerService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\UnitOfWork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,8 +70,60 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Implementations\\TeamRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\PlayerRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Implementations\\PlayerRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IUnitOfWork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Interfaces\\IUnitOfWork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IPlayerRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Interfaces\\IPlayerRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserUpdateDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DTOs\\User\\UserUpdateDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\UserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\UserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\IUserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\Interfaces\\IUserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ITeamService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\Interfaces\\ITeamService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\TeamService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\TeamService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\GameActionController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\GameActionController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\AuthenticationController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\AuthenticationController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\LiveScoreController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\LiveScoreController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\TeamController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\TeamController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\PlayerController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\PlayerController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\MatchController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\MatchController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\UserRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -35,44 +138,12 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Interfaces\\ITeamRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IPlayerRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Interfaces\\IPlayerRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\RegisterService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\RegisterService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ILiveScoreService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\Interfaces\\ILiveScoreService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IUnitOfWork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Interfaces\\IUnitOfWork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ITeamService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\Interfaces\\ITeamService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Hubs\\LiveScoreHub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Hubs\\LiveScoreHub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\UserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\UserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\IUserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\Interfaces\\IUserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserUpdateDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DTOs\\User\\UserUpdateDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserCreateDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -83,20 +154,8 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Enums\\Enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Team.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Team.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\MatchLineup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\MatchLineup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\DeleteService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\DeleteService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\TeamService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\TeamService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\PasswordHasherService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -123,14 +182,6 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Events\\MatchEvent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\AuthenticationController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\AuthenticationController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\LiveScore.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Pages\\LiveScore.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Dashboard.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Pages\\Dashboard.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -155,16 +206,8 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DTOs\\LiveScore\\BasketScoreDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\MatchService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\MatchService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\Match\\CreateMatchDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DTOs\\Match\\CreateMatchDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\LiveScore\\PlayerSubstitutionDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -219,26 +262,6 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\Interfaces\\ILoginService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\LiveScoreController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\LiveScoreController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\MatchController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\MatchController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\PlayerController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\PlayerController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\TeamController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\TeamController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\GameActionController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\GameActionController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Players.cshtml.cs||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Pages\\Players.cshtml.cs||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
@@ -251,32 +274,12 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Pages\\Register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Data\\BasketballDbContext.cs||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Data\\BasketballDbContext.cs||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IMatchRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Interfaces\\IMatchRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Match.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Match.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Migrations\\20250810031945_FixCascadeDeleteOnMatchLineup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250810031945_FixCascadeDeleteOnMatchLineup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Migrations\\BasketballDbContextModelSnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\BasketballDbContextModelSnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\MatchRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Implementations\\MatchRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\LiveScore\\LiveScoreUpdateDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -323,10 +326,6 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DTOs\\LiveScore\\SubstitionDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\User.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\User.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\GameActionService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\GameActionService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -337,10 +336,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserLoginDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DTOs\\User\\UserLoginDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\GameAction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\GameAction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserRegistrationDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -385,6 +380,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\BasketballLiveScore.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:BasketballLiveScore.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IMatchRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Interfaces\\IMatchRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\MatchRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Repositories\\Implementations\\MatchRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -428,123 +431,205 @@
         },
         {
           "DockedHeight": 456,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "UnitOfWork.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\UnitOfWork.cs",
-              "RelativeDocumentMoniker": "Repositories\\Implementations\\UnitOfWork.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\UnitOfWork.cs",
-              "RelativeToolTip": "Repositories\\Implementations\\UnitOfWork.cs",
-              "ViewState": "AgIAAE4AAAAAAAAAAAAAAG8AAAABAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "Match.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Match.cs",
+              "RelativeDocumentMoniker": "Models\\Match.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Match.cs",
+              "RelativeToolTip": "Models\\Match.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAowEIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T02:11:08.046Z",
+              "WhenOpened": "2025-08-06T04:57:34.935Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "GameAction.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\GameAction.cs",
+              "RelativeDocumentMoniker": "Models\\GameAction.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\GameAction.cs",
+              "RelativeToolTip": "Models\\GameAction.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAowCgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T01:44:52.963Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MatchLineup.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\MatchLineup.cs",
+              "RelativeDocumentMoniker": "Models\\MatchLineup.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\MatchLineup.cs",
+              "RelativeToolTip": "Models\\MatchLineup.cs",
+              "ViewState": "AgIAAKMAAAAAAAAAAAAowMoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T03:05:01.675Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Player.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Player.cs",
+              "RelativeDocumentMoniker": "Models\\Player.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Player.cs",
+              "RelativeToolTip": "Models\\Player.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T02:18:16.812Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\User.cs",
+              "RelativeToolTip": "Models\\User.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAowFEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T02:36:01.242Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Team.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Team.cs",
+              "RelativeDocumentMoniker": "Models\\Team.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Team.cs",
+              "RelativeToolTip": "Models\\Team.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAowDcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T03:05:28.347Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BasketballDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Data\\BasketballDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\BasketballDbContext.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Data\\BasketballDbContext.cs",
+              "RelativeToolTip": "Data\\BasketballDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-11T02:01:42.493Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAABMAAAAAAAAAAAApwBYAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-06T04:17:05.15Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "LiveScoreService.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\LiveScoreService.cs",
               "RelativeDocumentMoniker": "Services\\LiveScoreService.cs",
               "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\LiveScoreService.cs",
               "RelativeToolTip": "Services\\LiveScoreService.cs",
-              "ViewState": "AgIAACICAAAAAAAAAAAAAEMCAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAN4BAAAAAAAAAAAmwPQBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-10T12:17:03.21Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 14,
               "Title": "PlayerService.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\PlayerService.cs",
               "RelativeDocumentMoniker": "Services\\PlayerService.cs",
               "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\PlayerService.cs",
               "RelativeToolTip": "Services\\PlayerService.cs",
-              "ViewState": "AgIAACQBAAAAAAAAAAAAADkBAAABAAAAAAAAAA==",
+              "ViewState": "AgIAABkBAAAAAAAAAAAtwA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-10T02:49:25.486Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "TeamRepository.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\TeamRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\Implementations\\TeamRepository.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\TeamRepository.cs",
-              "RelativeToolTip": "Repositories\\Implementations\\TeamRepository.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAAAEEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T02:11:18.503Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 13,
               "Title": "PlayerRepository.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\PlayerRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\Implementations\\PlayerRepository.cs",
               "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\PlayerRepository.cs",
               "RelativeToolTip": "Repositories\\Implementations\\PlayerRepository.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAAAD8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAoAAAAAAAAAAADgvxsAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-10T02:11:24.261Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "UserRepository.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\UserRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\Implementations\\UserRepository.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\UserRepository.cs",
-              "RelativeToolTip": "Repositories\\Implementations\\UserRepository.cs",
-              "ViewState": "AgIAAE8AAAAAAAAAAAAAAHAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 12,
+              "Title": "ILiveScoreService.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ILiveScoreService.cs",
+              "RelativeDocumentMoniker": "Services\\Interfaces\\ILiveScoreService.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ILiveScoreService.cs",
+              "RelativeToolTip": "Services\\Interfaces\\ILiveScoreService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T02:55:10.061Z",
+              "WhenOpened": "2025-08-10T12:46:40.746Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "IUserRepository.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IUserRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IUserRepository.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IUserRepository.cs",
-              "RelativeToolTip": "Repositories\\Interfaces\\IUserRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "DocumentIndex": 11,
+              "Title": "LiveScore.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\LiveScore.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\LiveScore.cshtml.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\LiveScore.cshtml.cs",
+              "RelativeToolTip": "Pages\\LiveScore.cshtml.cs",
+              "ViewState": "AgIAAFgAAAAAAAAAAADgv3sAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T12:46:01.949Z",
+              "WhenOpened": "2025-08-07T22:48:54.052Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ITeamRepository.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\ITeamRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\Interfaces\\ITeamRepository.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\ITeamRepository.cs",
-              "RelativeToolTip": "Repositories\\Interfaces\\ITeamRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "DocumentIndex": 10,
+              "Title": "MatchService.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\MatchService.cs",
+              "RelativeDocumentMoniker": "Services\\MatchService.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\MatchService.cs",
+              "RelativeToolTip": "Services\\MatchService.cs",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAAAFwAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T03:40:19.219Z",
+              "WhenOpened": "2025-08-07T22:55:22.343Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "IPlayerRepository.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IPlayerRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IPlayerRepository.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IPlayerRepository.cs",
-              "RelativeToolTip": "Repositories\\Interfaces\\IPlayerRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "DocumentIndex": 15,
+              "Title": "UnitOfWork.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\UnitOfWork.cs",
+              "RelativeDocumentMoniker": "Repositories\\Implementations\\UnitOfWork.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\UnitOfWork.cs",
+              "RelativeToolTip": "Repositories\\Implementations\\UnitOfWork.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T03:40:29.483Z",
+              "WhenOpened": "2025-08-10T02:11:08.046Z",
               "EditorCaption": ""
             },
             {
@@ -553,33 +638,98 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "RegisterService.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\RegisterService.cs",
-              "RelativeDocumentMoniker": "Services\\RegisterService.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\RegisterService.cs",
-              "RelativeToolTip": "Services\\RegisterService.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAAAHIAAAABAAAAAAAAAA==",
+              "DocumentIndex": 16,
+              "Title": "TeamRepository.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\TeamRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Implementations\\TeamRepository.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\TeamRepository.cs",
+              "RelativeToolTip": "Repositories\\Implementations\\TeamRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T02:57:28.453Z",
+              "WhenOpened": "2025-08-10T02:11:18.503Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "ILiveScoreService.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ILiveScoreService.cs",
-              "RelativeDocumentMoniker": "Services\\Interfaces\\ILiveScoreService.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ILiveScoreService.cs",
-              "RelativeToolTip": "Services\\Interfaces\\ILiveScoreService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "DocumentIndex": 17,
+              "Title": "IUnitOfWork.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IUnitOfWork.cs",
+              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IUnitOfWork.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IUnitOfWork.cs",
+              "RelativeToolTip": "Repositories\\Interfaces\\IUnitOfWork.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T12:46:40.746Z",
+              "WhenOpened": "2025-08-10T12:45:06.895Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 18,
+              "Title": "IPlayerRepository.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IPlayerRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IPlayerRepository.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IPlayerRepository.cs",
+              "RelativeToolTip": "Repositories\\Interfaces\\IPlayerRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T03:40:29.483Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "UserUpdateDto.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserUpdateDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\User\\UserUpdateDto.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserUpdateDto.cs",
+              "RelativeToolTip": "DTOs\\User\\UserUpdateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T23:27:07.214Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "Services\\UserService.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\UserService.cs",
+              "RelativeToolTip": "Services\\UserService.cs",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAAAIgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T21:32:02.808Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\IUserService.cs",
+              "RelativeDocumentMoniker": "Services\\Interfaces\\IUserService.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\IUserService.cs",
+              "RelativeToolTip": "Services\\Interfaces\\IUserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T23:16:22.865Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "ITeamService.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ITeamService.cs",
+              "RelativeDocumentMoniker": "Services\\Interfaces\\ITeamService.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ITeamService.cs",
+              "RelativeToolTip": "Services\\Interfaces\\ITeamService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T12:46:49.699Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -592,228 +742,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "IUnitOfWork.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IUnitOfWork.cs",
-              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IUnitOfWork.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IUnitOfWork.cs",
-              "RelativeToolTip": "Repositories\\Interfaces\\IUnitOfWork.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T12:45:06.895Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "ITeamService.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ITeamService.cs",
-              "RelativeDocumentMoniker": "Services\\Interfaces\\ITeamService.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ITeamService.cs",
-              "RelativeToolTip": "Services\\Interfaces\\ITeamService.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAswCoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T12:46:49.699Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "LiveScoreHub.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Hubs\\LiveScoreHub.cs",
-              "RelativeDocumentMoniker": "Hubs\\LiveScoreHub.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Hubs\\LiveScoreHub.cs",
-              "RelativeToolTip": "Hubs\\LiveScoreHub.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T02:43:25.989Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "UserService.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\UserService.cs",
-              "RelativeDocumentMoniker": "Services\\UserService.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\UserService.cs",
-              "RelativeToolTip": "Services\\UserService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T21:32:02.808Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "IUserService.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\IUserService.cs",
-              "RelativeDocumentMoniker": "Services\\Interfaces\\IUserService.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\IUserService.cs",
-              "RelativeToolTip": "Services\\Interfaces\\IUserService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T23:16:22.865Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "UserUpdateDto.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserUpdateDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\User\\UserUpdateDto.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserUpdateDto.cs",
-              "RelativeToolTip": "DTOs\\User\\UserUpdateDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T23:27:07.214Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "UserCreateDto.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserCreateDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\User\\UserCreateDto.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserCreateDto.cs",
-              "RelativeToolTip": "DTOs\\User\\UserCreateDto.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAACcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T12:49:48.264Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "Enums.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Enums\\Enums.cs",
-              "RelativeDocumentMoniker": "Models\\Enums\\Enums.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Enums\\Enums.cs",
-              "RelativeToolTip": "Models\\Enums\\Enums.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T00:43:13.961Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "Team.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Team.cs",
-              "RelativeDocumentMoniker": "Models\\Team.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Team.cs",
-              "RelativeToolTip": "Models\\Team.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAAADcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T03:05:28.347Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "MatchLineup.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\MatchLineup.cs",
-              "RelativeDocumentMoniker": "Models\\MatchLineup.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\MatchLineup.cs",
-              "RelativeToolTip": "Models\\MatchLineup.cs",
-              "ViewState": "AgIAAKkAAAAAAAAAAAAAAMoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T03:05:01.675Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "DeleteService.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\DeleteService.cs",
-              "RelativeDocumentMoniker": "Services\\DeleteService.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\DeleteService.cs",
-              "RelativeToolTip": "Services\\DeleteService.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAAACgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T21:29:03.464Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 23,
               "Title": "TeamService.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\TeamService.cs",
               "RelativeDocumentMoniker": "Services\\TeamService.cs",
               "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\TeamService.cs",
               "RelativeToolTip": "Services\\TeamService.cs",
-              "ViewState": "AgIAAM0AAAAAAAAAAAAAAO4AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAACEBAAAAAAAAAAAhwEIBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-10T12:46:54.244Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "PasswordHasherService.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\PasswordHasherService.cs",
-              "RelativeDocumentMoniker": "Services\\PasswordHasherService.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\PasswordHasherService.cs",
-              "RelativeToolTip": "Services\\PasswordHasherService.cs",
-              "ViewState": "AgIAAFQAAAAAAAAAAAAAAHUAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T12:21:58.672Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 25,
-              "Title": "IRepository.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IRepository.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IRepository.cs",
-              "RelativeToolTip": "Repositories\\Interfaces\\IRepository.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAAACMAAAABAAAAAAAAAA==",
+              "Title": "GameActionController.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\GameActionController.cs",
+              "RelativeDocumentMoniker": "Controllers\\GameActionController.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\GameActionController.cs",
+              "RelativeToolTip": "Controllers\\GameActionController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T03:40:14.1Z",
+              "WhenOpened": "2025-08-10T01:21:39.423Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 26,
-              "Title": "BasketScoredEvent.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\BasketScoredEvent.cs",
-              "RelativeDocumentMoniker": "Models\\Events\\BasketScoredEvent.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\BasketScoredEvent.cs",
-              "RelativeToolTip": "Models\\Events\\BasketScoredEvent.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAAAAADgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-06T04:52:04.657Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 27,
-              "Title": "TimeoutEvent.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\TimeoutEvent.cs",
-              "RelativeDocumentMoniker": "Models\\Events\\TimeoutEvent.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\TimeoutEvent.cs",
-              "RelativeToolTip": "Models\\Events\\TimeoutEvent.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAAACIAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-06T04:57:14.849Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 28,
-              "Title": "SubstitutionEvent.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\SubstitutionEvent.cs",
-              "RelativeDocumentMoniker": "Models\\Events\\SubstitutionEvent.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\SubstitutionEvent.cs",
-              "RelativeToolTip": "Models\\Events\\SubstitutionEvent.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T23:11:15.481Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 30,
               "Title": "AuthenticationController.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\AuthenticationController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthenticationController.cs",
@@ -826,7 +781,215 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "LiveScoreController.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\LiveScoreController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LiveScoreController.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\LiveScoreController.cs",
+              "RelativeToolTip": "Controllers\\LiveScoreController.cs",
+              "ViewState": "AgIAANMBAAAAAAAAAAAAAPQBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T01:21:33.406Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "TeamController.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\TeamController.cs",
+              "RelativeDocumentMoniker": "Controllers\\TeamController.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\TeamController.cs",
+              "RelativeToolTip": "Controllers\\TeamController.cs",
+              "ViewState": "AgIAAJEAAAAAAAAAAAAAALIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T12:15:15.335Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 29,
+              "Title": "PlayerController.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\PlayerController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PlayerController.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\PlayerController.cs",
+              "RelativeToolTip": "Controllers\\PlayerController.cs",
+              "ViewState": "AgIAAFUBAAAAAAAAAAAAAHYBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T01:21:37.782Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "MatchController.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\MatchController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MatchController.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\MatchController.cs",
+              "RelativeToolTip": "Controllers\\MatchController.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAAAE8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-07T22:54:50.807Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\UserRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Implementations\\UserRepository.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\UserRepository.cs",
+              "RelativeToolTip": "Repositories\\Implementations\\UserRepository.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAAAHAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T02:55:10.061Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "IUserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IUserRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IUserRepository.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IUserRepository.cs",
+              "RelativeToolTip": "Repositories\\Interfaces\\IUserRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T12:46:01.949Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "ITeamRepository.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\ITeamRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Interfaces\\ITeamRepository.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\ITeamRepository.cs",
+              "RelativeToolTip": "Repositories\\Interfaces\\ITeamRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T03:40:19.219Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "RegisterService.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\RegisterService.cs",
+              "RelativeDocumentMoniker": "Services\\RegisterService.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\RegisterService.cs",
+              "RelativeToolTip": "Services\\RegisterService.cs",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAAAHIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T02:57:28.453Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "LiveScoreHub.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Hubs\\LiveScoreHub.cs",
+              "RelativeDocumentMoniker": "Hubs\\LiveScoreHub.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Hubs\\LiveScoreHub.cs",
+              "RelativeToolTip": "Hubs\\LiveScoreHub.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T02:43:25.989Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "UserCreateDto.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserCreateDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\User\\UserCreateDto.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserCreateDto.cs",
+              "RelativeToolTip": "DTOs\\User\\UserCreateDto.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T12:49:48.264Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "Enums.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Enums\\Enums.cs",
+              "RelativeDocumentMoniker": "Models\\Enums\\Enums.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Enums\\Enums.cs",
+              "RelativeToolTip": "Models\\Enums\\Enums.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T00:43:13.961Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "DeleteService.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\DeleteService.cs",
+              "RelativeDocumentMoniker": "Services\\DeleteService.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\DeleteService.cs",
+              "RelativeToolTip": "Services\\DeleteService.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAAACgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T21:29:03.464Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "PasswordHasherService.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\PasswordHasherService.cs",
+              "RelativeDocumentMoniker": "Services\\PasswordHasherService.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\PasswordHasherService.cs",
+              "RelativeToolTip": "Services\\PasswordHasherService.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAHUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T12:21:58.672Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "IRepository.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IRepository.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IRepository.cs",
+              "RelativeToolTip": "Repositories\\Interfaces\\IRepository.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAACMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T03:40:14.1Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "BasketScoredEvent.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\BasketScoredEvent.cs",
+              "RelativeDocumentMoniker": "Models\\Events\\BasketScoredEvent.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\BasketScoredEvent.cs",
+              "RelativeToolTip": "Models\\Events\\BasketScoredEvent.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAAADgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T04:52:04.657Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "TimeoutEvent.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\TimeoutEvent.cs",
+              "RelativeDocumentMoniker": "Models\\Events\\TimeoutEvent.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\TimeoutEvent.cs",
+              "RelativeToolTip": "Models\\Events\\TimeoutEvent.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAACIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T04:57:14.849Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "SubstitutionEvent.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\SubstitutionEvent.cs",
+              "RelativeDocumentMoniker": "Models\\Events\\SubstitutionEvent.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\SubstitutionEvent.cs",
+              "RelativeToolTip": "Models\\Events\\SubstitutionEvent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-10T23:11:15.481Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
               "Title": "MatchEvent.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\MatchEvent.cs",
               "RelativeDocumentMoniker": "Models\\Events\\MatchEvent.cs",
@@ -834,36 +997,24 @@
               "RelativeToolTip": "Models\\Events\\MatchEvent.cs",
               "ViewState": "AgIAAB4AAAAAAAAAAAAAAD8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-06T04:50:38.391Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-06T04:50:38.391Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 45,
               "Title": "Dashboard.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Dashboard.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Dashboard.cshtml.cs",
               "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Dashboard.cshtml.cs",
               "RelativeToolTip": "Pages\\Dashboard.cshtml.cs",
-              "ViewState": "AgIAADcAAAAAAAAAAAAqwEkAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAEcAAAAAAAAAAABRwEoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-07T22:47:54.916Z"
+              "WhenOpened": "2025-08-07T22:47:54.916Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
-              "Title": "LiveScore.cshtml.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\LiveScore.cshtml.cs",
-              "RelativeDocumentMoniker": "Pages\\LiveScore.cshtml.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\LiveScore.cshtml.cs",
-              "RelativeToolTip": "Pages\\LiveScore.cshtml.cs",
-              "ViewState": "AgIAAGgAAAAAAAAAAAAqwHoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-07T22:48:54.052Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 46,
               "Title": "Login.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Login.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Login.cshtml.cs",
@@ -875,7 +1026,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 47,
               "Title": "Register.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Register.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Register.cshtml.cs",
@@ -887,7 +1038,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 48,
               "Title": "MatchLiveStatusDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\Match\\MatchLiveStatusDto.cs",
               "RelativeDocumentMoniker": "DTOs\\Match\\MatchLiveStatusDto.cs",
@@ -899,7 +1050,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 49,
               "Title": "GameActionDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\GameActionDto.cs",
               "RelativeDocumentMoniker": "DTOs\\GameActionDto.cs",
@@ -911,7 +1062,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 50,
               "Title": "BasketScoreDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\LiveScore\\BasketScoreDto.cs",
               "RelativeDocumentMoniker": "DTOs\\LiveScore\\BasketScoreDto.cs",
@@ -923,7 +1074,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 51,
               "Title": "CreateMatchDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\Match\\CreateMatchDto.cs",
               "RelativeDocumentMoniker": "DTOs\\Match\\CreateMatchDto.cs",
@@ -935,31 +1086,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-08-06T04:17:05.15Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 38,
-              "Title": "MatchService.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\MatchService.cs",
-              "RelativeDocumentMoniker": "Services\\MatchService.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\MatchService.cs",
-              "RelativeToolTip": "Services\\MatchService.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAAAC0AAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-07T22:55:22.343Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 52,
               "Title": "PlayerSubstitutionDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\LiveScore\\PlayerSubstitutionDto.cs",
               "RelativeDocumentMoniker": "DTOs\\LiveScore\\PlayerSubstitutionDto.cs",
@@ -971,7 +1098,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 54,
               "Title": "MatchSetup.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\MatchSetup.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\MatchSetup.cshtml.cs",
@@ -983,7 +1110,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 53,
               "Title": "MatchSetup.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\MatchSetup.cshtml",
               "RelativeDocumentMoniker": "Pages\\MatchSetup.cshtml",
@@ -995,7 +1122,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 55,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Index.cshtml",
               "RelativeDocumentMoniker": "Pages\\Index.cshtml",
@@ -1007,7 +1134,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 56,
               "Title": "Index.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Index.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Index.cshtml.cs",
@@ -1019,7 +1146,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 57,
               "Title": "IPlayerService.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\IPlayerService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IPlayerService.cs",
@@ -1031,7 +1158,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 58,
               "Title": "Repository.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\Repository.cs",
               "RelativeDocumentMoniker": "Repositories\\Implementations\\Repository.cs",
@@ -1043,7 +1170,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 59,
               "Title": "Login.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Login.cshtml",
               "RelativeDocumentMoniker": "Pages\\Login.cshtml",
@@ -1055,7 +1182,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 60,
               "Title": "Dashboard.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Dashboard.cshtml",
               "RelativeDocumentMoniker": "Pages\\Dashboard.cshtml",
@@ -1067,7 +1194,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 61,
               "Title": "Logout.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Logout.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Logout.cshtml.cs",
@@ -1079,7 +1206,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 62,
               "Title": "Logout.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Logout.cshtml",
               "RelativeDocumentMoniker": "Pages\\Logout.cshtml",
@@ -1091,7 +1218,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 63,
               "Title": "LoginService.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\LoginService.cs",
               "RelativeDocumentMoniker": "Services\\LoginService.cs",
@@ -1103,7 +1230,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 64,
               "Title": "ILoginService.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\ILoginService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\ILoginService.cs",
@@ -1115,67 +1242,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 55,
-              "Title": "MatchController.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\MatchController.cs",
-              "RelativeDocumentMoniker": "Controllers\\MatchController.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\MatchController.cs",
-              "RelativeToolTip": "Controllers\\MatchController.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAswEwAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-07T22:54:50.807Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 56,
-              "Title": "PlayerController.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\PlayerController.cs",
-              "RelativeDocumentMoniker": "Controllers\\PlayerController.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\PlayerController.cs",
-              "RelativeToolTip": "Controllers\\PlayerController.cs",
-              "ViewState": "AgIAAE4BAAAAAAAAAAAYwHYBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T01:21:37.782Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 54,
-              "Title": "LiveScoreController.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\LiveScoreController.cs",
-              "RelativeDocumentMoniker": "Controllers\\LiveScoreController.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\LiveScoreController.cs",
-              "RelativeToolTip": "Controllers\\LiveScoreController.cs",
-              "ViewState": "AgIAAMwBAAAAAAAAAAAYwPQBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T01:21:33.406Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 57,
-              "Title": "TeamController.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\TeamController.cs",
-              "RelativeDocumentMoniker": "Controllers\\TeamController.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\TeamController.cs",
-              "RelativeToolTip": "Controllers\\TeamController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T12:15:15.335Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 58,
-              "Title": "GameActionController.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\GameActionController.cs",
-              "RelativeDocumentMoniker": "Controllers\\GameActionController.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Controllers\\GameActionController.cs",
-              "RelativeToolTip": "Controllers\\GameActionController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T01:21:39.423Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 59,
+              "DocumentIndex": 65,
               "Title": "Players.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Players.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Players.cshtml.cs",
@@ -1187,7 +1254,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 60,
+              "DocumentIndex": 66,
               "Title": "Players.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Players.cshtml",
               "RelativeDocumentMoniker": "Pages\\Players.cshtml",
@@ -1199,7 +1266,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 61,
+              "DocumentIndex": 67,
               "Title": "Register.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Register.cshtml",
               "RelativeDocumentMoniker": "Pages\\Register.cshtml",
@@ -1211,55 +1278,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 62,
-              "Title": "BasketballDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Data\\BasketballDbContext.cs",
-              "RelativeDocumentMoniker": "Data\\BasketballDbContext.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Data\\BasketballDbContext.cs",
-              "RelativeToolTip": "Data\\BasketballDbContext.cs",
-              "ViewState": "AgIAAH4AAAAAAAAAAAAYwKEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-06T04:48:41.692Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 63,
-              "Title": "IMatchRepository.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IMatchRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IMatchRepository.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IMatchRepository.cs",
-              "RelativeToolTip": "Repositories\\Interfaces\\IMatchRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T03:40:25.307Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 65,
-              "Title": "Match.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Match.cs",
-              "RelativeDocumentMoniker": "Models\\Match.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Match.cs",
-              "RelativeToolTip": "Models\\Match.cs",
-              "ViewState": "AgIAADUAAAAAAAAAAAAYwEUAAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-06T04:57:34.935Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 64,
-              "Title": "Player.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Player.cs",
-              "RelativeDocumentMoniker": "Models\\Player.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Player.cs",
-              "RelativeToolTip": "Models\\Player.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T02:18:16.812Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 66,
+              "DocumentIndex": 68,
               "Title": "20250810031945_FixCascadeDeleteOnMatchLineup.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Migrations\\20250810031945_FixCascadeDeleteOnMatchLineup.cs",
               "RelativeDocumentMoniker": "Migrations\\20250810031945_FixCascadeDeleteOnMatchLineup.cs",
@@ -1271,7 +1290,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 67,
+              "DocumentIndex": 69,
               "Title": "BasketballDbContextModelSnapshot.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Migrations\\BasketballDbContextModelSnapshot.cs",
               "RelativeDocumentMoniker": "Migrations\\BasketballDbContextModelSnapshot.cs",
@@ -1283,19 +1302,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 68,
-              "Title": "MatchRepository.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\MatchRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\Implementations\\MatchRepository.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\MatchRepository.cs",
-              "RelativeToolTip": "Repositories\\Implementations\\MatchRepository.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAIwDIAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T03:18:55.256Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 69,
+              "DocumentIndex": 70,
               "Title": "LiveScoreUpdateDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\LiveScore\\LiveScoreUpdateDto.cs",
               "RelativeDocumentMoniker": "DTOs\\LiveScore\\LiveScoreUpdateDto.cs",
@@ -1307,7 +1314,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 71,
+              "DocumentIndex": 72,
               "Title": "UpdateService.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\UpdateService.cs",
               "RelativeDocumentMoniker": "Services\\UpdateService.cs",
@@ -1319,7 +1326,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 70,
+              "DocumentIndex": 71,
               "Title": "LiveScoreDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\LiveScore\\LiveScoreDto.cs",
               "RelativeDocumentMoniker": "DTOs\\LiveScore\\LiveScoreDto.cs",
@@ -1331,7 +1338,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 72,
+              "DocumentIndex": 73,
               "Title": "PlayerDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\Player\\PlayerDto.cs",
               "RelativeDocumentMoniker": "DTOs\\Player\\PlayerDto.cs",
@@ -1343,7 +1350,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 73,
+              "DocumentIndex": 74,
               "Title": "PlayerDetailDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\Player\\PlayerDetailDto.cs",
               "RelativeDocumentMoniker": "DTOs\\Player\\PlayerDetailDto.cs",
@@ -1355,7 +1362,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 74,
+              "DocumentIndex": 75,
               "Title": "SetStartingFiveDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\LiveScore\\SetStartingFiveDto.cs",
               "RelativeDocumentMoniker": "DTOs\\LiveScore\\SetStartingFiveDto.cs",
@@ -1367,7 +1374,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 75,
+              "DocumentIndex": 76,
               "Title": "Teams.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Teams.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Teams.cshtml.cs",
@@ -1379,7 +1386,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 76,
+              "DocumentIndex": 77,
               "Title": "Teams.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Teams.cshtml",
               "RelativeDocumentMoniker": "Pages\\Teams.cshtml",
@@ -1391,7 +1398,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 77,
+              "DocumentIndex": 78,
               "Title": "TeamDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\Team\\TeamDto.cs",
               "RelativeDocumentMoniker": "DTOs\\Team\\TeamDto.cs",
@@ -1403,7 +1410,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 78,
+              "DocumentIndex": 79,
               "Title": "TeamDetailDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\Team\\TeamDetailDto.cs",
               "RelativeDocumentMoniker": "DTOs\\Team\\TeamDetailDto.cs",
@@ -1415,7 +1422,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 79,
+              "DocumentIndex": 80,
               "Title": "SubstitionDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\LiveScore\\SubstitionDto.cs",
               "RelativeDocumentMoniker": "DTOs\\LiveScore\\SubstitionDto.cs",
@@ -1424,18 +1431,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-10T02:41:09.496Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 80,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\User.cs",
-              "RelativeDocumentMoniker": "Models\\User.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\User.cs",
-              "RelativeToolTip": "Models\\User.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAYwFEAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T02:36:01.242Z"
             },
             {
               "$type": "Document",
@@ -1476,18 +1471,6 @@
             {
               "$type": "Document",
               "DocumentIndex": 84,
-              "Title": "GameAction.cs",
-              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\GameAction.cs",
-              "RelativeDocumentMoniker": "Models\\GameAction.cs",
-              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\GameAction.cs",
-              "RelativeToolTip": "Models\\GameAction.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAYwCgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T01:44:52.963Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 85,
               "Title": "UserRegistrationDto.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\DTOs\\User\\UserRegistrationDto.cs",
               "RelativeDocumentMoniker": "DTOs\\User\\UserRegistrationDto.cs",
@@ -1499,7 +1482,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 88,
+              "DocumentIndex": 87,
               "Title": "site.css",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\site.css",
@@ -1511,7 +1494,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 87,
+              "DocumentIndex": 86,
               "Title": "site.js",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\wwwroot\\js\\site.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\site.js",
@@ -1523,7 +1506,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 86,
+              "DocumentIndex": 85,
               "Title": "LiveScore.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\LiveScore.cshtml",
               "RelativeDocumentMoniker": "Pages\\LiveScore.cshtml",
@@ -1535,7 +1518,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 89,
+              "DocumentIndex": 88,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Pages\\Shared\\_Layout.cshtml",
@@ -1547,7 +1530,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 90,
+              "DocumentIndex": 89,
               "Title": "_ViewStart.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\_ViewStart.cshtml",
               "RelativeDocumentMoniker": "Pages\\_ViewStart.cshtml",
@@ -1559,7 +1542,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 91,
+              "DocumentIndex": 90,
               "Title": "IMatchService.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Services\\Interfaces\\IMatchService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IMatchService.cs",
@@ -1571,7 +1554,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 92,
+              "DocumentIndex": 91,
               "Title": "_ValidationScriptPartial.cshtml",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Pages\\Shared\\_ValidationScriptPartial.cshtml",
               "RelativeDocumentMoniker": "Pages\\Shared\\_ValidationScriptPartial.cshtml",
@@ -1583,7 +1566,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 93,
+              "DocumentIndex": 92,
               "Title": "FoulEvent.cs",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Models\\Events\\FoulEvent.cs",
               "RelativeDocumentMoniker": "Models\\Events\\FoulEvent.cs",
@@ -1595,7 +1578,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 94,
+              "DocumentIndex": 93,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
@@ -1607,7 +1590,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 95,
+              "DocumentIndex": 94,
               "Title": "BasketballLiveScore.csproj",
               "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\BasketballLiveScore.csproj",
               "RelativeDocumentMoniker": "BasketballLiveScore.csproj",
@@ -1619,25 +1602,61 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:2:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             }
           ]
         },
         {
           "DockedHeight": 217,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "dbo.Users [Donn\u00E9es]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/BasketballLiveScoreDb/True/SqlTable/dbo.Users.sql",
+              "ToolTip": "dbo.Users [Donn\u00E9es]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-08-11T01:26:44.667Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{fbcae063-e2c0-4ab1-a516-996ea3dafb72}"
+            },
+            {
               "$type": "Bookmark",
               "Name": "ST:3:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 96,
+              "Title": "MatchRepository.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\MatchRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Implementations\\MatchRepository.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Implementations\\MatchRepository.cs",
+              "RelativeToolTip": "Repositories\\Implementations\\MatchRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-11T01:15:26.295Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 95,
+              "Title": "IMatchRepository.cs",
+              "DocumentMoniker": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IMatchRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IMatchRepository.cs",
+              "ToolTip": "C:\\Users\\amben\\source\\repos\\GitHub\\BasketballLive\\REALCSHARP4PROJECT\\BasketballLiveScore\\Repositories\\Interfaces\\IMatchRepository.cs",
+              "RelativeToolTip": "Repositories\\Interfaces\\IMatchRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-11T01:15:26.247Z",
+              "EditorCaption": ""
             }
           ]
         }

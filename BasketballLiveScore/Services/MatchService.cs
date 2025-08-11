@@ -44,7 +44,9 @@ namespace BasketballLiveScore.Services
                 HomeTeamId = homeTeam.Id,
                 AwayTeamId = awayTeam.Id,
                 ScheduledDate = matchDto.ScheduledDate,
-                Status = Enum.TryParse<BasketballLiveScore.Models.MatchStatus>(matchDto.Status, out var status) ? status : BasketballLiveScore.Models.MatchStatus.Scheduled,                // Exemple: définir d'autres propriétés par défaut ou calculées si besoin
+                Status = Enum.TryParse<Models.Enums.MatchStatus>(matchDto.Status, out var status) 
+                    ? status 
+                    : Models.Enums.MatchStatus.Scheduled,
                 CreatedAt = DateTime.UtcNow,
                 CreatedByUserId = 1 // TODO: Récupérer l'utilisateur courant
             };
@@ -55,7 +57,7 @@ namespace BasketballLiveScore.Services
 
         /// <summary>
         /// Récupère tous les matchs
-        /// </summary>
+        /// </summary>  
         public List<Match> GetAllMatches()
         {
             return _unitOfWork.Matches.GetAll().ToList();
@@ -85,21 +87,21 @@ namespace BasketballLiveScore.Services
                 throw new KeyNotFoundException($"Match with ID {matchDto.Id} not found");
 
             // Mise à jour des propriétés
-            match.Status = Enum.TryParse<BasketballLiveScore.Models.MatchStatus>(matchDto.Status, out var status)
+            match.Status = Enum.TryParse<Models.Enums.MatchStatus>(matchDto.Status, out var status)
                 ? status
                 : match.Status;
-            match.CurrentQuarter = matchDto.CurrentQuarter;
+            match.CurrentQuarter = matchDto.CurrentQuarter;     
             match.HomeTeamScore = matchDto.HomeTeamScore;
             match.AwayTeamScore = matchDto.AwayTeamScore;
 
             // Si le match démarre, enregistrer l'heure de début
-            if (match.Status == BasketballLiveScore.Models.MatchStatus.InProgress && !match.StartTime.HasValue)
+            if (match.Status == Models.Enums.MatchStatus.InProgress && !match.StartTime.HasValue)
             {
                 match.StartTime = DateTime.UtcNow;
             }
 
             // Si le match se termine, enregistrer l'heure de fin
-            if (match.Status == BasketballLiveScore.Models.MatchStatus.Finished && !match.EndTime.HasValue)
+            if (match.Status == Models.Enums.MatchStatus.Finished && !match.EndTime.HasValue)
             {
                 match.EndTime = DateTime.UtcNow;
             }

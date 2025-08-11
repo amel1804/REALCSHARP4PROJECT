@@ -1,0 +1,24 @@
+﻿// File: Services/Interfaces/ITeamService.cs
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using BasketballLiveScore.Models;
+
+namespace BasketballLiveScore.Services.Interfaces
+{
+    /// <summary>
+    /// Contrat pour le service de gestion des équipes.
+    /// </summary>
+    public interface ITeamService
+    {
+        Task<Team?> GetByIdAsync(int id);
+        Task<IEnumerable<Team>> GetAllAsync();
+        Task<Team> CreateAsync(Team team);
+        Task<Team?> UpdateAsync(int id, Team team);
+        Task<bool> DeleteAsync(int id);
+
+        // Gestion des joueurs d'une équipe
+        Task<IEnumerable<Player>> GetPlayersAsync(int teamId);
+        Task<bool> AddPlayerToTeamAsync(int teamId, int playerId);
+        Task<bool> RemovePlayerFromTeamAsync(int teamId, int playerId);
+    }
+}

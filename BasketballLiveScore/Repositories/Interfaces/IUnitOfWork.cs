@@ -14,6 +14,7 @@ namespace BasketballLiveScore.Repositories.Interfaces
         IPlayerRepository Players { get; }
         IMatchRepository Matches { get; }
         IMatchEventRepository MatchEvents { get; }
+        IMatchLineupRepository MatchLineups { get; }
 
         /// <summary>
         /// Sauvegarde tous les changements en base

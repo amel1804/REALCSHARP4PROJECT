@@ -1,0 +1,227 @@
+﻿// File: Services/TeamService.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BasketballLiveScore.Models;
+using BasketballLiveScore.Repositories.Interfaces;
+using BasketballLiveScore.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+
+namespace BasketballLiveScore.Services
+{
+    /// <summary>
+    /// Service d'implémentation pour la gestion des équipes.
+    /// Utilise IUnitOfWork et les repositories génériques (GetById, Find, GetAll, Add, Update, Remove).
+    /// </summary>
+    public class TeamService : ITeamService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<TeamService> _logger;
+
+        public TeamService(IUnitOfWork unitOfWork, ILogger<TeamService> logger)
+        {
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        /// <summary>Récupère une équipe par id (ou null si non trouvée).</summary>
+        public async Task<Team?> GetByIdAsync(int id)
+        {
+            try
+            {
+                var team = _unitOfWork.Teams.GetById(id);
+                return await Task.FromResult(team);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération de l'équipe {TeamId}", id);
+                return null;
+            }
+        }
+
+        /// <summary>Récupère toutes les équipes.</summary>
+        public async Task<IEnumerable<Team>> GetAllAsync()
+        {
+            try
+            {
+                var teams = _unitOfWork.Teams.GetAll() ?? Enumerable.Empty<Team>();
+                return await Task.FromResult(teams);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération des équipes");
+                return Enumerable.Empty<Team>();
+            }
+        }
+
+        /// <summary>Crée une équipe après validations (nom obligatoire et unique, insensible à la casse).</summary>
+        public async Task<Team> CreateAsync(Team team)
+        {
+            if (team == null) throw new ArgumentNullException(nameof(team));
+
+            if (string.IsNullOrWhiteSpace(team.Name))
+                throw new ArgumentException("Le nom de l'équipe est obligatoire", nameof(team));
+
+            try
+            {
+                // Vérification d'unicité insensible à la casse
+                var existing = _unitOfWork.Teams.Find(t => t.Name.ToLower() == team.Name.ToLower()).FirstOrDefault();
+                if (existing != null)
+                    throw new InvalidOperationException($"Une équipe avec le nom '{team.Name}' existe déjà.");
+
+                team.CreatedAt = DateTime.UtcNow;
+                _unitOfWork.Teams.Add(team);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Équipe {TeamName} créée avec succès", team.Name);
+                return team;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la création de l'équipe");
+                throw;
+            }
+        }
+
+        /// <summary>Met à jour une équipe si elle existe, retourne l'entité mise à jour ou null.</summary>
+        public async Task<Team?> UpdateAsync(int id, Team team)
+        {
+            if (team == null) throw new ArgumentNullException(nameof(team));
+
+            try
+            {
+                var existing = _unitOfWork.Teams.GetById(id);
+                if (existing == null)
+                {
+                    _logger.LogWarning("Équipe {TeamId} non trouvée pour mise à jour", id);
+                    return null;
+                }
+
+                // Mise à jour des champs autorisés
+                existing.Name = team.Name;
+                existing.City = team.City;
+                existing.Coach = team.Coach;
+
+                _unitOfWork.Teams.Update(existing);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Équipe {TeamId} mise à jour", id);
+                return existing;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la mise à jour de l'équipe {TeamId}", id);
+                throw;
+            }
+        }
+
+        /// <summary>Supprime une équipe après vérification qu'elle n'a pas de matchs associés.</summary>
+        public async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                var team = _unitOfWork.Teams.GetById(id);
+                if (team == null)
+                {
+                    _logger.LogWarning("Équipe {TeamId} non trouvée pour suppression", id);
+                    return false;
+                }
+
+                // Vérifier s'il y a des matchs liés à cette équipe
+                var hasMatches = _unitOfWork.Matches
+                    .Find(m => m.HomeTeamId == id || m.AwayTeamId == id)
+                    .Any();
+
+                if (hasMatches)
+                {
+                    _logger.LogWarning("Impossible de supprimer l'équipe {TeamId} car des matchs existent", id);
+                    return false;
+                }
+
+                _unitOfWork.Teams.Remove(team);
+                var result = await _unitOfWork.CompleteAsync();
+                if (result > 0)
+                    _logger.LogInformation("Équipe {TeamId} supprimée", id);
+
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la suppression de l'équipe {TeamId}", id);
+                return false;
+            }
+        }
+
+        /// <summary>Récupère les joueurs d'une équipe (via Players.Find).</summary>
+        public async Task<IEnumerable<Player>> GetPlayersAsync(int teamId)
+        {
+            try
+            {
+                var players = _unitOfWork.Players.Find(p => p.TeamId == teamId) ?? Enumerable.Empty<Player>();
+                return await Task.FromResult(players);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération des joueurs de l'équipe {TeamId}", teamId);
+                return Enumerable.Empty<Player>();
+            }
+        }
+
+        /// <summary>Associe un joueur existant à une équipe.</summary>
+        public async Task<bool> AddPlayerToTeamAsync(int teamId, int playerId)
+        {
+            try
+            {
+                var team = _unitOfWork.Teams.GetById(teamId);
+                var player = _unitOfWork.Players.GetById(playerId);
+
+                if (team == null || player == null)
+                {
+                    _logger.LogWarning("Équipe ou joueur introuvable (teamId={TeamId}, playerId={PlayerId})", teamId, playerId);
+                    return false;
+                }
+
+                player.TeamId = teamId;
+                _unitOfWork.Players.Update(player);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Joueur {PlayerId} ajouté à l'équipe {TeamId}", playerId, teamId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de l'ajout du joueur à l'équipe");
+                return false;
+            }
+        }
+
+        /// <summary>Retire un joueur d'une équipe (met TeamId à 0 ou null selon ton modèle).</summary>
+        public async Task<bool> RemovePlayerFromTeamAsync(int teamId, int playerId)
+        {
+            try
+            {
+                var player = _unitOfWork.Players.GetById(playerId);
+
+                if (player == null || player.TeamId != teamId)
+                {
+                    _logger.LogWarning("Joueur non trouvé ou n'appartient pas à l'équipe (playerId={PlayerId}, teamId={TeamId})", playerId, teamId);
+                    return false;
+                }
+
+                // Si TeamId est nullable dans ton modèle, préfère `player.TeamId = null;`
+                player.TeamId = 0;
+                _unitOfWork.Players.Update(player);
+                await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Joueur {PlayerId} retiré de l'équipe {TeamId}", playerId, teamId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors du retrait du joueur de l'équipe");
+                return false;
+            }
+        }
+    }
+}

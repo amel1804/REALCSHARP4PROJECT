@@ -1,0 +1,318 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BasketballLiveScore.DTOs.Player;
+using BasketballLiveScore.Models;
+using BasketballLiveScore.Repositories.Interfaces;
+using BasketballLiveScore.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+
+namespace BasketballLiveScore.Services
+{
+    /// <summary>
+    /// Service pour la gestion des joueurs de basketball
+    /// </summary>
+    public class PlayerService : IPlayerService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<PlayerService> _logger;
+
+        public PlayerService(IUnitOfWork unitOfWork, ILogger<PlayerService> logger)
+        {
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        public async Task<PlayerDto?> GetPlayerByIdAsync(int id)
+        {
+            try
+            {
+                var player = await _unitOfWork.Players.GetPlayerWithStats(id);
+                if (player == null) return null;
+
+                return new PlayerDto
+                {
+                    Id = player.Id,
+                    FirstName = player.FirstName,
+                    LastName = player.LastName,
+                    JerseyNumber = player.JerseyNumber,
+                    TeamId = player.TeamId,
+                    TeamName = player.Team?.Name ?? string.Empty
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération du joueur {PlayerId}", id);
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<PlayerDto>> GetAllPlayersAsync()
+        {
+            try
+            {
+                var players = _unitOfWork.Players.GetAll();
+                return await Task.FromResult(players.Select(p => new PlayerDto
+                {
+                    Id = p.Id,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    JerseyNumber = p.JerseyNumber,
+                    TeamId = p.TeamId,
+                    TeamName = p.Team?.Name ?? string.Empty
+                }));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération des joueurs");
+                return new List<PlayerDto>();
+            }
+        }
+
+        public async Task<IEnumerable<PlayerDto>> GetPlayersByTeamAsync(int teamId)
+        {
+            try
+            {
+                var players = await _unitOfWork.Players.GetPlayersByTeamAsync(teamId);
+                return players.Select(p => new PlayerDto
+                {
+                    Id = p.Id,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    JerseyNumber = p.JerseyNumber,
+                    TeamId = p.TeamId,
+                    TeamName = p.Team?.Name ?? string.Empty
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération des joueurs de l'équipe {TeamId}", teamId);
+                return new List<PlayerDto>();
+            }
+        }
+
+        public async Task<PlayerDto> CreatePlayerAsync(CreatePlayerDto createPlayerDto)
+        {
+            if (createPlayerDto == null)
+                throw new ArgumentNullException(nameof(createPlayerDto));
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(createPlayerDto.FirstName) || 
+                    string.IsNullOrWhiteSpace(createPlayerDto.LastName))
+                {
+                    throw new ArgumentException("Le prénom et le nom sont obligatoires");
+                }
+
+                if (createPlayerDto.JerseyNumber < 0 || createPlayerDto.JerseyNumber > 99)
+                {
+                    throw new ArgumentException("Le numéro de maillot doit être entre 0 et 99");
+                }
+
+                var team = _unitOfWork.Teams.GetById(createPlayerDto.TeamId);
+                if (team == null)
+                {
+                    throw new InvalidOperationException($"L'équipe avec l'ID {createPlayerDto.TeamId} n'existe pas");
+                }
+
+                var existingNumber = _unitOfWork.Players
+                    .Find(p => p.TeamId == createPlayerDto.TeamId && 
+                              p.JerseyNumber == createPlayerDto.JerseyNumber)
+                    .FirstOrDefault();
+
+                if (existingNumber != null)
+                {
+                    throw new InvalidOperationException($"Le numéro {createPlayerDto.JerseyNumber} est déjà utilisé dans cette équipe");
+                }
+
+                var player = new Player
+                {
+                    FirstName = createPlayerDto.FirstName,
+                    LastName = createPlayerDto.LastName,
+                    JerseyNumber = createPlayerDto.JerseyNumber,
+                    TeamId = createPlayerDto.TeamId
+                };
+
+                _unitOfWork.Players.Add(player);
+                await _unitOfWork.CompleteAsync();
+
+                return new PlayerDto
+                {
+                    Id = player.Id,
+                    FirstName = player.FirstName,
+                    LastName = player.LastName,
+                    JerseyNumber = player.JerseyNumber,
+                    TeamId = player.TeamId,
+                    TeamName = team.Name
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la création du joueur");
+                throw;
+            }
+        }
+
+        public async Task<PlayerDto> UpdatePlayerAsync(int id, UpdatePlayerDto updatePlayerDto)
+        {
+            if (updatePlayerDto == null)
+                throw new ArgumentNullException(nameof(updatePlayerDto));
+
+            try
+            {
+                var player = _unitOfWork.Players.GetById(id);
+                if (player == null)
+                {
+                    _logger.LogWarning("Joueur {PlayerId} non trouvé", id);
+                    throw new InvalidOperationException($"Joueur avec l'ID {id} non trouvé");
+                }
+
+                if (updatePlayerDto.JerseyNumber.HasValue)
+                {
+                    var existingNumber = _unitOfWork.Players
+                        .Find(p => p.TeamId == player.TeamId &&
+                                   p.JerseyNumber == updatePlayerDto.JerseyNumber &&
+                                   p.Id != id)
+                        .FirstOrDefault();
+
+                    if (existingNumber != null)
+                    {
+                        throw new InvalidOperationException($"Le numéro {updatePlayerDto.JerseyNumber} est déjà utilisé dans cette équipe");
+                    }
+
+                    player.JerseyNumber = updatePlayerDto.JerseyNumber.Value;
+                }
+
+                if (updatePlayerDto.TeamId.HasValue && updatePlayerDto.TeamId != player.TeamId)
+                {
+                    var newTeam = _unitOfWork.Teams.GetById(updatePlayerDto.TeamId.Value);
+                    if (newTeam == null)
+                    {
+                        throw new InvalidOperationException($"L'équipe avec l'ID {updatePlayerDto.TeamId} n'existe pas");
+                    }
+                    player.TeamId = updatePlayerDto.TeamId.Value;
+                }
+
+                _unitOfWork.Players.Update(player);
+                await _unitOfWork.CompleteAsync();
+
+                return new PlayerDto
+                {
+                    Id = player.Id,
+                    FirstName = player.FirstName,
+                    LastName = player.LastName,
+                    JerseyNumber = player.JerseyNumber,
+                    TeamId = player.TeamId,
+                    TeamName = player.Team?.Name ?? string.Empty
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la mise à jour du joueur {PlayerId}", id);
+                throw;
+            }
+        }
+
+        public async Task<bool> DeletePlayerAsync(int id)
+        {
+            try
+            {
+                var player = _unitOfWork.Players.GetById(id);
+                if (player == null)
+                {
+                    _logger.LogWarning("Joueur {PlayerId} non trouvé pour suppression", id);
+                    return false;
+                }
+
+                var hasMatchStats = _unitOfWork.MatchLineups
+                    .Find(ml => ml.PlayerId == id)
+                    .Any();
+
+                if (hasMatchStats)
+                {
+                    _logger.LogWarning("Impossible de supprimer le joueur {PlayerId} car il a des statistiques de match", id);
+                    return false;
+                }
+
+                _unitOfWork.Players.Remove(player);
+                var result = await _unitOfWork.CompleteAsync();
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la suppression du joueur {PlayerId}", id);
+                return false;
+            }
+        }
+
+        public async Task<PlayerMatchStatsDto> GetPlayerMatchStatsAsync(int playerId, int matchId)
+        {
+            try
+            {
+                var lineup = _unitOfWork.MatchLineups.GetPlayerLineup(matchId, playerId);
+                if (lineup == null) return null;
+
+                return new PlayerMatchStatsDto
+                {
+                    PlayerId = playerId,
+                    PlayerName = lineup.Player?.FullName ?? "Unknown",
+                    JerseyNumber = lineup.Player?.JerseyNumber ?? 0,
+                    Points = lineup.Points,
+                    Fouls = lineup.PersonalFouls,
+                    MinutesPlayed = lineup.PlayingTimeSeconds / 60,
+                    IsStarter = lineup.IsStarter
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération des statistiques du joueur");
+                return null;
+            }
+        }
+
+        public async Task SetStartingFiveAsync(int matchId, int teamId, List<int> playerIds)
+        {
+            if (playerIds == null || playerIds.Count != 5)
+                throw new ArgumentException("Il faut exactement 5 joueurs pour le 5 de base");
+
+            try
+            {
+                // Vérifier que tous les joueurs appartiennent à l'équipe
+                var players = _unitOfWork.Players
+                    .Find(p => playerIds.Contains(p.Id))
+                    .ToList();
+
+                if (players.Count != 5)
+                    throw new InvalidOperationException("Certains joueurs n'existent pas");
+
+                if (players.Any(p => p.TeamId != teamId))
+                    throw new InvalidOperationException("Certains joueurs n'appartiennent pas à l'équipe");
+
+                // Créer ou mettre à jour les alignements
+                for (int i = 0; i < players.Count; i++)
+                {
+                    var lineup = new MatchLineup
+                    {
+                        MatchId = matchId,
+                        TeamId = teamId,
+                        PlayerId = players[i].Id,
+                        Position = i + 1,
+                        IsStarter = true,
+                        IsOnCourt = true
+                    };
+
+                    _unitOfWork.MatchLineups.Add(lineup);
+                }
+
+                await _unitOfWork.CompleteAsync();
+                _logger.LogInformation("5 de base défini pour l'équipe {TeamId} dans le match {MatchId}", teamId, matchId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la définition du 5 de base");
+                throw;
+            }
+        }
+    }
+}

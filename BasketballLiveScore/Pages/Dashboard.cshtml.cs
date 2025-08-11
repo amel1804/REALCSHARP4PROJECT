@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BasketballLiveScore.DTOs.Match;
 using BasketballLiveScore.Models;
+using BasketballLiveScore.Models.Enums;
 using BasketballLiveScore.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -59,7 +60,7 @@ namespace BasketballLiveScore.Pages
                 // Statistiques
                 TotalMatchesCount = _unitOfWork.Matches.GetAll().Count();
                 ActiveMatchesCount = _unitOfWork.Matches
-                    .Find(m => m.Status == MatchStatus.InProgress)
+                    .Find(m => m.Status == Models.Enums.MatchStatus.InProgress)
                     .Count();
 
                 return Page();

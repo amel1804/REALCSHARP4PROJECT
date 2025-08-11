@@ -28,7 +28,8 @@ namespace BasketballLiveScore.Repositories.Implementations
         public async Task<Player?> GetPlayerWithStats(int playerId)
         {
             return await context.Players
-                .Include(p => p.Stats) // adapte selon ta navigation Stats
+                .Include(p => p.Team)
+                .Include(p => p.MatchLineups)
                 .FirstOrDefaultAsync(p => p.Id == playerId);
         }
 

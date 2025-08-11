@@ -16,5 +16,6 @@ namespace BasketballLiveScore.Services.Interfaces
         Task<bool> RecordSubstitutionAsync(int matchId, PlayerSubstitutionDto substitutionDto);
         Task<bool> RecordTimeoutAsync(int matchId, int teamId);
         Task<LiveScoreUpdateDto> GetLiveScoreAsync(int matchId);
+        Task<bool> StartMatchAsync(int matchId);
     }
 }
